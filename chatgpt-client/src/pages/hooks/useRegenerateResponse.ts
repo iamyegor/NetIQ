@@ -51,7 +51,6 @@ export function useRegenerateResponse(
             };
             setMessages((prev) => {
                 const updated = prev.filter((m) => m.id !== "temp-regenerated-id");
-                console.log("updated", updated);
                 const index = updated.findIndex((m) => m.linkId === data.linkId && m.isSelected);
                 if (index !== -1) {
                     updated[index].isSelected = false;

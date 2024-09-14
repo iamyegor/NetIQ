@@ -10,4 +10,5 @@ export type Message = {
 export type Chat = {
     id: string;
     title: string;
+    lastUpdatedAt: string;
 };

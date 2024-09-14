@@ -1,8 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Message } from "@/pages/ChatPage/types.ts";
 
 export default function useDisplayedMessages(messages: Message[]) {
     const [displayedMessages, setDisplayedMessages] = useState<Message[]>([]);
+
+    const messageKeys = useMemo(() => {
+        return messages.map((m) => `${m.id}-${m.isSelected}${m.content.length}`).join("|");
+    }, [messages]);
 
     useEffect(() => {
         const getMessagesToDisplay = () => {
@@ -48,7 +52,7 @@ export default function useDisplayedMessages(messages: Message[]) {
         };
 
         setDisplayedMessages(getMessagesToDisplay());
-    }, [messages]);
+    }, [messageKeys]);
 
     return displayedMessages;
 }

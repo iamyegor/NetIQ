@@ -45,4 +45,38 @@ public class Chat : AggregateRoot<Guid>
 
         return assistantMessage;
     }
+
+    public Message EditPrompt(string messageContent, Guid linkId)
+    {
+        foreach (Message message in _messages.Where(m => m.LinkId == linkId))
+        {
+            message.IsSelected = false;
+        }
+
+        Message editedPrompt = new(messageContent, Sender.User, linkId) { IsSelected = true };
+        Message assistantMessage = new("", Sender.Assistant, editedPrompt.Id) { IsSelected = true };
+
+        AddMessage(editedPrompt);
+        AddMessage(assistantMessage);
+
+        return editedPrompt;
+    }
+
+    public void UnselectMessages(Guid? linkId)
+    {
+        foreach (Message message in _messages.Where(m => m.LinkId == linkId))
+        {
+            message.IsSelected = false;
+        }
+    }
+
+    public void SelectMessage(Message message)
+    {
+        foreach (Message msg in _messages.Where(m => m.LinkId == message.LinkId))
+        {
+            msg.IsSelected = false;
+        }
+
+        message.IsSelected = true;
+    }
 }

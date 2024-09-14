@@ -55,13 +55,15 @@ public class StreamerController : ApplicationController
         Chat chat,
         string message,
         List<Guid> displayedMessagesList,
-        CancellationToken ct
+        CancellationToken ct,
+        bool isSelected = false
     )
     {
         Guid? linkId = displayedMessagesList.LastOrDefault();
         linkId = linkId == Guid.Empty ? null : linkId;
         Message userMessage = new Message(message, Sender.User, linkId);
         chat.AddMessage(userMessage);
+        chat.SelectMessage(userMessage);
         await Context.SaveChangesAsync(ct);
 
         await SendSseEventAsync(
@@ -78,7 +80,7 @@ public class StreamerController : ApplicationController
                     {
                         id = chat.Id,
                         title = chat.Title,
-                        createdAt = chat.LastUpdatedAt
+                        lastUpdatedAt = chat.LastUpdatedAt
                     }
                 }
             ),

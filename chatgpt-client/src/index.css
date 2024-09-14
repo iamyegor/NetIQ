@@ -53,7 +53,7 @@ body,
 
         ul,
         ol {
-            @apply pl-8 -mb-4 -mt-7;
+            @apply pl-8 space-y-5;
         }
         ul {
             @apply list-disc;
@@ -62,22 +62,27 @@ body,
             @apply list-decimal;
         }
         li {
-            @apply -my-1;
-            > ul {
-                @apply -my-2;
-                > li:last-child {
-                    @apply -mb-8;
-                }
-            }
-            > p {
-                @apply ml-1 -mt-6;
-            }
-            > pre {
-                @apply mt-5
-            }
+            @apply space-y-5;
         }
-        li:has(p):has(pre) {
-            @apply space-y-1;
+        /*li {*/
+        /*    @apply -my-1;*/
+        /*    > ul {*/
+        /*        @apply -my-2;*/
+        /*        > li:last-child {*/
+        /*            @apply -mb-8;*/
+        /*        }*/
+        /*    }*/
+        /*    > p {*/
+        /*        !*@apply ml-1 -mt-6;*!*/
+        /*    }*/
+        /*    > pre {*/
+        /*        @apply mt-5*/
+        /*    }*/
+        /*}*/
+        li:has(pre) {
+            pre {
+                @apply mt-6;
+            }
         }
 
         /* Links */
@@ -124,18 +129,18 @@ body,
 }
 
 ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 11px;
 }
 
 ::-webkit-scrollbar-track {
-    background: #1c1c1c;
-    border-radius: 3px;
+    background: transparent;
+    border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb {
     background: #4a4a4a;
-    border-radius: 3px;
+    border-radius: 8px;
+    min-height: 30px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -144,5 +149,13 @@ body,
 
 * {
     scrollbar-width: auto;
-    scrollbar-color: #4a4a4a #1c1c1c;
+}
+
+.scrollbar-hide {
+    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* WebKit */
 }

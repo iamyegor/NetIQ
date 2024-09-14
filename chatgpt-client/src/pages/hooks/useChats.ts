@@ -9,6 +9,7 @@ export default function useChats() {
     const { data: chatsData } = useQuery({
         queryKey: ["chats"],
         queryFn: () => api.get("chats"),
+        gcTime: 0,
     });
 
     useEffect(() => {

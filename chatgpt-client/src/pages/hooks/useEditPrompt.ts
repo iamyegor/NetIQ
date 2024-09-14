@@ -1,30 +1,25 @@
-import { Chat, Message } from "@/pages/ChatPage/types.ts";
-import { Dispatch, SetStateAction, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { Message } from "@/pages/ChatPage/types.ts";
+import React, { useRef } from "react";
 import useInsertTempMessages from "@/pages/hooks/useInsertTempMessages.ts";
+import { useParams } from "react-router-dom";
 
-const useChatEventSource = (
+export default function useEditPrompt(
     displayedMessages: Message[],
-    setIsStreaming: Dispatch<SetStateAction<boolean>>,
-    setMessages: Dispatch<SetStateAction<Message[]>>,
-    setChats: Dispatch<SetStateAction<Chat[]>>,
+    setMessages: React.Dispatch<React.SetStateAction<Message[]>>,
+    setIsStreaming: React.Dispatch<React.SetStateAction<boolean>>,
     startEventSource: (
         url: string,
         onMessage: (event: MessageEvent) => void,
         onError?: (error: Event) => void,
         onClose?: () => void,
     ) => EventSource,
-) => {
-    const navigate = useNavigate();
+) {
+    const { chatId } = useParams();
     const insertTempMessages = useInsertTempMessages(setMessages);
     const userMessageRef = useRef<Message | null>(null);
     const assistantMessageRef = useRef<Message | null>(null);
 
-    const handleEventSourceMessage = (
-        event: MessageEvent,
-        tempAssistantMessage: Message,
-        isNewChat: boolean,
-    ) => {
+    const handleEventSourceMessage = (event: MessageEvent, tempAssistantMessage: Message) => {
         const data = JSON.parse(event.data);
 
         if (data.type === "user_message") {
@@ -41,12 +36,6 @@ const useChatEventSource = (
                 userMessageRef.current!,
                 tempAssistantMessage,
             ]);
-
-            if (isNewChat && data.chat) {
-                const newChat: Chat = data.chat;
-                setChats((prevChats) => [newChat, ...prevChats]);
-                navigate(`/chats/${newChat.id}`, { replace: true });
-            }
         } else if (data.type === "assistant_message_start") {
             assistantMessageRef.current = {
                 id: data.id,
@@ -69,30 +58,23 @@ const useChatEventSource = (
         }
     };
 
-    async function startChatEventSource(
-        url: string,
-        chatId: string | null,
-        messageContent: string,
-    ) {
+    return async (messageId: string, messageContent: string) => {
         setIsStreaming(true);
+
+        const encodedMessage = encodeURIComponent(messageContent);
+        const currentMessageIndex = displayedMessages.findIndex((m) => m.id === messageId);
+        const messagesToSend = encodeURIComponent(
+            JSON.stringify(displayedMessages.slice(0, currentMessageIndex).map((m) => m.id)),
+        );
+        const urlWithParams = `https://localhost:7071/api/chats/${chatId}/messages/edit?messageContent=${encodedMessage}&messagesToSend=${messagesToSend}`;
 
         const { tempAssistantMessage } = insertTempMessages(
             messageContent,
-            displayedMessages[displayedMessages.length - 1]?.id ?? null,
+            displayedMessages[currentMessageIndex].linkId,
         );
-
-        const encodedMessage = encodeURIComponent(messageContent);
-        const displayedMessageIds = encodeURIComponent(
-            JSON.stringify(displayedMessages.map((msg) => msg.id)),
-        );
-        const urlWithParams = `${url}?message=${encodedMessage}&displayedMessages=${displayedMessageIds}&chatId=${chatId}`;
 
         startEventSource(urlWithParams, (msg) =>
-            handleEventSourceMessage(msg, tempAssistantMessage, !chatId),
+            handleEventSourceMessage(msg, tempAssistantMessage),
         );
-    }
-
-    return { startChatEventSource };
-};
-
-export default useChatEventSource;
+    };
+}

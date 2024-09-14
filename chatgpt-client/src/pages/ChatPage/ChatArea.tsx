@@ -21,6 +21,7 @@ const ChatArea = ({
     shouldAttachToBottom,
     setShouldAttachToBottom,
     scrollToBottom,
+    editPrompt,
 }: {
     messages: Message[];
     setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
@@ -31,6 +32,7 @@ const ChatArea = ({
     shouldAttachToBottom: boolean;
     setShouldAttachToBottom: (isAtBottom: boolean) => void;
     scrollToBottom: (smooth?: boolean) => void;
+    editPrompt: (messageId: string, messageContent: string) => void;
 }) => {
     const { chatId } = useParams<{ chatId: string }>();
     const chatEndRef = useRef<HTMLDivElement | null>(null);
@@ -117,7 +119,10 @@ const ChatArea = ({
                                 key={message.id}
                                 message={message}
                                 isStreaming={isStreaming}
-                                isLast={messages[messages.length - 1]?.id === message.id}
+                                isLast={
+                                    displayedMessages[displayedMessages.length - 1]?.id ===
+                                    message.id
+                                }
                                 variants={messages
                                     .filter((m) => m.linkId === message.linkId)
                                     .sort(
@@ -127,6 +132,7 @@ const ChatArea = ({
                                     )}
                                 selectVariant={(variant: Message) => selectVariant(variant)}
                                 regenerateResponse={() => regenerateResponse(message.id)}
+                                editPrompt={editPrompt}
                             />
                         ))}
                         <div id="chat-end" ref={chatEndRef} className="h-5"></div>

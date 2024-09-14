@@ -1,5 +1,5 @@
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { vscDarkPlus as theme } from "react-syntax-highlighter/dist/esm/styles/prism";
 import ClipboardSvg from "@/assets/pages/chat/clipboard.svg?react";
 import CheckmarkSvg from "@/assets/pages/chat/check.svg?react";

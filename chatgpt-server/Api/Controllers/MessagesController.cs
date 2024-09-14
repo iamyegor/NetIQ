@@ -18,8 +18,57 @@ public class MessagesController : StreamerController
     public MessagesController(ApplicationContext context, ChatGpt chatGpt)
         : base(context, chatGpt) { }
 
+    [HttpGet("edit")]
+    public async Task EditPrompt(
+        Guid chatId,
+        [FromQuery] string messageContent,
+        [FromQuery] string messagesToSend,
+        CancellationToken ct
+    )
+    {
+        InitializeResponseHeaders();
+
+        Guid userId = (await Context.Users.SingleAsync(ct)).Id;
+
+        Chat? chat = await Context
+            .Users.Where(u => u.Id == userId)
+            .SelectMany(u => u.Chats)
+            .SingleOrDefaultAsync(c => c.Id == chatId, ct);
+
+        if (chat == null)
+        {
+            await SendSseErrorAsync("Chat not found", CancellationToken.None);
+            return;
+        }
+
+        await Context.Entry(chat).Collection(c => c.Messages).LoadAsync(ct);
+
+        List<Guid> displayedMessageIds =
+            JsonConvert.DeserializeObject<List<Guid>>(messagesToSend) ?? [];
+        List<ChatGptMessage> gptMessages = chat
+            .Messages.Where(m => displayedMessageIds.Contains(m.Id))
+            .OrderBy(m => m.CreatedAt)
+            .Select(m => new ChatGptMessage(m.Sender.Value, m.Content))
+            .ToList();
+
+        Message userMessage = await AddUserMessage(
+            chat,
+            messageContent,
+            displayedMessageIds,
+            ct,
+            true
+        );
+        await AddAssistantMessage(chat, userMessage.Id, ct);
+        gptMessages.Add(new ChatGptMessage(userMessage.Sender.Value, userMessage.Content));
+
+        await StreamChatGptResponse(chat.Messages.Last(), gptMessages, ct);
+
+        await Context.SaveChangesAsync(CancellationToken.None);
+        await SendSseEventAsync("Stream ended", CancellationToken.None, "close");
+    }
+
     [HttpGet("regenerate")]
-    public async Task RegenerateMessageAsync(
+    public async Task RegenerateResponse(
         Guid chatId,
         [FromQuery] string messagesToSend,
         CancellationToken ct

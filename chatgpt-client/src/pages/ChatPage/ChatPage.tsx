@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { FaArrowDown } from "react-icons/fa";
 import { Message } from "@/pages/ChatPage/types.ts";
 import ChatArea from "@/pages/ChatPage/ChatArea.tsx";
 import InputArea from "@/pages/ChatPage/InputArea.tsx";
@@ -13,9 +11,11 @@ import useScrollToBottom from "@/pages/hooks/useScrollToBottom.ts";
 import useChats from "@/pages/hooks/useChats.ts";
 import { useBaseEventSource } from "@/pages/hooks/useBaseEventSource.ts";
 import { useRegenerateResponse } from "@/pages/hooks/useRegenerateResponse.ts";
+import GoDownButton from "@/pages/ChatPage/GoDownButton.tsx";
+import useEditPrompt from "@/pages/hooks/useEditPrompt.ts";
 
 const ChatPage = () => {
-    const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
+    const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
     const [inputMessage, setInputMessage] = useState("");
     const [isStreaming, setIsStreaming] = useState(false);
@@ -39,6 +39,14 @@ const ChatPage = () => {
         setIsStreaming,
         startEventSource,
     );
+    const editPrompt = useEditPrompt(
+        displayedMessages,
+        setMessages,
+        setIsStreaming,
+        startEventSource,
+    );
+
+    const [inputAreaHeight, setInputAreaHeight] = useState(0);
 
     const navigate = useNavigate();
     const { chatId } = useParams<{ chatId: string }>();
@@ -61,7 +69,12 @@ const ChatPage = () => {
 
         startChatEventSource(url, chatId ?? null, inputMessage.trim());
         setInputMessage("");
+        setTimeout(() => scrollToBottom(true), 70);
     }
+
+    const updateInputAreaHeight = (height: number) => {
+        setInputAreaHeight(height);
+    };
 
     return (
         <div className="flex h-screen bg-neutral-800 relative ">
@@ -89,6 +102,7 @@ const ChatPage = () => {
                     shouldAttachToBottom={shouldAttachToBottom}
                     setShouldAttachToBottom={setShouldAttachToBottom}
                     scrollToBottom={scrollToBottom}
+                    editPrompt={editPrompt}
                 />
                 <InputArea
                     inputMessage={inputMessage}
@@ -96,18 +110,13 @@ const ChatPage = () => {
                     sendMessage={sendMessage}
                     isStreaming={isStreaming}
                     stopStreaming={stopEventSource}
+                    updateInputAreaHeight={updateInputAreaHeight}
                 />
                 {!shouldAttachToBottom && canShowScrollButton && hasChatScrollbar && (
-                    <div className="absolute z-40 bottom-28 inset-x-0 flex justify-center">
-                        <Button
-                            size="icon"
-                            variant="secondary"
-                            className="border border-neutral-600 rounded-full"
-                            onClick={() => scrollToBottom(true)}
-                        >
-                            <FaArrowDown />
-                        </Button>
-                    </div>
+                    <GoDownButton
+                        onClick={() => scrollToBottom(true)}
+                        bottom={inputAreaHeight + 15}
+                    />
                 )}
             </div>
         </div>
