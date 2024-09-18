@@ -10,30 +10,28 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip.tsx";
-import BotSvg from "@/assets/pages/chat/user-robot.svg?react";
 import CopySvg from "@/assets/pages/chat/copy.svg?react";
 import RotateSvg from "@/assets/pages/chat/rotate.svg?react";
 import CheckSvg from "@/assets/pages/chat/check.svg?react";
 import VariantsPagination from "@/pages/ChatPage/VariantsPagination.tsx";
+import shortenedLogo from "@/assets/pages/chat/netiq-shortened.png";
+import { useAppContext } from "@/context/AppContext.tsx";
 
 const AssistantMessage = ({
     message,
-    isStreaming,
-    isLast,
     variants,
     selectVariant,
-    regenerateResponse,
 }: {
     message: Message;
-    isStreaming: boolean;
-    isLast: boolean;
     variants: Message[];
     selectVariant: (message: Message) => void;
-    regenerateResponse: () => void;
 }) => {
     const [isCopied, setIsCopied] = useState(false);
     const contentRef = useRef<HTMLDivElement>(null);
     const scalingDotRef = useRef<HTMLDivElement>(null);
+    const { isStreaming, displayedMessages, regenerateResponse } = useAppContext();
+    const isLast = displayedMessages[displayedMessages.length - 1].id === message.id;
+    useScalingDot(contentRef, scalingDotRef, message, isStreaming, isLast, displayedMessages);
 
     function handleCopy() {
         navigator.clipboard.writeText(message.content);
@@ -43,8 +41,6 @@ const AssistantMessage = ({
             setIsCopied(false);
         }, 1000);
     }
-
-    useScalingDot(contentRef, scalingDotRef, message, isStreaming, isLast);
 
     const memoizedMarkdown = useMemo(() => {
         return (
@@ -66,17 +62,13 @@ const AssistantMessage = ({
             return true;
         }
 
-        if (isLast && !isStreaming) {
-            return true;
-        }
-
-        return false;
+        return isLast && !isStreaming;
     }
 
     return (
-        <div className="flex gap-x-3 justify-start">
-            <div className="fill-white flex-shrink-0 w-9 h-9 rounded-full border border-neutral-600 p-1.5 mt-1.5">
-                <BotSvg className="w-full h-full" />
+        <div className="flex gap-x-3 justify-start md:pr-7">
+            <div className="fill-white flex-shrink-0 w-9 h-9 rounded-full border border-neutral-600 p-[9px] mt-1.5 hidden md:flex items-center">
+                <img src={shortenedLogo} alt="ассистент" className="w-full" />
             </div>
             <div className="p-3 rounded-[25px] text-white flex flex-col gap-y-5 w-full">
                 <div ref={contentRef}>
@@ -112,7 +104,7 @@ const AssistantMessage = ({
                         </TooltipProvider>
                         <TooltipProvider delayDuration={100}>
                             <Tooltip>
-                                <TooltipTrigger onClick={regenerateResponse}>
+                                <TooltipTrigger onClick={() => regenerateResponse(message.id)}>
                                     <RotateSvg className="w-4 h-4 fill-neutral-300" />
                                 </TooltipTrigger>
                                 <TooltipContent side="bottom">

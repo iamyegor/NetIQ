@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Подтвердить почту</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .email-wrapper {
+            text-align: center;
+            flex-shrink: 0;
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            background-color: #0a0a0a;
+            border-radius: 15px;
+            padding: 40px;
+        }
+
+        .email-container {
+            flex-shrink: 0;
+            max-width: 600px;
+            margin: 0 auto;
+            background: #262626;
+            padding: 20px;
+            border-radius: 15px;
+            border: #525252 1px solid;
+            box-shadow: 0 2px 20px rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        h1 {
+            color: white;
+            font-size: 30px;
+            font-weight: 800;
+        }
+
+        p {
+            color: white;
+            line-height: 1.6;
+        }
+
+        .code {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffffff;
+            text-align: center;
+            margin: 25px 0;
+        }
+
+        .footer {
+            text-align: center;
+            color: #ff0000;
+            font-size: 12px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="email-wrapper">
+    <div class="email-container">
+        <h1>Подтверждение почты</h1>
+        <p>Здравствуйте, пожалуйста, используйте следующий код для завершения регистрации:</p>
+        <p class='code'>{code}</p>
+        <p>Если вы не запрашивали этот код, просто проигнорируйте это письмо или свяжитесь с поддержкой, если у вас есть вопросы.</p>
+        <div class="footer">
+            <p>&copy; 2024 NetIQ. Все права защищены.</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

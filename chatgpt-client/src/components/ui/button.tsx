@@ -16,10 +16,11 @@ const buttonVariants = cva(
                     "border border-neutral-400 bg-white hover:bg-neutral-100 border hover:text-neutral-900 dark:border-neutral-600 dark:bg-neutral-900 dark:hover:bg-neutral-950 dark:hover:text-neutral-50",
                 secondary:
                     "bg-neutral-100 text-neutral-900 hover:bg-neutral-100/80 dark:bg-neutral-800 dark:text-neutral-50 dark:hover:bg-neutral-800/95",
-                ghost: "hover:bg-neutral-100 hover:text-neutral-900 dark:hover:bg-neutral-600/30 dark:hover:text-neutral-50",
+                ghost: "hover:bg-neutral-100  dark:hover:bg-neutral-600/30",
                 link: "text-neutral-900 underline-offset-4 hover:underline dark:text-neutral-50",
                 cancel: "bg-[#1F1F1F] hover:bg-neutral-800",
                 arrow: "fill-neutral-300 hover:fill-neutral-100 disabled:fill-neutral-500 !w-7 !h-7 !p-1.5 hover:bg-neutral-100/10 rounded-lg",
+                chat: "hover:bg-neutral-800",
             },
             size: {
                 default: "h-10 px-4 py-2",

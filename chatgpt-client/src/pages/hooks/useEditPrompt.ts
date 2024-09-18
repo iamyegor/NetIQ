@@ -1,19 +1,30 @@
-import { Message } from "@/pages/ChatPage/types.ts";
-import React, { useRef } from "react";
+import { AppError, Message, Model } from "@/pages/ChatPage/types.ts";
+import { Dispatch, SetStateAction, useRef } from "react";
 import useInsertTempMessages from "@/pages/hooks/useInsertTempMessages.ts";
 import { useParams } from "react-router-dom";
+import PostEventSource from "@/utils/PostEventSource.ts";
 
-export default function useEditPrompt(
-    displayedMessages: Message[],
-    setMessages: React.Dispatch<React.SetStateAction<Message[]>>,
-    setIsStreaming: React.Dispatch<React.SetStateAction<boolean>>,
+interface EditPromptParams {
+    setMessages: Dispatch<SetStateAction<Message[]>>;
+    displayedMessages: Message[];
+    setIsStreaming: Dispatch<SetStateAction<boolean>>;
     startEventSource: (
         url: string,
+        body: any,
         onMessage: (event: MessageEvent) => void,
-        onError?: (error: Event) => void,
-        onClose?: () => void,
-    ) => EventSource,
-) {
+    ) => PostEventSource;
+    selectedModel: Model | null;
+    setAppError: Dispatch<SetStateAction<AppError>>;
+}
+
+export default function useEditPrompt({
+    setMessages,
+    displayedMessages,
+    setIsStreaming,
+    startEventSource,
+    selectedModel,
+    setAppError,
+}: EditPromptParams) {
     const { chatId } = useParams();
     const insertTempMessages = useInsertTempMessages(setMessages);
     const userMessageRef = useRef<Message | null>(null);
@@ -58,23 +69,32 @@ export default function useEditPrompt(
         }
     };
 
-    return async (messageId: string, messageContent: string) => {
-        setIsStreaming(true);
-
-        const encodedMessage = encodeURIComponent(messageContent);
+    const editPrompt = async (messageId: string, messageContent: string) => {
         const currentMessageIndex = displayedMessages.findIndex((m) => m.id === messageId);
-        const messagesToSend = encodeURIComponent(
-            JSON.stringify(displayedMessages.slice(0, currentMessageIndex).map((m) => m.id)),
-        );
-        const urlWithParams = `https://localhost:7071/api/chats/${chatId}/messages/edit?messageContent=${encodedMessage}&messagesToSend=${messagesToSend}`;
 
         const { tempAssistantMessage } = insertTempMessages(
             messageContent,
             displayedMessages[currentMessageIndex].linkId,
         );
 
-        startEventSource(urlWithParams, (msg) =>
-            handleEventSourceMessage(msg, tempAssistantMessage),
+        if (messageContent.length > 50000) {
+            setAppError("message_too_long");
+            return;
+        }
+
+        setIsStreaming(true);
+
+        const displayedMessageIds = displayedMessages
+            .slice(0, currentMessageIndex)
+            .map((m) => m.id);
+        const urlWithParams = `https://localhost:7071/api/chats/${chatId}/messages/edit`;
+
+        startEventSource(
+            urlWithParams,
+            { messageContent, displayedMessageIds, model: selectedModel?.id },
+            (msg) => handleEventSourceMessage(msg, tempAssistantMessage),
         );
     };
+
+    return { editPrompt };
 }

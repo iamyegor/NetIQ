@@ -5,37 +5,34 @@ import React, { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import ChatMessage from "@/pages/ChatPage/ChatMessage.tsx";
 import { useSelectVariant } from "@/pages/hooks/useSelectVariant.ts";
+import ErrorMessage from "@/pages/ChatPage/ErrorMessage.tsx";
+import "ldrs/ring2";
+import netIqLogo from "@/assets/common/netiq.png";
+import { AxiosError } from "axios";
+import ServerErrorResponse from "@/types/errors/ServerErrorResponse.ts";
+import RouteError from "@/types/errors/RouteError.ts";
+import { useAppContext } from "@/context/AppContext.tsx";
 
 const fetchMessages = async (chatId: string): Promise<Message[]> => {
     const response = await api.get(`/chats/${chatId}/messages`);
     return response.data;
 };
 
-const ChatArea = ({
-    messages,
-    setMessages,
-    setHasChatScrollbar,
-    displayedMessages,
-    isStreaming,
-    regenerateResponse,
-    shouldAttachToBottom,
-    setShouldAttachToBottom,
-    scrollToBottom,
-    editPrompt,
-}: {
-    messages: Message[];
-    setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
-    setHasChatScrollbar: React.Dispatch<React.SetStateAction<boolean>>;
-    displayedMessages: Message[];
-    isStreaming: boolean;
-    regenerateResponse: (messageId: string) => void;
-    shouldAttachToBottom: boolean;
-    setShouldAttachToBottom: (isAtBottom: boolean) => void;
-    scrollToBottom: (smooth?: boolean) => void;
-    editPrompt: (messageId: string, messageContent: string) => void;
-}) => {
+const ChatArea = () => {
+    const {
+        messages,
+        setMessages,
+        displayedMessages,
+        isStreaming,
+        shouldAttachToBottom,
+        setShouldAttachToBottom,
+        scrollToBottom,
+        appError,
+        setAppError,
+        setHasChatScrollbar,
+    } = useAppContext();
+
     const { chatId } = useParams<{ chatId: string }>();
-    const chatEndRef = useRef<HTMLDivElement | null>(null);
     const selectVariant = useSelectVariant(setMessages);
     const prevScrollTop = useRef(0);
     const mainRef = useRef<HTMLElement | null>(null);
@@ -52,11 +49,50 @@ const ChatArea = ({
         }
     }, [JSON.stringify(displayedMessages)]);
 
-    const { data, isLoading, isError, error } = useQuery({
+    const {
+        data,
+        isLoading,
+        error: messageLoadingError,
+    } = useQuery({
         queryKey: ["messages", chatId],
         queryFn: () => fetchMessages(chatId as string),
         enabled: messages.length == 0 && !!chatId,
+        gcTime: 0,
+        retry: 1,
     });
+
+    // useEffect(() => {
+    //     console.log({ messageLength: messages.length, chatId: chatId });
+    //     console.log("enabled", messages.length == 0 && !!chatId);
+    // }, [messages.length, chatId]);
+
+    useEffect(() => {
+        const error = messageLoadingError as
+            | AxiosError<ServerErrorResponse>
+            | AxiosError<{ errors: { chatId: string[] } }>;
+
+        // if chatId is incorrect or doesn't exist, redirect to 404
+        if (error?.response?.data) {
+            if ("errors" in error.response.data && error.response.data.errors.chatId) {
+                throw RouteError.notFound();
+            }
+
+            if (
+                "errorCode" in error.response.data &&
+                error.response.data.errorCode === "chat.not.found"
+            ) {
+                throw RouteError.notFound();
+            }
+        }
+
+        if (error) {
+            setAppError("messages_error");
+        }
+    }, [messageLoadingError]);
+
+    // useEffect(() => {
+    //     console.log({ chatId, messages, displayedMessages });
+    // }, [chatId, messages, displayedMessages]);
 
     useEffect(() => {
         setMessages(data || []);
@@ -87,61 +123,61 @@ const ChatArea = ({
         return (
             <main className="flex-1 overflow-auto flex justify-center">
                 <div className="w-full max-w-[800px] flex items-center justify-center h-full">
-                    <h2 className="text-xl text-neutral-100">Loading messages...</h2>
+                    <h2 className="text-xl text-neutral-100">
+                        <l-ring-2 color="#e5e5e5" size="55" stroke="6"></l-ring-2>
+                    </h2>
                 </div>
             </main>
         );
     }
 
-    if (isError) {
-        console.error("Failed to fetch messages:", error);
+    if (messages.length === 0 && !chatId) {
         return (
-            <main className="flex-1 overflow-auto flex justify-center">
+            <main className="flex-1 flex justify-center items-center">
                 <div className="w-full max-w-[800px] flex items-center justify-center h-full">
-                    <h2 className="text-xl text-red-500">Failed to load messages.</h2>
+                    <div className="flex flex-col items-center space-y-8">
+                        <img
+                            src={netIqLogo}
+                            alt="Логотип"
+                            className="h-20 object-cover hover:opacity-70 cursor-pointer active:scale-95 transition"
+                        />
+                        <h2 className="text-2xl font-medium text-neutral-100">
+                            Чем я могу вам помочь?
+                        </h2>
+                    </div>
                 </div>
             </main>
         );
+    }
+
+    function getMessageVariants(message: Message) {
+        return messages
+            .filter((m) => m.linkId === message.linkId)
+            .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
     }
 
     return (
         <main
             ref={mainRef}
             id="chat"
-            className="flex-1 flex justify-center overflow-y-auto !relative"
+            className="flex-1 flex justify-center overflow-y-auto !relative px-5"
             onScroll={handleScroll}
         >
-            <div className="w-full max-w-[800px]">
-                {displayedMessages.length > 0 ? (
-                    <div className="space-y-5">
-                        {displayedMessages.map((message) => (
-                            <ChatMessage
-                                key={message.id}
-                                message={message}
-                                isStreaming={isStreaming}
-                                isLast={
-                                    displayedMessages[displayedMessages.length - 1]?.id ===
-                                    message.id
-                                }
-                                variants={messages
-                                    .filter((m) => m.linkId === message.linkId)
-                                    .sort(
-                                        (a, b) =>
-                                            new Date(a.createdAt).getTime() -
-                                            new Date(b.createdAt).getTime(),
-                                    )}
-                                selectVariant={(variant: Message) => selectVariant(variant)}
-                                regenerateResponse={() => regenerateResponse(message.id)}
-                                editPrompt={editPrompt}
-                            />
-                        ))}
-                        <div id="chat-end" ref={chatEndRef} className="h-5"></div>
-                    </div>
-                ) : (
-                    <div className="flex items-center justify-center h-full">
-                        <h2 className="text-xl text-neutral-100">No messages yet.</h2>
-                    </div>
-                )}
+            <div
+                className={`w-full max-w-[800px] ${appError && "h-full flex flex-col justify-between items-center"}`}
+            >
+                <div className="space-y-5">
+                    {displayedMessages.map((message) => (
+                        <ChatMessage
+                            key={message.id}
+                            message={message}
+                            variants={getMessageVariants(message)}
+                            selectVariant={(variant: Message) => selectVariant(variant)}
+                        />
+                    ))}
+                    <div id="chat-end" className="h-5"></div>
+                </div>
+                <ErrorMessage error={appError} />
             </div>
         </main>
     );

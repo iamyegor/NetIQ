@@ -4,21 +4,26 @@ import PencilSvg from "@/assets/pages/chat/pencil.svg?react";
 import { Button } from "@/components/ui/button.tsx";
 import { Textarea } from "@/components/ui/textarea.tsx";
 import VariantsPagination from "@/pages/ChatPage/VariantsPagination.tsx";
+import { useAppContext } from "@/context/AppContext.tsx";
 
-const UserMessage = ({
+export default function UserMessage({
     message,
-    editPrompt,
     variants,
     selectVariant,
 }: {
     message: Message;
-    editPrompt: (messageId: string, messageContent: string) => void;
     variants: Message[];
     selectVariant: (message: Message) => void;
-}) => {
+}) {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const [isEditing, setIsEditing] = useState(false);
     const [editedMessage, setEditedMessage] = useState<string>(message.content);
+    const { scrollToBottom, editPrompt } = useAppContext();
+
+    async function handleEditPrompt(messageId: string, messageContent: string) {
+        await editPrompt(messageId, messageContent);
+        setTimeout(() => scrollToBottom(true), 70);
+    }
 
     const resizeTextarea = () => {
         if (textareaRef.current) {
@@ -56,7 +61,7 @@ const UserMessage = ({
                         </Button>
                         <Button
                             className="rounded-2xl"
-                            onClick={() => editPrompt(message.id, editedMessage)}
+                            onClick={() => handleEditPrompt(message.id, editedMessage)}
                         >
                             Отправить
                         </Button>
@@ -64,19 +69,21 @@ const UserMessage = ({
                 </div>
             ) : (
                 <>
-                    <Button
-                        size="icon"
-                        variant="ghost"
-                        className="rounded-full hover:bg-neutral-100/10 mt-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                        onClick={() => setIsEditing(true)}
-                    >
-                        <PencilSvg className="w-4 h-4 fill-neutral-300" />
-                    </Button>
-                    <div className="max-w-[600px] flex flex-col items-end space-y-2">
-                        <div className="p-3 rounded-[25px] text-white bg-neutral-700/50 px-5">
-                            <p className="break-words" style={{ whiteSpace: "pre-wrap" }}>
-                                {message.content}
-                            </p>
+                    <div className="w-full max-w-[650px] flex flex-col items-end space-y-2">
+                        <div className="flex space-x-2.5">
+                            <Button
+                                size="icon"
+                                variant="ghost"
+                                className="rounded-full hover:bg-neutral-100/10 mt-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
+                                onClick={() => setIsEditing(true)}
+                            >
+                                <PencilSvg className="w-4 h-4 fill-neutral-300" />
+                            </Button>
+                            <div className="p-3 rounded-[25px] text-white bg-neutral-700/50 px-5">
+                                <p className="break-all" style={{ whiteSpace: "pre-wrap" }}>
+                                    {message.content}
+                                </p>
+                            </div>
                         </div>
                         {variants.length > 1 && (
                             <VariantsPagination
@@ -90,6 +97,4 @@ const UserMessage = ({
             )}
         </div>
     );
-};
-
-export default UserMessage;
+}

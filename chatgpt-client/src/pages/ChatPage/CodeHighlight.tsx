@@ -66,7 +66,7 @@ export default function CodeHighlight({
             />
         </div>
     ) : (
-        <code {...rest} className={className}>
+        <code {...rest} className={`${className} text-wrap`}>
             {children}
         </code>
     );

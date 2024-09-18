@@ -1,25 +1,16 @@
 import React, { useMemo } from "react";
-import { Chat, Message } from "@/pages/ChatPage/types.ts";
-import AddSvg from "@/assets/pages/chat/add.svg?react";
-import { Button } from "@/components/ui/button.tsx";
-import { FiSidebar } from "react-icons/fi";
-import CategoryChats from "@/pages/ChatPage/CategoryChats.tsx";
+import { Chat } from "@/pages/ChatPage/types.ts";
+import SidebarContents from "@/pages/ChatPage/SidebarContents.tsx";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
+import { useMediaQuery } from "react-responsive";
+import { DialogDescription } from "@/components/ui/dialog.tsx";
+import { useAppContext } from "@/context/AppContext.tsx";
 
-const Sidebar = ({
-    isSidebarExpanded,
-    toggleSidebar,
-    createNewChat,
-    chats,
-    currentChatId,
-    setCurrentChatId,
-}: {
-    isSidebarExpanded: boolean;
-    toggleSidebar: () => void;
-    createNewChat: () => void;
-    chats: Chat[];
-    currentChatId: string | null;
-    setCurrentChatId: (id: string) => void;
-}) => {
+const Sidebar = () => {
+    const { isSidebarExpanded, setIsSidebarExpanded, chats } = useAppContext();
+
+    const isMdScreen = useMediaQuery({ minWidth: 768 });
+
     const categorizeChats = (chats: Chat[]) => {
         const now = new Date();
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -54,47 +45,23 @@ const Sidebar = ({
 
     return (
         <aside className="ease-in-out flex">
-            <div
-                className={`bg-neutral-900 ${isSidebarExpanded ? "w-72" : "w-0"} transition-all relative overflow-y-scroll`}
-            >
-                <div className="p-2.5 py-4 space-y-4">
-                    <div className="flex flex-col gap-y-4">
-                        <Button onClick={toggleSidebar} variant="ghost" size="icon">
-                            <FiSidebar className="h-6 w-6 text-white" />
-                        </Button>
-                        <Button onClick={createNewChat} className="flex gap-x-3 min-w-[260px]">
-                            <AddSvg className="h-6 w-6" />
-                            <p>New chat</p>
-                        </Button>
-                    </div>
-                    <div className="space-y-1 w-full h-full">
-                        <CategoryChats
-                            categoryTitle="Сегодня"
-                            chats={categorizedChats.today}
-                            currentChatId={currentChatId}
-                            setCurrentChatId={setCurrentChatId}
-                        />
-                        <CategoryChats
-                            categoryTitle="Вчера"
-                            chats={categorizedChats.yesterday}
-                            currentChatId={currentChatId}
-                            setCurrentChatId={setCurrentChatId}
-                        />
-                        <CategoryChats
-                            categoryTitle="Последние 7 дней"
-                            chats={categorizedChats.previousSevenDays}
-                            currentChatId={currentChatId}
-                            setCurrentChatId={setCurrentChatId}
-                        />
-                        <CategoryChats
-                            categoryTitle="Последние 30 дней"
-                            chats={categorizedChats.previousThirtyDays}
-                            currentChatId={currentChatId}
-                            setCurrentChatId={setCurrentChatId}
-                        />
-                    </div>
-                </div>
-            </div>
+            {isMdScreen ? (
+                <SidebarContents categorizedChats={categorizedChats} />
+            ) : (
+                <Drawer
+                    open={isSidebarExpanded}
+                    onOpenChange={() => setIsSidebarExpanded((prev) => !prev)}
+                    direction="left"
+                >
+                    <DrawerHeader className="absolute -top-999 -left-999">
+                        <DrawerTitle>Навигация по чатам</DrawerTitle>
+                        <DialogDescription>Чаты</DialogDescription>
+                    </DrawerHeader>
+                    <DrawerContent className="h-screen top-0 left-0 right-auto mt-0 w-min rounded-none text-white">
+                        <SidebarContents categorizedChats={categorizedChats} />
+                    </DrawerContent>
+                </Drawer>
+            )}
         </aside>
     );
 };

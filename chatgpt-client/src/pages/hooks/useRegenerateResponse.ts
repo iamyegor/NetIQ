@@ -1,18 +1,27 @@
-import { Message } from "@/pages/ChatPage/types.ts";
-import React, { useRef } from "react";
+import { Message, Model } from "@/pages/ChatPage/types.ts";
+import { Dispatch, SetStateAction, useRef } from "react";
 import { useParams } from "react-router-dom";
+import PostEventSource from "@/utils/PostEventSource.ts";
 
-export function useRegenerateResponse(
-    setMessages: React.Dispatch<React.SetStateAction<Message[]>>,
-    displayedMessages: Message[],
-    setIsStreaming: React.Dispatch<React.SetStateAction<boolean>>,
+interface RegenerateResponseParams {
+    setMessages: Dispatch<SetStateAction<Message[]>>;
+    displayedMessages: Message[];
+    setIsStreaming: Dispatch<SetStateAction<boolean>>;
     startEventSource: (
         url: string,
+        body: any,
         onMessage: (event: MessageEvent) => void,
-        onError?: (error: Event) => void,
-        onClose?: () => void,
-    ) => EventSource,
-) {
+    ) => PostEventSource;
+    selectedModel: Model | null;
+}
+
+export function useRegenerateResponse({
+    setMessages,
+    displayedMessages,
+    setIsStreaming,
+    startEventSource,
+    selectedModel,
+}: RegenerateResponseParams) {
     const { chatId } = useParams();
     const regeneratedMessageRef = useRef<Message | null>(null);
 
@@ -72,15 +81,23 @@ export function useRegenerateResponse(
         }
     };
 
-    return async (messageId: string) => {
+    const regenerateResponse = async (messageId: string) => {
         const currentMessageIndex = displayedMessages.findIndex((m) => m.id === messageId);
-        const messagesToSend = displayedMessages.slice(0, currentMessageIndex).map((m) => m.id);
+        const displayedMessageIds = displayedMessages
+            .slice(0, currentMessageIndex)
+            .map((m) => m.id);
 
-        const url = `https://localhost:7071/api/chats/${chatId}/messages/regenerate?messagesToSend=${encodeURIComponent(JSON.stringify(messagesToSend))}`;
+        const url = `https://localhost:7071/api/chats/${chatId}/messages/regenerate`;
 
         insertFakeMessage(displayedMessages[currentMessageIndex].linkId);
 
         setIsStreaming(true);
-        startEventSource(url, handleRegenerateMessage);
+        startEventSource(
+            url,
+            { displayedMessageIds, model: selectedModel?.id },
+            handleRegenerateMessage,
+        );
     };
+
+    return { regenerateResponse };
 }

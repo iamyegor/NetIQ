@@ -1,16 +1,26 @@
 export default class RouteError extends Error {
-    code: string;
+    title: string;
 
-    private constructor(code: string, message: string) {
+    private constructor(title: string, message: string) {
         super(message);
-        this.code = code;
+        this.title = title;
+    }
+
+    static notFound(): RouteError {
+        return new RouteError("404 - Страница не найдена", "Упс! Чат или страница, которую вы ищете, не существует.");
     }
 
     static unexpected(): RouteError {
-        return new RouteError("unexpected", "Unexpected error. Please try again later.");
+        return new RouteError(
+            "Какая-то Ошибка",
+            "Что-то пошло не так. Пожалуйста, попробуйте еще раз.",
+        );
     }
 
     static serverError(): RouteError {
-        return new RouteError("server.error", "Error on our side. Please try again later.");
+        return new RouteError(
+            "500! Ошибка сервера",
+            "Ошибка на нашей стороне. Пожалуйста, попробуйте позже.",
+        );
     }
 }

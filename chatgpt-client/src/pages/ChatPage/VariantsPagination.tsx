@@ -33,7 +33,7 @@ function VariantsPagination<T>({
                 disabled={currentItem === items[items.length - 1]}
                 onClick={() => onSelectItem(items[currentIndex + 1])}
             >
-                <NextArrowSvg className="w-3.5 h-3.5" />
+                <NextArrowSvg className="w-full h-full" />
             </Button>
         </div>
     );

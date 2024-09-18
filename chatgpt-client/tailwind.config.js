@@ -11,7 +11,7 @@ export default {
                 mono: ["Jetbrains Mono", defaultTheme.fontFamily.mono],
             },
             screens: {
-                xs: "400px",
+                xs: "420px",
                 sm: "600px",
                 md: "768px",
                 lg: "1024px",
@@ -22,7 +22,9 @@ export default {
                 md: "calc(var(--radius) - 2px)",
                 sm: "calc(var(--radius) - 4px)",
             },
-            colors: {},
+            colors: {
+                "faded": "#BCBCBC"
+            },
         },
         container: {
             center: "true",
