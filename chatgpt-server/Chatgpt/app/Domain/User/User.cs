@@ -9,6 +9,7 @@ public class User : AggregateRoot<Guid>
     public IReadOnlyList<Chat.Chat> Chats => _chats.AsReadOnly();
     private readonly List<Chat.Chat> _chats = [];
     public SubscriptionStatus SubscriptionStatus { get; } = SubscriptionStatus.Free;
+    public int SentMessages { get; set; }
 
     public User()
         : base(Guid.NewGuid()) { }
@@ -38,4 +39,8 @@ public class User : AggregateRoot<Guid>
         return model != null && model.SubscriptionsWithAccess.Contains(SubscriptionStatus);
     }
 
+    public bool ReachedMaxMessages()
+    {
+        return SentMessages >= SubscriptionStatus.MaxMessages;
+    }
 }

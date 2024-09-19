@@ -24,6 +24,10 @@ const errorContent = {
         title: "Достигнут лимит сообщений",
         description: "Пожалуйста, создайте новый чат, чтобы продолжить общение.",
     },
+    subscription_max_messages_error: {
+        title: "Достигнут лимит сообщений в подписке",
+        description: "Пожалуйста, обновите подписку, чтобы продолжить общение.",
+    },
 };
 
 const ErrorMessage: React.FC<ErrorMessageProps> = ({ error }) => {

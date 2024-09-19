@@ -87,6 +87,10 @@ namespace Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<int>("SentMessages")
+                        .HasColumnType("integer")
+                        .HasColumnName("sent_messages");
+
                     b.ComplexProperty<Dictionary<string, object>>("Email", "Domain.User.User.Email#Email", b1 =>
                         {
                             b1.IsRequired();
@@ -100,6 +104,10 @@ namespace Infrastructure.Migrations
                     b.ComplexProperty<Dictionary<string, object>>("SubscriptionStatus", "Domain.User.User.SubscriptionStatus#SubscriptionStatus", b1 =>
                         {
                             b1.IsRequired();
+
+                            b1.Property<int>("MaxMessages")
+                                .HasColumnType("integer")
+                                .HasColumnName("subscription_max_messages");
 
                             b1.Property<string>("Value")
                                 .IsRequired()

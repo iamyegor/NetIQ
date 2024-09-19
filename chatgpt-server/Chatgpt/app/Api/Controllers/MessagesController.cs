@@ -61,6 +61,12 @@ public class MessagesController : StreamerController
             return;
         }
 
+        if (user.ReachedMaxMessages())
+        {
+            await SendSseErrorAsync("User reached max messages", CancellationToken.None);
+            return;
+        }
+
         List<ChatGptMessage> gptMessages = chat
             .Messages.Where(m => request.DisplayedMessageIds.Contains(m.Id))
             .OrderBy(m => m.CreatedAt)
@@ -78,6 +84,8 @@ public class MessagesController : StreamerController
         gptMessages.Add(new ChatGptMessage(userMessage.Sender.Value, userMessage.Content));
 
         await StreamChatGptResponse(chat.Messages.Last(), gptMessages, request.Model, ct);
+
+        user.SentMessages++;
 
         await Context.SaveChangesAsync(CancellationToken.None);
         await SendSseEventAsync("Stream ended", CancellationToken.None, "close");
@@ -125,6 +133,12 @@ public class MessagesController : StreamerController
             await SendSseErrorAsync("Chat reached max messages", CancellationToken.None);
             return;
         }
+        
+        if (user.ReachedMaxMessages())
+        {
+            await SendSseErrorAsync("User reached max messages", CancellationToken.None);
+            return;
+        }
 
         List<ChatGptMessage> gptMessages = chat
             .Messages.Where(m => request.DisplayedMessageIds.Contains(m.Id))
@@ -137,7 +151,7 @@ public class MessagesController : StreamerController
         await SendAssistantMessageStart(regeneratedResponse, ct);
 
         await StreamChatGptResponse(regeneratedResponse, gptMessages, request.Model, ct);
-
+        
         await Context.SaveChangesAsync(CancellationToken.None);
         await SendSseEventAsync("Stream ended", CancellationToken.None, "close");
     }
@@ -232,6 +246,12 @@ public class MessagesController : StreamerController
             return;
         }
 
+        if (user.ReachedMaxMessages())
+        {
+            await SendSseErrorAsync("User reached max messages", CancellationToken.None);
+            return;
+        }
+
         Message userMessage = await AddUserMessage(
             chat,
             request.MessageContent,
@@ -249,6 +269,8 @@ public class MessagesController : StreamerController
             .ToList();
 
         await StreamChatGptResponse(assistantMessage, gptMessages, request.Model, ct);
+
+        user.SentMessages++;
 
         await Context.SaveChangesAsync(CancellationToken.None);
         await SendSseEventAsync("Stream ended", CancellationToken.None, "close");

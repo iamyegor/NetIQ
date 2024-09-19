@@ -24,7 +24,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             sBuilder =>
             {
                 sBuilder.Property(s => s.Value).HasColumnName("subscription_status");
+                sBuilder.Property(s => s.MaxMessages).HasColumnName("subscription_max_messages");
             }
         );
+        builder.Property(user => user.SentMessages).HasColumnName("sent_messages");
     }
 }

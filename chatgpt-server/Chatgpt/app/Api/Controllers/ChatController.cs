@@ -94,10 +94,16 @@ public class ChatController : StreamerController
             await SendSseErrorAsync("User not found", CancellationToken.None);
             return;
         }
-        
+
         if (!user.CanAccess(request.Model))
         {
             await SendSseErrorAsync("User can't access the model", CancellationToken.None);
+            return;
+        }
+        
+        if (user.ReachedMaxMessages())
+        {
+            await SendSseErrorAsync("User reached max messages", CancellationToken.None);
             return;
         }
 
@@ -111,6 +117,8 @@ public class ChatController : StreamerController
 
         await StreamChatGptResponse(assistantMessage, [userPrompt], request.Model, ct);
 
+        user.SentMessages++;
+        
         await Context.SaveChangesAsync(CancellationToken.None);
         await SendSseEventAsync("Stream ended", CancellationToken.None, "close");
     }

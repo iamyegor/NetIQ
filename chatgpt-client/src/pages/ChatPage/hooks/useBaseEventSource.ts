@@ -24,6 +24,8 @@ export function useBaseEventSource(
                 eventSource.close();
                 if (error.message === "Chat reached max messages") {
                     setError("max_messages_error");
+                } else if (error.message === "User reached max messages") {
+                    setError("subscription_max_messages_error");
                 } else {
                     setError("generic_error");
                 }
