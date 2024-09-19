@@ -97,6 +97,16 @@ namespace Infrastructure.Migrations
                                 .HasColumnName("email");
                         });
 
+                    b.ComplexProperty<Dictionary<string, object>>("SubscriptionStatus", "Domain.User.User.SubscriptionStatus#SubscriptionStatus", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("subscription_status");
+                        });
+
                     b.HasKey("Id");
 
                     b.ToTable("users", (string)null);

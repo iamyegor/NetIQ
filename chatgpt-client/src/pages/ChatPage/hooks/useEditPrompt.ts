@@ -1,6 +1,6 @@
 import { AppError, Message, Model } from "@/pages/ChatPage/types.ts";
 import { Dispatch, SetStateAction, useRef } from "react";
-import useInsertTempMessages from "@/pages/hooks/useInsertTempMessages.ts";
+import useInsertTempMessages from "@/pages/ChatPage/hooks/useInsertTempMessages.ts";
 import { useParams } from "react-router-dom";
 import PostEventSource from "@/utils/PostEventSource.ts";
 
@@ -87,7 +87,7 @@ export default function useEditPrompt({
         const displayedMessageIds = displayedMessages
             .slice(0, currentMessageIndex)
             .map((m) => m.id);
-        const urlWithParams = `https://localhost:7071/api/chats/${chatId}/messages/edit`;
+        const urlWithParams = `chats/${chatId}/messages/edit`;
 
         startEventSource(
             urlWithParams,

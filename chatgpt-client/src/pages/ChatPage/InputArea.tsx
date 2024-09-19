@@ -24,9 +24,7 @@ const InputArea = () => {
     async function sendMessage() {
         if (!inputMessage.trim()) return;
 
-        const url = chatId
-            ? `https://localhost:7071/api/chats/${chatId}/messages`
-            : `https://localhost:7071/api/chats/stream`;
+        const url = chatId ? `chats/${chatId}/messages` : `chats/stream`;
 
         await startChatEventSource(url, chatId ?? null, inputMessage.trim());
         setInputMessage("");
@@ -65,7 +63,7 @@ const InputArea = () => {
     };
 
     return (
-        <div ref={containerRef} className="pt-2 pb-4 flex justify-center space-y-8 px-2 xs:px-5">
+        <div ref={containerRef} className="pt-2 pb-4 flex justify-center space-y-8 px-2 xs:px-5 bottom-0 left-0 right-0 bg-neutral-800 fixed md:static">
             <div className="w-full max-w-[800px] flex space-x-2 items-end">
                 {appError ? (
                     <div className="w-full flex justify-center">

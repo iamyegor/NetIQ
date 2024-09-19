@@ -18,8 +18,12 @@ const errorContent = {
     },
     message_too_long: {
         title: "Вы отправили слишоком длинное сообщение",
-        description: "Пожалуйста, перезагрузите чат и отправьте сообщение покороче."
-    }
+        description: "Пожалуйста, перезагрузите чат и отправьте сообщение покороче.",
+    },
+    max_messages_error: {
+        title: "Достигнут лимит сообщений",
+        description: "Пожалуйста, создайте новый чат, чтобы продолжить общение.",
+    },
 };
 
 const ErrorMessage: React.FC<ErrorMessageProps> = ({ error }) => {
@@ -35,15 +39,17 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({ error }) => {
     const { title, description } = selectedErrorContent;
 
     return (
-        <Alert className="px-5">
-            <div className="flex items-center space-x-6 text-neutral-200">
-                <ExclamationSvg className="w-6 h-6 fill-neutral-200" />
-                <div className="space-y-2">
-                    <AlertTitle className="text-lg font-semibold">{title}</AlertTitle>
-                    <AlertDescription className="text-sm">{description}</AlertDescription>
+        <div className="!pb-5">
+            <Alert className="px-5">
+                <div className="flex items-center space-x-6 text-neutral-200">
+                    <ExclamationSvg className="w-6 h-6 fill-neutral-200" />
+                    <div className="space-y-2">
+                        <AlertTitle className="text-lg font-semibold">{title}</AlertTitle>
+                        <AlertDescription className="text-sm">{description}</AlertDescription>
+                    </div>
                 </div>
-            </div>
-        </Alert>
+            </Alert>
+        </div>
     );
 };
 

@@ -1,7 +1,7 @@
 import { AppError, Chat, Message, Model } from "@/pages/ChatPage/types.ts";
 import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import useInsertTempMessages from "@/pages/hooks/useInsertTempMessages.ts";
+import useInsertTempMessages from "@/pages/ChatPage/hooks/useInsertTempMessages.ts";
 import PostEventSource from "@/utils/PostEventSource.ts";
 
 interface ChatEventSourceParams {

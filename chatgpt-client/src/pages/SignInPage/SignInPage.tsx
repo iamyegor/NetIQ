@@ -5,6 +5,8 @@ import { Label } from "@/components/ui/label";
 import { Form, Link, useActionData, useNavigation } from "react-router-dom";
 import netIqLogo from "@/assets/common/netiq.png";
 import PasswordInput from "@/components/ui/PasswordInput";
+import "ldrs/ring2";
+
 
 export default function SignInPage() {
     const actionData = useActionData() as { error: string } | undefined;

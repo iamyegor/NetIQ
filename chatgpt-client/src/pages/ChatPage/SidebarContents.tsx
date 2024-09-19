@@ -4,13 +4,12 @@ import { FiSidebar } from "react-icons/fi";
 import CategoryChats from "@/pages/ChatPage/CategoryChats.tsx";
 import BaseSkeleton from "@/components/ui/BaseSkeleton.tsx";
 import { Chat } from "@/pages/ChatPage/types.ts";
-import { CircleUser, LogOut } from "lucide-react";
+import { CircleUser, LogOut, Sparkles } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import api from "@/lib/api.ts";
 import authApi from "@/lib/authApi.ts";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAppContext } from "@/context/AppContext.tsx";
-import { ScrollArea } from "@/components/ui/scroll-area.tsx";
 
 async function fetchEmail() {
     const response = await api.get<{ email: string }>("user/email");
@@ -63,8 +62,8 @@ export default function SidebarContents({
                 isSidebarExpanded ? "w-72" : "w-0"
             } h-screen transition-all overflow-hidden flex flex-col relative`}
         >
-            <div className="overflow-y-auto overflow-x-hidden pb-[50px]">
-                <div className="p-2.5 py-4 space-y-4">
+            <div className="overflow-y-scroll overflow-x-hidden mb-[125px]">
+                <div className="p-2.5 py-4 pb-0 space-y-4">
                     <div className="flex flex-col gap-y-4 text-faded">
                         <Button
                             onClick={() => setIsSidebarExpanded(false)}
@@ -105,9 +104,19 @@ export default function SidebarContents({
                     </div>
                 </div>
             </div>
-            <div className="absolute bottom-0 left-0 right-0 bg-neutral-900 p-2">
-                <div className="bg-neutral-800 p-2 rounded-xl flex items-center justify-between text-white">
-                    <div className="flex items-center space-x-2">
+            <div className="absolute bottom-0 left-0 right-0 bg-neutral-900 p-2 pt-1.5 space-y-2">
+                <Link
+                    to="/pricing"
+                    className="hover:bg-neutral-800 rounded-xl flex items-center space-x-3 text-white px-2 text-sm cursor-pointer h-[50px] transition duration-300"
+                >
+                    <Sparkles className="w-6 h-6 flex-shrink-0" />
+                    <div className="text-nowrap">
+                        <p>Улучшите свой план</p>
+                        <p className="text-xs text-neutral-400">Получите больше возможностей</p>
+                    </div>
+                </Link>
+                <div className="bg-neutral-800 rounded-xl px-2 flex items-center justify-between text-white h-[50px]">
+                    <div className="flex items-center space-x-3">
                         <CircleUser className="w-6 h-6" />
                         <p className="text-sm truncate max-w-[21ch]">{email ?? "Профиль"}</p>
                     </div>

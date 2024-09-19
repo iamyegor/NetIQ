@@ -87,7 +87,7 @@ export function useRegenerateResponse({
             .slice(0, currentMessageIndex)
             .map((m) => m.id);
 
-        const url = `https://localhost:7071/api/chats/${chatId}/messages/regenerate`;
+        const url = `chats/${chatId}/messages/regenerate`;
 
         insertFakeMessage(displayedMessages[currentMessageIndex].linkId);
 

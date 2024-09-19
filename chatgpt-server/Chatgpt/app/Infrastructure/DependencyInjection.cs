@@ -5,7 +5,6 @@ using Infrastructure.Utils;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SharedKernel.Auth;
-using SharedKernel.Communication.Extensions;
 
 namespace Infrastructure;
 
@@ -33,14 +32,19 @@ public static class DependencyInjection
 
     public static void AddChatgpt(this IServiceCollection services)
     {
-        services.AddSingleton(
-            _ = new GptHttpClient(
-                apiKey: Environment.GetEnvironmentVariable("CustomGptApiKey")!,
-                proxyAddress: Environment.GetEnvironmentVariable("PROXY_ADDRESS")!,
-                proxyUsername: Environment.GetEnvironmentVariable("PROXY_USERNAME")!,
-                proxyPassword: Environment.GetEnvironmentVariable("PROXY_PASSWORD")!
-            )
+        var apiKey = Environment.GetEnvironmentVariable("CustomGptApiKey")!;
+        var proxyAddress = Environment.GetEnvironmentVariable("PROXY_ADDRESS")!;
+        var proxyUsername = Environment.GetEnvironmentVariable("PROXY_USERNAME")!;
+        var proxyPassword = Environment.GetEnvironmentVariable("PROXY_PASSWORD")!;
+
+        var gptHttpClient = new GptHttpClient(
+            apiKey: apiKey,
+            proxyAddress: proxyAddress,
+            proxyUsername: proxyUsername,
+            proxyPassword: proxyPassword
         );
+
+        services.AddSingleton(_ => gptHttpClient);
         services.AddScoped<ChatGpt>();
     }
 }

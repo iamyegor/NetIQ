@@ -4,6 +4,7 @@ using Api.Dtos;
 using Domain.Chat;
 using Domain.Chat.Entities;
 using Domain.Chat.Errors;
+using Domain.User;
 using Infrastructure.Auth;
 using Infrastructure.ChatGPT;
 using Infrastructure.Data;
@@ -28,11 +29,24 @@ public class MessagesController : StreamerController
 
         Guid userId = Guid.Parse(User.FindFirstValue(JwtClaims.UserId)!);
 
-        Chat? chat = await Context
+        User? user = await Context
             .Users.Where(u => u.Id == userId)
-            .SelectMany(u => u.Chats)
-            .SingleOrDefaultAsync(c => c.Id == chatId, ct);
+            .Include(u => u.Chats.Where(c => c.Id == chatId))
+            .SingleOrDefaultAsync(c => c.Id == userId, ct);
 
+        if (user == null)
+        {
+            await SendSseErrorAsync("User not found", CancellationToken.None);
+            return;
+        }
+
+        if (!user.CanAccess(request.Model))
+        {
+            await SendSseErrorAsync("User can't access the model", CancellationToken.None);
+            return;
+        }
+
+        Chat? chat = user.Chats.SingleOrDefault();
         if (chat == null)
         {
             await SendSseErrorAsync("Chat not found", CancellationToken.None);
@@ -40,6 +54,12 @@ public class MessagesController : StreamerController
         }
 
         await Context.Entry(chat).Collection(c => c.Messages).LoadAsync(ct);
+
+        if (chat.ReachedMaxMessages())
+        {
+            await SendSseErrorAsync("Chat reached max messages", CancellationToken.None);
+            return;
+        }
 
         List<ChatGptMessage> gptMessages = chat
             .Messages.Where(m => request.DisplayedMessageIds.Contains(m.Id))
@@ -74,11 +94,24 @@ public class MessagesController : StreamerController
 
         Guid userId = Guid.Parse(User.FindFirstValue(JwtClaims.UserId)!);
 
-        Chat? chat = await Context
+        User? user = await Context
             .Users.Where(u => u.Id == userId)
-            .SelectMany(u => u.Chats)
-            .SingleOrDefaultAsync(c => c.Id == chatId, ct);
+            .Include(u => u.Chats.Where(c => c.Id == chatId))
+            .SingleOrDefaultAsync(c => c.Id == userId, ct);
 
+        if (user == null)
+        {
+            await SendSseErrorAsync("User not found", CancellationToken.None);
+            return;
+        }
+
+        if (!user.CanAccess(request.Model))
+        {
+            await SendSseErrorAsync("User can't access the model", CancellationToken.None);
+            return;
+        }
+
+        Chat? chat = user.Chats.SingleOrDefault();
         if (chat == null)
         {
             await SendSseErrorAsync("Chat not found", CancellationToken.None);
@@ -86,6 +119,12 @@ public class MessagesController : StreamerController
         }
 
         await Context.Entry(chat).Collection(c => c.Messages).LoadAsync(ct);
+
+        if (chat.ReachedMaxMessages())
+        {
+            await SendSseErrorAsync("Chat reached max messages", CancellationToken.None);
+            return;
+        }
 
         List<ChatGptMessage> gptMessages = chat
             .Messages.Where(m => request.DisplayedMessageIds.Contains(m.Id))
@@ -161,11 +200,24 @@ public class MessagesController : StreamerController
 
         Guid userId = Guid.Parse(User.FindFirstValue(JwtClaims.UserId)!);
 
-        Chat? chat = await Context
+        User? user = await Context
             .Users.Where(u => u.Id == userId)
-            .SelectMany(u => u.Chats)
-            .SingleOrDefaultAsync(c => c.Id == chatId, ct);
+            .Include(u => u.Chats.Where(c => c.Id == chatId))
+            .SingleOrDefaultAsync(c => c.Id == userId, ct);
 
+        if (user == null)
+        {
+            await SendSseErrorAsync("User not found", CancellationToken.None);
+            return;
+        }
+
+        if (!user.CanAccess(request.Model))
+        {
+            await SendSseErrorAsync("User can't access the model", CancellationToken.None);
+            return;
+        }
+
+        Chat? chat = user.Chats.SingleOrDefault();
         if (chat == null)
         {
             await SendSseErrorAsync("Chat not found", CancellationToken.None);
@@ -173,6 +225,12 @@ public class MessagesController : StreamerController
         }
 
         await Context.Entry(chat).Collection(c => c.Messages).LoadAsync(ct);
+
+        if (chat.ReachedMaxMessages())
+        {
+            await SendSseErrorAsync("Chat reached max messages", CancellationToken.None);
+            return;
+        }
 
         Message userMessage = await AddUserMessage(
             chat,

@@ -11,7 +11,7 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog.tsx";
 import { Link, useNavigate } from "react-router-dom";
-import { useDeleteChat } from "@/pages/hooks/useDeleteChat.ts";
+import { useDeleteChat } from "@/pages/ChatPage/hooks/useDeleteChat.ts";
 import { useMediaQuery } from "react-responsive";
 import { useAppContext } from "@/context/AppContext.tsx";
 
@@ -39,6 +39,11 @@ const CategoryChats: React.FC<CategoryChatsProps> = ({ categoryTitle, chats }) =
 
     async function handleDeleteChat() {
         if (!chatToDelete) return;
+
+        if (chatToDelete === chatId) {
+            setMessages([]);
+            stopEventSource();
+        }
 
         deleteChat.mutate(chatToDelete);
         setShowDialog(false);

@@ -1,6 +1,6 @@
 import { InfiniteData, useMutation, useQueryClient } from "@tanstack/react-query";
-import api from "@/lib/api";
-import { ChatsResponse } from "@/pages/ChatPage/types";
+import api from "@/lib/api.ts";
+import { ChatsResponse } from "@/pages/ChatPage/types.ts";
 
 export function useDeleteChat() {
     const queryClient = useQueryClient();

@@ -94,6 +94,12 @@ public class ChatController : StreamerController
             await SendSseErrorAsync("User not found", CancellationToken.None);
             return;
         }
+        
+        if (!user.CanAccess(request.Model))
+        {
+            await SendSseErrorAsync("User can't access the model", CancellationToken.None);
+            return;
+        }
 
         Chat chat = new Chat(await GetChatTitle(request.MessageContent));
         user.AddChat(chat);

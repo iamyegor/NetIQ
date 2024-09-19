@@ -16,14 +16,14 @@ export default async function resetPasswordPageAction({
         confirmPassword,
     });
     if (validationResult.isFailure) {
-        return { appError: validationResult.error! };
+        return { error: validationResult.error! };
     }
 
     const url = new URL(request.url);
     const queryParams = new URLSearchParams(url.search);
     const token: string | null = queryParams.get("token");
 
-    if (!token) return { appError: "Некорректная ссылка" };
+    if (!token) return { error: "Некорректная ссылка" };
 
     try {
         await authApi.post("auth/reset-password", { newPassword: password, token });
@@ -32,14 +32,14 @@ export default async function resetPasswordPageAction({
         if (axios.isAxiosError(error)) {
             const { errorCode } = error.response!.data;
             if (errorCode == "password.reset.is.same.as.current") {
-                return { appError: "Новый пароль совпадает со старым" };
+                return { error: "Новый пароль совпадает со старым" };
             }
 
             if (errorCode == "password.reset.token.is.invalid") {
-                return { appError: "Некорректная ссылка" };
+                return { error: "Некорректная ссылка" };
             }
         }
 
-        return { appError: "Что-то пошло не так. Попробуйте позже" };
+        return { error: "Что-то пошло не так. Попробуйте позже" };
     }
 }

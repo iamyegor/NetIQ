@@ -8,6 +8,7 @@ public class User : AggregateRoot<Guid>
     public Email Email { get; private set; }
     public IReadOnlyList<Chat.Chat> Chats => _chats.AsReadOnly();
     private readonly List<Chat.Chat> _chats = [];
+    public SubscriptionStatus SubscriptionStatus { get; } = SubscriptionStatus.Free;
 
     public User()
         : base(Guid.NewGuid()) { }
@@ -30,4 +31,11 @@ public class User : AggregateRoot<Guid>
         Chat.Chat chat = _chats.Single(c => c.Id == chatId);
         _chats.Remove(chat);
     }
+
+    public bool CanAccess(string modelName)
+    {
+        Model? model = Model.GetByName(modelName);
+        return model != null && model.SubscriptionsWithAccess.Contains(SubscriptionStatus);
+    }
+
 }

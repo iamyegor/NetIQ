@@ -1,6 +1,6 @@
 #!/bin/bash
 DOCKER_USERNAME="jasonstathamdev"
-DOCKER_REPO="attire"
+DOCKER_REPO="netiq"
 APP_IMAGE="auth-app"
 MIGRATOR_IMAGE="auth-migrator"
 

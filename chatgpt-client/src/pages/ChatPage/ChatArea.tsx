@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import React, { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import ChatMessage from "@/pages/ChatPage/ChatMessage.tsx";
-import { useSelectVariant } from "@/pages/hooks/useSelectVariant.ts";
+import { useSelectVariant } from "@/pages/ChatPage/hooks/useSelectVariant.ts";
 import ErrorMessage from "@/pages/ChatPage/ErrorMessage.tsx";
 import "ldrs/ring2";
 import netIqLogo from "@/assets/common/netiq.png";
@@ -106,7 +106,7 @@ const ChatArea = () => {
 
     const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
         const target = event.currentTarget;
-        const atBottom = target.scrollHeight - target.scrollTop <= target.clientHeight + 30;
+        const atBottom = target.scrollHeight - target.scrollTop <= target.clientHeight + 5;
 
         const currentScrollTop = target.scrollTop;
 
@@ -160,11 +160,11 @@ const ChatArea = () => {
         <main
             ref={mainRef}
             id="chat"
-            className="flex-1 flex justify-center overflow-y-auto !relative px-5"
+            className="flex-1 flex justify-center overflow-y-auto !relative px-5 mt-[70px] mb-[90px] md:mb-0 md:mt-0"
             onScroll={handleScroll}
         >
             <div
-                className={`w-full max-w-[800px] ${appError && "h-full flex flex-col justify-between items-center"}`}
+                className={`w-full max-w-[800px] ${appError && "h-full flex flex-col justify-between items-stretch"}`}
             >
                 <div className="space-y-5">
                     {displayedMessages.map((message) => (

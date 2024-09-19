@@ -1,11 +1,13 @@
-import { Message } from "@/pages/ChatPage/types";
+import { Message } from "@/pages/ChatPage/types.ts";
 import React from "react";
 import api from "@/lib/api.ts";
-import { useParams } from "react-router-dom";
+import { useAppContext } from "@/context/AppContext.tsx";
 
 export function useSelectVariant(setMessages: React.Dispatch<React.SetStateAction<Message[]>>) {
-    const { chatId } = useParams();
+    const { chatId, stopEventSource } = useAppContext();
+
     return async (variant: Message) => {
+        stopEventSource();
         setMessages((prevMessages) => {
             const updatedMessages = [...prevMessages];
             updatedMessages.forEach((m) => {
@@ -18,7 +20,7 @@ export function useSelectVariant(setMessages: React.Dispatch<React.SetStateActio
             });
             return updatedMessages;
         });
-        
+
         await api.post(`/chats/${chatId}/messages/${variant.id}/select`, {
             linkId: variant.linkId,
         });

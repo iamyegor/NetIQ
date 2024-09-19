@@ -15,7 +15,7 @@ function VariantsPagination<T>({
     const currentIndex = items.indexOf(currentItem);
 
     return (
-        <div className="flex items-center space-x-2 text-neutral-200">
+        <div className="flex items-center space-x-0.5 text-neutral-200">
             <Button
                 variant="arrow"
                 disabled={currentItem === items[0]}

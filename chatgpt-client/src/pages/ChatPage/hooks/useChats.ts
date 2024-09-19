@@ -1,18 +1,21 @@
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
-import api from "@/lib/api";
+import api from "@/lib/api.ts";
 import { useInView } from "react-intersection-observer";
 import { useCallback, useEffect, useState } from "react";
-import { Chat, ChatsResponse } from "@/pages/ChatPage/types";
+import { Chat, ChatsResponse } from "@/pages/ChatPage/types.ts";
 
 export default function useChats() {
     const queryClient = useQueryClient();
-    const { data, isLoading, fetchNextPage, hasNextPage } = useInfiniteQuery({
+    const [isEnabled, setIsEnabled] = useState(false);
+
+    const { data, isLoading, fetchNextPage, hasNextPage, refetch } = useInfiniteQuery({
         queryKey: ["chats"],
         queryFn: fetchChats,
         initialPageParam: 1,
         getNextPageParam: (lastPage) => lastPage.nextPageNumber,
         gcTime: 0,
         retry: false,
+        enabled: isEnabled,
     });
 
     async function fetchChats({ pageParam }: { pageParam: number }) {
@@ -25,10 +28,10 @@ export default function useChats() {
     const chats = data?.pages.flatMap((page) => page.chats) || [];
 
     useEffect(() => {
-        if (inView && hasNextPage) {
+        if (inView && hasNextPage && isEnabled) {
             fetchNextPage();
         }
-    }, [chats.length, inView]);
+    }, [chats.length, inView, isEnabled, hasNextPage, fetchNextPage]);
 
     const mutateChats = useCallback(
         (mutator: (pages: ChatsResponse[]) => ChatsResponse[]) => {
@@ -56,11 +59,17 @@ export default function useChats() {
         [mutateChats],
     );
 
+    const loadChats = useCallback(() => {
+        setIsEnabled(true);
+        refetch();
+    }, [refetch]);
+
     return {
         chats,
         chatsLoading: isLoading,
         addChat,
         chatsEndRef: ref,
         allChatsLoaded: !hasNextPage,
+        loadChats,
     };
 }

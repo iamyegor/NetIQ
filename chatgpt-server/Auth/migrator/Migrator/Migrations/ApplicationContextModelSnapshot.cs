@@ -85,24 +85,6 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("UserId");
                         });
 
-                    b.OwnsOne("Domain.User.ValueObjects.Name", "Name", b1 =>
-                        {
-                            b1.Property<Guid>("UserId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("name");
-
-                            b1.HasKey("UserId");
-
-                            b1.ToTable("users");
-
-                            b1.WithOwner()
-                                .HasForeignKey("UserId");
-                        });
-
                     b.OwnsOne("Domain.User.ValueObjects.Password", "Password", b1 =>
                         {
                             b1.Property<Guid>("UserId")
@@ -195,8 +177,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("Email");
 
                     b.Navigation("EmailVerificationCode");
-
-                    b.Navigation("Name");
 
                     b.Navigation("Password");
 

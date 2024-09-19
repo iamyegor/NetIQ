@@ -7,17 +7,17 @@ import React, {
     useState,
 } from "react";
 import { AppError, Chat, Message, Model } from "@/pages/ChatPage/types.ts";
-import { useBaseEventSource } from "@/pages/hooks/useBaseEventSource.ts";
-import useDisplayedMessages from "@/pages/hooks/useDisplayedMessages.ts";
+import { useBaseEventSource } from "@/pages/ChatPage/hooks/useBaseEventSource.ts";
+import useDisplayedMessages from "@/pages/ChatPage/hooks/useDisplayedMessages.ts";
 import { useParams } from "react-router-dom";
 import useError from "@/context/hooks/useError.ts";
-import useScrollToBottom from "@/pages/hooks/useScrollToBottom.ts";
-import useChats from "@/pages/hooks/useChats.ts";
-import { useRegenerateResponse } from "@/pages/hooks/useRegenerateResponse.ts";
-import useEditPrompt from "@/pages/hooks/useEditPrompt.ts";
+import useScrollToBottom from "@/pages/ChatPage/hooks/useScrollToBottom.ts";
+import useChats from "@/pages/ChatPage/hooks/useChats.ts";
+import { useRegenerateResponse } from "@/pages/ChatPage/hooks/useRegenerateResponse.ts";
+import useEditPrompt from "@/pages/ChatPage/hooks/useEditPrompt.ts";
 import useCreateNewChat from "@/context/hooks/useCreateNewChat.tsx";
 import { useMediaQuery } from "react-responsive";
-import useChatEventSource from "@/pages/hooks/useChatEventSource.ts";
+import useChatEventSource from "@/pages/ChatPage/hooks/useChatEventSource.ts";
 
 interface AppContextValue {
     messages: Message[];
@@ -56,6 +56,7 @@ interface AppContextValue {
     editPrompt: (messageId: string, messageContent: string) => Promise<void>;
     createNewChat: () => void;
     isMdScreen: boolean;
+    loadChats: () => void;
 }
 
 const AppContext = createContext<AppContextValue | null>(null);
@@ -73,7 +74,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const [shouldAttachToBottom, setShouldAttachToBottom] = useState(false);
     const scrollToBottom = useScrollToBottom(setCanShowGoDownButton, setShouldAttachToBottom);
     const [hasChatScrollbar, setHasChatScrollbar] = useState(false);
-    const { chats, chatsLoading, addChat, chatsEndRef, allChatsLoaded } = useChats();
+    const { chats, chatsLoading, addChat, chatsEndRef, allChatsLoaded, loadChats } = useChats();
     const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
     const streamingData = {
         setMessages,
@@ -93,6 +94,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     return (
         <AppContext.Provider
             value={{
+                loadChats,
                 isMdScreen,
                 createNewChat,
                 editPrompt,

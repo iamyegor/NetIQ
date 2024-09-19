@@ -81,4 +81,9 @@ public class Chat : AggregateRoot<Guid>
 
         message.IsSelected = true;
     }
+
+    public bool ReachedMaxMessages()
+    {
+        return _messages.Count(m => m.Sender == Sender.User) >= 50;
+    }
 }

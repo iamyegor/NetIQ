@@ -9,8 +9,20 @@ import ModelSelector from "@/pages/ChatPage/ModelSelector.tsx";
 import { useAppContext } from "@/context/AppContext.tsx";
 
 const models: Model[] = [
-    { id: "gpt-4o", name: "GPT-4o", description: "Самая умная модель", icon: BulbSvg },
-    { id: "gpt-4o-mini", name: "GPT-4o mini", description: "Очень быстрая модель", icon: BoltSvg },
+    {
+        id: "gpt-4o",
+        name: "GPT-4o",
+        description: "Самая умная модель",
+        icon: BulbSvg,
+        subscriptionAccess: ["plus"],
+    },
+    {
+        id: "gpt-4o-mini",
+        name: "GPT-4o mini",
+        description: "Очень быстрая модель",
+        icon: BoltSvg,
+        subscriptionAccess: ["free", "plus"],
+    },
 ];
 
 const Header = () => {
@@ -31,7 +43,7 @@ const Header = () => {
     };
 
     return (
-        <header className="bg-neutral-800 w-full h-min p-4 fill-faded text-faded">
+        <header className="bg-neutral-800 w-full h-min pb-2 md:pb-4 p-4 fill-faded text-faded fixed md:static z-50">
             <div className="hidden md:flex space-x-2">
                 {!isSidebarExpanded && (
                     <div className="space-x-2 flex">
@@ -58,7 +70,7 @@ const Header = () => {
                 <ModelSelector
                     selectedModel={selectedModel}
                     models={models}
-                    handleModelSelect={handleModelSelect}
+                    setSelectedModel={handleModelSelect}
                 />
             </div>
             <div className="flex md:hidden justify-between">
@@ -73,7 +85,7 @@ const Header = () => {
                 <ModelSelector
                     selectedModel={selectedModel}
                     models={models}
-                    handleModelSelect={handleModelSelect}
+                    setSelectedModel={handleModelSelect}
                 />
                 <Button
                     onClick={createNewChat}

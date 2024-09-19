@@ -11,20 +11,27 @@
         body {
             margin: 0;
             padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #0a0a0a;
         }
 
         .email-wrapper {
             text-align: center;
-            flex-shrink: 0;
             font-family: 'Inter', sans-serif;
             font-size: 16px;
             background-color: #0a0a0a;
             border-radius: 15px;
             padding: 40px;
+            box-sizing: border-box;
+            width: 100%;
+            max-width: 680px; 
         }
 
         .email-container {
-            flex-shrink: 0;
+            width: 100%;
             max-width: 600px;
             margin: 0 auto;
             background: #262626;
@@ -33,12 +40,14 @@
             border: #525252 1px solid;
             box-shadow: 0 2px 20px rgba(255, 255, 255, 0.1);
             color: white;
+            box-sizing: border-box;
         }
 
         h1 {
             color: white;
             font-size: 30px;
             font-weight: 800;
+            margin-top: 0;
         }
 
         p {

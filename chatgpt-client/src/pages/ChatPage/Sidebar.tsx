@@ -53,7 +53,7 @@ const Sidebar = () => {
                     onOpenChange={() => setIsSidebarExpanded((prev) => !prev)}
                     direction="left"
                 >
-                    <DrawerHeader className="absolute -top-999 -left-999">
+                    <DrawerHeader className="absolute -top-[9999px] -left-[9999px]">
                         <DrawerTitle>Навигация по чатам</DrawerTitle>
                         <DialogDescription>Чаты</DialogDescription>
                     </DrawerHeader>

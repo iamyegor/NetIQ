@@ -2,13 +2,15 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-COPY ["Api/Api.csproj", "Api/"]
-COPY ["Application/Application.csproj", "Application/"]
-COPY ["Domain/Domain.csproj", "Domain/"]
-COPY ["Infrastructure/Infrastructure.csproj", "Infrastructure/"]
+COPY ["Chatgpt/app/Api/Api.csproj", "Api/"]
+COPY ["Chatgpt/app/Application/Application.csproj", "Application/"]
+COPY ["Chatgpt/app/Domain/Domain.csproj", "Domain/"]
+COPY ["Chatgpt/app/Infrastructure/Infrastructure.csproj", "Infrastructure/"]
+COPY ["SharedKernel/SharedKernel.csproj", "SharedKernel/"]
 RUN dotnet restore Api/Api.csproj -v d
 
-COPY . .
+COPY Chatgpt/app/ .
+COPY SharedKernel/ SharedKernel/
 
 WORKDIR /src/Api
 RUN dotnet publish -c Release -o /app/publish

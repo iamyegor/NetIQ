@@ -19,5 +19,12 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
                 eBuilder.Property(x => x.Value).HasColumnName("email");
             }
         );
+        builder.ComplexProperty(
+            x => x.SubscriptionStatus,
+            sBuilder =>
+            {
+                sBuilder.Property(s => s.Value).HasColumnName("subscription_status");
+            }
+        );
     }
 }

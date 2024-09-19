@@ -16,6 +16,7 @@ import requestPasswordResetPageAction from "@/pages/RequestPasswordReset/actions
 import ResetPasswordPage from "@/pages/ResetPassword/ResetPasswordPage.tsx";
 import resetPasswordPageAction from "@/pages/ResetPassword/actions/resetPasswordPageAction.ts";
 import { AppProvider } from "@/context/AppContext.tsx";
+import PricingPage from "@/pages/PricingPage/PricingPage.tsx";
 
 export const routes = [
     {
@@ -25,7 +26,7 @@ export const routes = [
                 <RootLayout />
             </AppProvider>
         ),
-        // errorElement: <ErrorPage />,
+        errorElement: <ErrorPage />,
         children: [
             {
                 index: true,
@@ -71,6 +72,10 @@ export const routes = [
                 element: <ResetPasswordPage />,
                 action: resetPasswordPageAction,
                 loader: authenticateAndRedirectToChatOrStayLoader,
+            },
+            {
+                path: "pricing",
+                element: <PricingPage />,
             },
             {
                 path: "*",

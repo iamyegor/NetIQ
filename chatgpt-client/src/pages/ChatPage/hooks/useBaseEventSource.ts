@@ -20,9 +20,13 @@ export function useBaseEventSource(
 
             eventSource.onmessage = onMessage;
 
-            eventSource.onerror = () => {
+            eventSource.onerror = (error) => {
                 eventSource.close();
-                setError("generic_error");
+                if (error.message === "Chat reached max messages") {
+                    setError("max_messages_error");
+                } else {
+                    setError("generic_error");
+                }
                 setIsStreaming(false);
             };
             eventSource.onclose = () => {
@@ -40,6 +44,6 @@ export function useBaseEventSource(
             eventSourceRef.current = null;
         }
     }, []);
-    
+
     return { startEventSource, stopEventSource };
 }
