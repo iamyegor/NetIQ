@@ -144,15 +144,23 @@ body,
     background: #5a5a5a;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px rgb(54, 54, 54) inset !important;
+    -webkit-text-fill-color: white !important;
+}
+
 * {
     scrollbar-width: auto;
 }
 
 .scrollbar-hide {
-    scrollbar-width: none;  /* Firefox */
-    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-    display: none;  /* WebKit */
+    display: none; /* WebKit */
 }

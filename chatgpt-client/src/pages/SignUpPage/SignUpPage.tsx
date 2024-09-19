@@ -69,9 +69,9 @@ export default function SignUpPage() {
                     <Button
                         type="submit"
                         className="w-full !mt-12 !p-6"
-                        disabled={state === "loading" || state === "submitting"}
+                        disabled={state === "submitting"}
                     >
-                        {state === "loading" || state === "submitting" ? (
+                        {state === "submitting" ? (
                             <l-ring-2 color="#424242" size={25} stroke={4} />
                         ) : (
                             <span>Зарегистрироваться</span>

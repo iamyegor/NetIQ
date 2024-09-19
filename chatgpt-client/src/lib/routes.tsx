@@ -17,6 +17,7 @@ import ResetPasswordPage from "@/pages/ResetPassword/ResetPasswordPage.tsx";
 import resetPasswordPageAction from "@/pages/ResetPassword/actions/resetPasswordPageAction.ts";
 import { AppProvider } from "@/context/AppContext.tsx";
 import PricingPage from "@/pages/PricingPage/PricingPage.tsx";
+import AdminPage from "@/pages/AdminPage/AdminPage.tsx";
 
 export const routes = [
     {
@@ -76,6 +77,10 @@ export const routes = [
             {
                 path: "pricing",
                 element: <PricingPage />,
+            },
+            {
+                path: "admin",
+                element: <AdminPage />,
             },
             {
                 path: "*",

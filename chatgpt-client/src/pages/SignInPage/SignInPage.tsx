@@ -7,7 +7,6 @@ import netIqLogo from "@/assets/common/netiq.png";
 import PasswordInput from "@/components/ui/PasswordInput";
 import "ldrs/ring2";
 
-
 export default function SignInPage() {
     const actionData = useActionData() as { error: string } | undefined;
     const { state } = useNavigation();
@@ -56,9 +55,9 @@ export default function SignInPage() {
                     <Button
                         type="submit"
                         className="w-full !p-6 !mt-8"
-                        disabled={state === "loading" || state === "submitting"}
+                        disabled={state === "submitting"}
                     >
-                        {state === "loading" || state === "submitting" ? (
+                        {state === "submitting" ? (
                             <l-ring-2 color="#424242" size={25} stroke={4} />
                         ) : (
                             <span>Войти</span>

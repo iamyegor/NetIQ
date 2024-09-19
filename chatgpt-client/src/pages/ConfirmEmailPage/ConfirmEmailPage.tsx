@@ -23,7 +23,9 @@ export default function ConfirmEmailPage() {
                 className="flex flex-col justify-center items-center p-8 w-full max-w-[600px] bg-neutral-800 rounded-2xl space-y-8 border border-neutral-600"
             >
                 <div className="space-y-4 text-center text-white">
-                    <h1 className="text-2xl xs:text-3xl sm:text-4xl font-semibold">Подтвердите почту</h1>
+                    <h1 className="text-2xl xs:text-3xl sm:text-4xl font-semibold">
+                        Подтвердите почту
+                    </h1>
                     <p className="space-x-2 text-sm xs:text-base">
                         <span>Введите код который мы прислали на</span>
                         <span className="underline">{email}</span>
@@ -32,13 +34,9 @@ export default function ConfirmEmailPage() {
                 <VerificationCodeInput inputs={inputs} setInputs={setInputs} message={message} />
                 <Button
                     className="rounded-lg py-6 text-white w-full"
-                    disabled={
-                        inputs.some((x) => x === "") ||
-                        state === "loading" ||
-                        state === "submitting"
-                    }
+                    disabled={inputs.some((x) => x === "") || state === "submitting"}
                 >
-                    {state === "loading" || state === "submitting" ? (
+                    {state === "submitting" ? (
                         <l-ring-2 color="#424242" size={25} stroke={4} />
                     ) : (
                         <span>Подтвердить</span>

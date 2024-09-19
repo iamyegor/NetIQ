@@ -43,11 +43,8 @@ export default function RequestPasswordResetPage() {
                     />
                     <FeedbackMessageComponent feedback={feedBack} />
                 </div>
-                <Button
-                    className="w-full !p-6"
-                    disabled={state === "loading" || state === "submitting"}
-                >
-                    {state === "loading" || state === "submitting" ? (
+                <Button className="w-full !p-6" disabled={state === "submitting"}>
+                    {state === "submitting" ? (
                         <l-ring-2 color="#424242" size={25} stroke={4} />
                     ) : (
                         <span>Отправить</span>

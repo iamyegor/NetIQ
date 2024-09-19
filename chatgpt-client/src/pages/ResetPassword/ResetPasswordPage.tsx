@@ -31,12 +31,8 @@ export default function ResetPasswordPage() {
                     placeholder="Повторите пароль"
                 />
                 {error && <p className="text-red-500 text-sm !-mt-3">{error}</p>}
-                <Button
-                    type="submit"
-                    className="w-full !p-6"
-                    disabled={state === "loading" || state === "submitting"}
-                >
-                    {state === "loading" || state === "submitting" ? (
+                <Button type="submit" className="w-full !p-6" disabled={state === "submitting"}>
+                    {state === "submitting" ? (
                         <l-ring-2 color="#424242" size={25} stroke={4} />
                     ) : (
                         <span>Изменить пароль</span>
