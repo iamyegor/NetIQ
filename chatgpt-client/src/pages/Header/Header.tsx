@@ -36,7 +36,7 @@ const Header = () => {
                 subscriptionAccess: ["free", "plus"],
             },
         ],
-        [],
+        [window.uiLanguage],
     );
 
     useEffect(() => {
