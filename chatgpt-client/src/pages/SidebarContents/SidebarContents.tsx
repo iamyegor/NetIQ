@@ -2,7 +2,7 @@
 import AddSvg from "@/assets/pages/chat/add.svg?react";
 import { Button } from "@/components/ui/button.tsx";
 import { FiSidebar } from "react-icons/fi";
-import CategoryChats from "@/pages/ChatPage/CategoryChats.tsx";
+import CategoryChats from "@/pages/ChatPage/CategoryChats/CategoryChats";
 import BaseSkeleton from "@/components/ui/BaseSkeleton.tsx";
 import { Chat } from "@/pages/ChatPage/types.ts";
 import { CircleUser, LogOut, Sparkles } from "lucide-react";

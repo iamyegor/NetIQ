@@ -14,6 +14,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDeleteChat } from "@/pages/ChatPage/hooks/useDeleteChat.ts";
 import { useMediaQuery } from "react-responsive";
 import { useAppContext } from "@/context/AppContext.tsx";
+import useCategoryChatsTranslation from "./hooks/useCategoryChatsTranslation";
 
 interface CategoryChatsProps {
     categoryTitle: string;
@@ -21,6 +22,7 @@ interface CategoryChatsProps {
 }
 
 const CategoryChats: React.FC<CategoryChatsProps> = ({ categoryTitle, chats }) => {
+    const t = useCategoryChatsTranslation();
     const isMdScreen = useMediaQuery({ minWidth: 768 });
     const [showDialog, setShowDialog] = useState(false);
     const [chatToDelete, setChatToDelete] = useState<string | null>(null);
@@ -67,24 +69,21 @@ const CategoryChats: React.FC<CategoryChatsProps> = ({ categoryTitle, chats }) =
             <Dialog open={showDialog} onOpenChange={(isOpen) => setShowDialog(isOpen)}>
                 <DialogContent>
                     <DialogHeader className="text-white space-y-5">
-                        <DialogTitle>Вы точно хотите продолжить?</DialogTitle>
-                        <DialogDescription>
-                            Это действие нельзя отменить. Это навсегда удалит ваш чат и все его
-                            сообщения.
-                        </DialogDescription>
+                        <DialogTitle>{t.deleteConfirmationTitle}</DialogTitle>
+                        <DialogDescription>{t.deleteConfirmationDescription}</DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
                         <Button
                             className="!bg-red-600 !text-white"
                             onClick={() => handleDeleteChat()}
                         >
-                            Удалить
+                            {t.deleteButton}
                         </Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
             <h3 className="text-sm font-semibold text-neutral-300 mt-8 mb-2 pl-2 text-nowrap">
-                {categoryTitle}
+                {t.categoryTitle}: {categoryTitle}
             </h3>
             {chats.map((chat, index) => (
                 <Link
