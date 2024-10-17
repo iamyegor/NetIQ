@@ -9,10 +9,8 @@ ring2.register();
 
 const queryClient = new QueryClient();
 
-// worker.start().then(() => {
 ReactDOM.createRoot(document.getElementById("root")!).render(
     <QueryClientProvider client={queryClient}>
         <RouterProvider router={createBrowserRouter(routes)}></RouterProvider>
     </QueryClientProvider>,
 );
-// });

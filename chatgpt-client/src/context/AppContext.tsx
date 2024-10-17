@@ -18,6 +18,7 @@ import useEditPrompt from "@/pages/ChatPage/hooks/useEditPrompt.ts";
 import useCreateNewChat from "@/context/hooks/useCreateNewChat.tsx";
 import { useMediaQuery } from "react-responsive";
 import useChatEventSource from "@/pages/ChatPage/hooks/useChatEventSource.ts";
+import useLanguageDetection from "./hooks/useLanguageDetection";
 
 interface AppContextValue {
     messages: Message[];
@@ -78,6 +79,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
     const streamingData = {
         setMessages,
+        appError,
         displayedMessages,
         setIsStreaming,
         startEventSource,
@@ -87,9 +89,10 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     };
     const { regenerateResponse } = useRegenerateResponse(streamingData);
     const { editPrompt } = useEditPrompt(streamingData);
-    const { createNewChat } = useCreateNewChat(setMessages, stopEventSource);
+    const { createNewChat } = useCreateNewChat(setMessages, stopEventSource, setAppError);
     const { startChatEventSource } = useChatEventSource(streamingData);
     const isMdScreen = useMediaQuery({ minWidth: 768 });
+    useLanguageDetection();
 
     return (
         <AppContext.Provider

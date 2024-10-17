@@ -1,13 +1,14 @@
 import { useState } from "react";
+import { Form, useNavigation } from "react-router-dom";
 import VerificationCodeInput from "@/pages/ConfirmEmailPage/components/VerificationCodeInput/VerificationCodeInput.tsx";
 import useEmail from "@/pages/ConfirmEmailPage/hooks/useEmail.ts";
-import { Form, useNavigation } from "react-router-dom";
-import ResendCodeButton from "@/pages/ConfirmEmailPage/components/ResendCodeButton.tsx";
+import ResendCodeButton from "@/pages/ConfirmEmailPage/components/ResendCodeButton/ResendCodeButton";
 import GoBackButton from "@/pages/ConfirmEmailPage/components/GoBackButton.tsx";
 import useSecondsLeft from "@/pages/ConfirmEmailPage/hooks/useSecondsLeft.ts";
 import CountdownDisplay from "@/pages/ConfirmEmailPage/components/VerificationCodeInput/CountdownDisplay.tsx";
 import useEmailConfirmationMessage from "@/pages/ConfirmEmailPage/hooks/useEmailConfirmationMessage.ts";
 import { Button } from "@/components/ui/button.tsx";
+import useConfirmEmailTranslation from "./hooks/useConfirmEmailTranslation";
 
 export default function ConfirmEmailPage() {
     const [inputs, setInputs] = useState<string[]>(Array(5).fill(""));
@@ -15,6 +16,7 @@ export default function ConfirmEmailPage() {
     const { message, setMessage } = useEmailConfirmationMessage();
     const { state } = useNavigation();
     const email = useEmail();
+    const t = useConfirmEmailTranslation();
 
     return (
         <div className="h-full flex justify-center items-center bg-black py-5 px-2.5 xs:px-5 sm:px-10">
@@ -24,10 +26,10 @@ export default function ConfirmEmailPage() {
             >
                 <div className="space-y-4 text-center text-white">
                     <h1 className="text-2xl xs:text-3xl sm:text-4xl font-semibold">
-                        Подтвердите почту
+                        {t.confirmEmail}
                     </h1>
                     <p className="space-x-2 text-sm xs:text-base">
-                        <span>Введите код который мы прислали на</span>
+                        <span>{t.enterCode}</span>
                         <span className="underline">{email}</span>
                     </p>
                 </div>
@@ -39,19 +41,20 @@ export default function ConfirmEmailPage() {
                     {state === "submitting" ? (
                         <l-ring-2 color="#424242" size={25} stroke={4} />
                     ) : (
-                        <span>Подтвердить</span>
+                        <span>{t.confirm}</span>
                     )}
                 </Button>
                 <div className="flex flex-col sm:flex-row w-full sm:space-x-5 space-y-4 sm:space-y-0">
-                    <GoBackButton route="/sign-up" text="Назад" />
+                    <GoBackButton route="/sign-up" text={t.back} />
                     <ResendCodeButton
                         setSecondsLeft={setSecondsLeft}
                         secondsLeft={secondsLeft}
                         maxSeconds={60}
                         setMessage={setMessage}
+                        text={t.resendCode}
                     />
                 </div>
-                <CountdownDisplay secondsLeft={secondsLeft} />
+                <CountdownDisplay secondsLeft={secondsLeft} text={t.countdown} />
             </Form>
         </div>
     );

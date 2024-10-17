@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
-import ChatArea from "@/pages/ChatPage/ChatArea.tsx";
-import InputArea from "@/pages/ChatPage/InputArea.tsx";
-import Header from "@/pages/ChatPage/Header.tsx";
-import Sidebar from "@/pages/ChatPage/Sidebar.tsx";
-import GoDownButton from "@/pages/ChatPage/GoDownButton.tsx";
 import { useAppContext } from "@/context/AppContext.tsx";
+import ChatArea from "@/pages/ChatPage/ChatArea/ChatArea";
+import GoDownButton from "@/pages/ChatPage/GoDownButton.tsx";
+import Sidebar from "@/pages/ChatPage/Sidebar.tsx";
+import Header from "@/pages/Header/Header";
+import InputArea from "@/pages/InputArea/InputArea";
+import { useEffect } from "react";
 
 const ChatPage = () => {
     const { loadChats } = useAppContext();

@@ -7,6 +7,7 @@ import PostEventSource from "@/utils/PostEventSource.ts";
 interface ChatEventSourceParams {
     setMessages: Dispatch<SetStateAction<Message[]>>;
     displayedMessages: Message[];
+    appError: AppError;
     setIsStreaming: Dispatch<SetStateAction<boolean>>;
     startEventSource: (
         url: string,
@@ -20,6 +21,7 @@ interface ChatEventSourceParams {
 
 const useChatEventSource = ({
     displayedMessages,
+    appError,
     setIsStreaming,
     setMessages,
     startEventSource,
@@ -34,7 +36,7 @@ const useChatEventSource = ({
 
     useEffect(() => {
         const tempUserMessage = displayedMessages.find((msg) => msg.id === "temp-user-id");
-        if (tempUserMessage) {
+        if (tempUserMessage && !appError) {
             setIsStreaming(true);
         }
     }, [displayedMessages.length]);

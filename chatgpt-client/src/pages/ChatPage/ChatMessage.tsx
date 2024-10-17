@@ -1,7 +1,6 @@
+import AssistantMessage from "@/pages/ChatPage/AssistantMessage/AssistantMessage";
 import { Message } from "@/pages/ChatPage/types.ts";
-import React from "react";
 import UserMessage from "@/pages/ChatPage/UserMessage.tsx";
-import AssistantMessage from "@/pages/ChatPage/AssistantMessage.tsx";
 
 const ChatMessage = ({
     message,

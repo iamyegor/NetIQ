@@ -1,10 +1,10 @@
-import React, { useMemo } from "react";
-import { Chat } from "@/pages/ChatPage/types.ts";
-import SidebarContents from "@/pages/ChatPage/SidebarContents.tsx";
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
-import { useMediaQuery } from "react-responsive";
 import { DialogDescription } from "@/components/ui/dialog.tsx";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import { useAppContext } from "@/context/AppContext.tsx";
+import { Chat } from "@/pages/ChatPage/types.ts";
+import SidebarContents from "@/pages/SidebarContents/SidebarContents";
+import { useMemo } from "react";
+import { useMediaQuery } from "react-responsive";
 
 const Sidebar = () => {
     const { isSidebarExpanded, setIsSidebarExpanded, chats } = useAppContext();

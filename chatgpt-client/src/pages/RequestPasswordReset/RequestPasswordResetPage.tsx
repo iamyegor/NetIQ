@@ -1,15 +1,16 @@
-import { Form, Link, useActionData, useNavigation } from "react-router-dom";
-import FeedbackMessageComponent from "@/pages/ConfirmEmailPage/components/VerificationCodeInput/FeedbackMessageComponent.tsx";
-import FeedbackMessage from "@/types/FeedbackMessage.ts";
 import { Button } from "@/components/ui/button.tsx";
-import { Label } from "@/components/ui/label.tsx";
 import { Input } from "@/components/ui/input.tsx";
+import { Label } from "@/components/ui/label.tsx";
+import FeedbackMessage from "@/types/FeedbackMessage.ts";
 import { ArrowLeft } from "lucide-react";
-import React from "react";
+import { Form, Link, useActionData, useNavigation } from "react-router-dom";
+import FeedbackMessageComponent from "../ConfirmEmailPage/components/VerificationCodeInput/FeedbackMessageComponent";
+import useRequestPasswordResetTranslation from "./hooks/useRequestPasswordResetTranslation";
 
 export default function RequestPasswordResetPage() {
     const feedBack = useActionData() as FeedbackMessage | null;
     const { state } = useNavigation();
+    const t = useRequestPasswordResetTranslation();
 
     return (
         <div className="min-h-full flex justify-center items-center bg-neutral-950 py-5 px-2.5 xs:px-5 sm:px-10">
@@ -24,21 +25,17 @@ export default function RequestPasswordResetPage() {
                     <ArrowLeft className="w-5 h-5" />
                 </Link>
                 <div className="text-center space-y-4">
-                    <h1 className="text-lg xs:text-2xl md:text-4xl font-semibold">
-                        Восстановите пароль
-                    </h1>
-                    <p className="text-sm xs:text-base">
-                        Укажите почту на которую мы отправим инструкцию по восстановлению пароля
-                    </p>
+                    <h1 className="text-lg xs:text-2xl md:text-4xl font-semibold">{t.title}</h1>
+                    <p className="text-sm xs:text-base">{t.subtitle}</p>
                 </div>
                 <div className="space-y-4">
-                    <Label htmlFor="password">Пароль</Label>
+                    <Label htmlFor="email">{t.emailLabel}</Label>
                     <Input
                         id="email"
                         name="email"
                         type="email"
                         className={`w-full rounded-xl !p-6 !pl-4 !border-neutral-500`}
-                        placeholder="Например: myemail@example.com"
+                        placeholder={t.emailPlaceholder}
                         required
                     />
                     <FeedbackMessageComponent feedback={feedBack} />
@@ -47,7 +44,7 @@ export default function RequestPasswordResetPage() {
                     {state === "submitting" ? (
                         <l-ring-2 color="#424242" size={25} stroke={4} />
                     ) : (
-                        <span>Отправить</span>
+                        <span>{t.submitButton}</span>
                     )}
                 </Button>
             </Form>

@@ -1,16 +1,18 @@
-import { redirect } from "react-router-dom";
 import authApi from "@/lib/authApi.ts";
-import getCodeFromForm from "@/pages/ConfirmEmailPage/utils/getCodeFromForm.ts";
-import FeedbackMessage from "@/types/FeedbackMessage.ts";
 import extractVerifyEmailError from "@/pages/ConfirmEmailPage/utils/extractVerifyEmailError.ts";
-import axios from "axios";
+import getCodeFromForm from "@/pages/ConfirmEmailPage/utils/getCodeFromForm.ts";
 import RouteError from "@/types/errors/RouteError.ts";
+import FeedbackMessage from "@/types/FeedbackMessage.ts";
+import axios from "axios";
+import { redirect } from "react-router-dom";
+import { getConfirmEmailErrorTranslatino } from "../utils/getConfirmEmailErrorTranslatino";
 
 export default async function confirmEmailPageAction({ request }: any) {
     const code: string = await getCodeFromForm(request, 5);
+    const t = getConfirmEmailErrorTranslatino();
 
     if (code.length != 5) {
-        return FeedbackMessage.createError("Код должен быть длиной 5 символов");
+        return FeedbackMessage.createError(t.shortCode);
     }
 
     try {

@@ -5,23 +5,25 @@ import { Form, Link, useActionData, useNavigation } from "react-router-dom";
 import FieldError from "@/types/errors/FieldError";
 import netIqLogo from "@/assets/common/netiq.png";
 import PasswordInput from "@/components/ui/PasswordInput.tsx";
+import useSignUpTranslation from "./hooks/useSignUpTranslation";
 
 export default function SignUpPage() {
     const actionData = useActionData() as { error: FieldError } | null;
     const { state } = useNavigation();
     const error = actionData?.error ?? null;
+    const t = useSignUpTranslation();
 
     return (
         <div className="min-h-full bg-neutral-950 flex items-center justify-center py-5 px-2.5 xs:px-5 sm:px-10">
             <div className="bg-neutral-800 p-8 pt-5 rounded-xl shadow-lg w-full max-w-md space-y-8 border border-neutral-600">
                 <div className="flex flex-col items-center space-y-6">
-                    <img src={netIqLogo} alt="Логотип" className="h-20 object-cover" />
-                    <h2 className="text-2xl font-bold text-white text-center">Регистрация</h2>
+                    <img src={netIqLogo} alt="Logo" className="h-20 object-cover" />
+                    <h2 className="text-2xl font-bold text-white text-center">{t.signUp}</h2>
                 </div>
                 <Form method="post" className="space-y-4 text-white">
                     <div className="space-y-4">
                         <Label htmlFor="email" className="text-white">
-                            Email
+                            {t.email}
                         </Label>
                         <Input
                             id="email"
@@ -36,7 +38,7 @@ export default function SignUpPage() {
                     </div>
                     <div className="space-y-4">
                         <Label htmlFor="password" className="text-white">
-                            Пароль
+                            {t.password}
                         </Label>
                         <PasswordInput
                             id="password"
@@ -52,7 +54,7 @@ export default function SignUpPage() {
                     </div>
                     <div className="space-y-4">
                         <Label htmlFor="confirmPassword" className="text-white">
-                            Подтвердите пароль
+                            {t.confirmPassword}
                         </Label>
                         <PasswordInput
                             id="confirmPassword"
@@ -74,14 +76,14 @@ export default function SignUpPage() {
                         {state === "submitting" ? (
                             <l-ring-2 color="#424242" size={25} stroke={4} />
                         ) : (
-                            <span>Зарегистрироваться</span>
+                            <span>{t.register}</span>
                         )}
                     </Button>
                 </Form>
                 <p className="text-center text-white text-sm">
-                    Уже зарегистрированы?{" "}
+                    {t.alreadyRegistered}{" "}
                     <Link to="/sign-in" className="text-blue-400 hover:underline text-nowrap">
-                        Войдите в аккаунт
+                        {t.signIn}
                     </Link>
                 </p>
             </div>

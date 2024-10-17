@@ -13,7 +13,7 @@ export default function FeedbackMessageComponent({ feedback }: SuccessOrErrorMes
     return (
         <>
             {feedback!.isSuccess ? (
-                <div className="flex space-x-1.5">
+                <div className="flex space-x-1.5 justify-center">
                     <Check className="w-5 h-5 mt-0.5 flex-shrink-0 text-green-500" />
                     <p className="text-green-500">{feedback!.message}</p>
                 </div>
