@@ -12,9 +12,8 @@ env:
   SERVER_IP: 89.169.154.188
 
 jobs:
-  build-and-deploy:
+  setup:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
 
@@ -27,6 +26,12 @@ jobs:
           username: ${{ env.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+  build-client:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
       - name: Build and push client
         uses: docker/build-push-action@v2
         with:
@@ -34,15 +39,21 @@ jobs:
           push: true
           tags: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKER_REPO }}:client
 
-      - name: Prepare Auth migrations
-        run: |
-          mkdir -p chatgpt-server/Auth/migrator/Migrator/Migrations
-          cp -r chatgpt-server/Auth/app/Infrastructure/Migrations/* chatgpt-server/Auth/migrator/Migrator/Migrations/
+  build-auth:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
 
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: "8.0.x"
+
+      - name: Prepare Auth migrations
+        run: |
+          mkdir -p chatgpt-server/Auth/migrator/Migrator/Migrations
+          cp -r chatgpt-server/Auth/app/Infrastructure/Migrations/* chatgpt-server/Auth/migrator/Migrator/Migrations/
 
       - name: Run MigrationChanger for Auth
         run: |
@@ -63,6 +74,17 @@ jobs:
           context: ./chatgpt-server/Auth/migrator
           push: true
           tags: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKER_REPO }}:auth-migrator
+
+  build-server:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: "8.0.x"
 
       - name: Prepare Server migrations
         run: |
@@ -89,6 +111,10 @@ jobs:
           push: true
           tags: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKER_REPO }}:netiq-migrator
 
+  deploy:
+    needs: [build-client, build-auth, build-server]
+    runs-on: ubuntu-latest
+    steps:
       - name: Deploy to server
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
