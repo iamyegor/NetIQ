@@ -21,15 +21,16 @@ interface CategoryChatsProps {
 }
 
 const CategoryChats: React.FC<CategoryChatsProps> = ({ categoryTitle, chats }) => {
-    const { setMessages } = useAppContext();
     const isMdScreen = useMediaQuery({ minWidth: 768 });
     const [showDialog, setShowDialog] = useState(false);
     const [chatToDelete, setChatToDelete] = useState<string | null>(null);
-    const { setIsSidebarExpanded, chatId, stopEventSource } = useAppContext();
+    const { setIsSidebarExpanded, chatId, stopEventSource, setMessages } = useAppContext();
     const { deleteChat } = useDeleteChat();
     const navigate = useNavigate();
 
-    function handleChatSwitch() {
+    function handleChatSwitch(newChat: string | undefined) {
+        if (chatId === newChat) return;
+
         stopEventSource();
         setMessages([]);
         if (!isMdScreen) {
@@ -88,7 +89,7 @@ const CategoryChats: React.FC<CategoryChatsProps> = ({ categoryTitle, chats }) =
             {chats.map((chat, index) => (
                 <Link
                     to={`/chats/${chat.id}`}
-                    onClick={handleChatSwitch}
+                    onClick={() => handleChatSwitch(chat.id)}
                     key={index}
                     className={`w-full flex justify-start items-center text-white !text-sm font-normal h-9 min-w-[260px] mb-1 space-x-3 !px-2 group relative p-2 hover:bg-neutral-800 rounded-lg transition ${chatId === chat.id ? "bg-neutral-800" : ""}`}
                 >
