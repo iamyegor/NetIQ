@@ -23,14 +23,14 @@ const Header = () => {
         () => [
             {
                 id: "gpt-4o",
-                name: t["gpt-4o"].name,
+                name: "GPT-4o",
                 description: t["gpt-4o"].description,
                 icon: BulbSvg,
                 subscriptionAccess: ["plus"],
             },
             {
                 id: "gpt-4o-mini",
-                name: t["gpt-4o-mini"].name,
+                name: "GPT-4o mini",
                 description: t["gpt-4o-mini"].description,
                 icon: BoltSvg,
                 subscriptionAccess: ["free", "plus"],
@@ -41,7 +41,7 @@ const Header = () => {
 
     useEffect(() => {
         setSelectedModel(models[1]);
-    }, []);
+    }, [window.uiLanguage]);
 
     const handleModelSelect = (modelId: Model) => {
         setSelectedModel(modelId);

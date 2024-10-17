@@ -5,11 +5,9 @@ const modelTranslations = [
         locale: "en",
         models: {
             "gpt-4o": {
-                name: "GPT-4o",
                 description: "The smartest model",
             },
             "gpt-4o-mini": {
-                name: "GPT-4o mini",
                 description: "Very fast model",
             },
         },
@@ -18,11 +16,9 @@ const modelTranslations = [
         locale: "ru",
         models: {
             "gpt-4o": {
-                name: "GPT-4o",
                 description: "Самая умная модель",
             },
             "gpt-4o-mini": {
-                name: "GPT-4o mini",
                 description: "Очень быстрая модель",
             },
         },
