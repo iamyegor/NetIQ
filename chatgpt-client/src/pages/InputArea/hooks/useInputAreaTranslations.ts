@@ -5,11 +5,21 @@ const inputAreaTranslations = [
         locale: "en",
         writeMessage: "Write a message...",
         reloadChat: "Reload chat",
+        developer: {
+            title: "Developer:",
+            name: "DENIS",
+            link: "https://www.upwork.com/freelancers/~01069602500635941a?mp_source=share",
+        },
     },
     {
         locale: "ru",
         writeMessage: "Напишите сообщение...",
         reloadChat: "Перезагрузить чат",
+        developer: {
+            title: "Разработчик:",
+            name: "GDIGITAL",
+            link: "https://kwork.ru/user/gd1g1tal",
+        },
     },
 ];
 

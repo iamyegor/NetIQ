@@ -68,9 +68,9 @@ const InputArea = () => {
     return (
         <div
             ref={containerRef}
-            className="pt-2 pb-4 flex justify-center space-y-8 px-2 xs:px-5 bottom-0 left-0 right-0 bg-neutral-800 fixed md:static"
+            className="flex flex-col items-center px-2 xs:px-5 bottom-0 left-0 right-0 bg-neutral-800 fixed md:static"
         >
-            <div className="w-full max-w-[800px] flex space-x-2 items-end">
+            <div className="w-full max-w-[800px] flex space-x-2 items-end mb-2">
                 {appError ? (
                     <div className="w-full flex justify-center">
                         <Button className="p-6 space-x-3" onClick={handleReload}>
@@ -105,6 +105,16 @@ const InputArea = () => {
                     </>
                 )}
             </div>
+            <p className="mb-2 text-neutral-400 text-[14px] font-medium space-x-1">
+                <span>{t.developer.title}</span>
+                <a
+                    className="font-notable font-bold hover:text-white transition-colors cursor-pointer"
+                    href={t.developer.link}
+                    target="_blank"
+                >
+                    {t.developer.name}
+                </a>
+            </p>
         </div>
     );
 };

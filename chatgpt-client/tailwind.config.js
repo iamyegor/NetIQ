@@ -9,6 +9,7 @@ export default {
             fontFamily: {
                 sans: ["Inter", ...defaultTheme.fontFamily.sans],
                 mono: ["Jetbrains Mono", defaultTheme.fontFamily.mono],
+                notable: ["Goldman", defaultTheme.fontFamily.sans],
             },
             screens: {
                 xs: "420px",
@@ -23,7 +24,7 @@ export default {
                 sm: "calc(var(--radius) - 4px)",
             },
             colors: {
-                "faded": "#BCBCBC"
+                faded: "#BCBCBC",
             },
         },
         container: {
