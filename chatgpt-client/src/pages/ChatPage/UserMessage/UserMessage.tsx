@@ -1,10 +1,11 @@
-import { Message } from "@/pages/ChatPage/types.ts";
-import React, { useEffect, useRef, useState } from "react";
 import PencilSvg from "@/assets/pages/chat/pencil.svg?react";
 import { Button } from "@/components/ui/button.tsx";
 import { Textarea } from "@/components/ui/textarea.tsx";
-import VariantsPagination from "@/pages/ChatPage/VariantsPagination.tsx";
 import { useAppContext } from "@/context/AppContext.tsx";
+import { Message } from "@/pages/ChatPage/types.ts";
+import VariantsPagination from "@/pages/ChatPage/VariantsPagination.tsx";
+import { useEffect, useRef, useState } from "react";
+import useUserMessageTranslation from "./hooks/useUserMessageTranslation";
 
 export default function UserMessage({
     message,
@@ -19,6 +20,7 @@ export default function UserMessage({
     const [isEditing, setIsEditing] = useState(false);
     const [editedMessage, setEditedMessage] = useState<string>(message.content);
     const { scrollToBottom, editPrompt } = useAppContext();
+    const t = useUserMessageTranslation();
 
     async function handleEditPrompt(messageId: string, messageContent: string) {
         await editPrompt(messageId, messageContent);
@@ -57,13 +59,13 @@ export default function UserMessage({
                             variant="cancel"
                             onClick={cancel}
                         >
-                            Отменить
+                            {t.cancel}
                         </Button>
                         <Button
                             className="rounded-2xl"
                             onClick={() => handleEditPrompt(message.id, editedMessage)}
                         >
-                            Отправить
+                            {t.send}
                         </Button>
                     </div>
                 </div>
