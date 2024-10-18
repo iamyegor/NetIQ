@@ -83,7 +83,7 @@ const CategoryChats: React.FC<CategoryChatsProps> = ({ categoryTitle, chats }) =
                 </DialogContent>
             </Dialog>
             <h3 className="text-sm font-semibold text-neutral-300 mt-8 mb-2 pl-2 text-nowrap">
-                {t.categoryTitle}: {categoryTitle}
+                {categoryTitle}
             </h3>
             {chats.map((chat, index) => (
                 <Link
