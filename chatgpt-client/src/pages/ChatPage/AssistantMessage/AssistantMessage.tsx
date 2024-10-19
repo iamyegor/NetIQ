@@ -2,7 +2,7 @@ import { Message } from "@/pages/ChatPage/types.ts";
 import React, { useMemo, useRef, useState } from "react";
 import { useScalingDot } from "@/pages/ChatPage/hooks/useScalingDot.ts";
 import Markdown from "react-markdown";
-import CodeHighlight from "@/pages/ChatPage/CodeHighlight.tsx";
+import CodeHighlight from "@/pages/ChatPage/CodeHighlight/CodeHighlight";
 import ScalingDot from "@/pages/ChatPage/ScalingDot.tsx";
 import {
     Tooltip,
