@@ -144,4 +144,4 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ env.SERVER_IP }} >> ~/.ssh/known_hosts
-          ssh yegor@${{ env.SERVER_IP }} "helm upgrade netiq netiq-k8s --values netiq-k8s/values.yaml"
+          ssh root@${{ env.SERVER_IP }} "helm upgrade netiq netiq-k8s --values netiq-k8s/values.yaml"

@@ -9,7 +9,7 @@ export default function useScrollToBottom(
         setCanShowScrollButton(false);
         animateScroll.scrollToBottom({
             containerId: "chat",
-            duration: smooth ? 300 : 50,
+            duration: smooth ? 300 : 0,
             smooth,
         });
 
@@ -17,14 +17,14 @@ export default function useScrollToBottom(
             () => {
                 setIsAtBottom(true);
             },
-            smooth ? 300 : 50,
+            smooth ? 300 : 0,
         );
 
         setTimeout(
             () => {
                 setCanShowScrollButton(true);
             },
-            smooth ? 350 : 50,
+            smooth ? 350 : 0,
         );
     };
 }

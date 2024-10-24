@@ -30,18 +30,18 @@ public static class DependencyInjection
         return services;
     }
 
-    public static void AddChatgpt(this IServiceCollection services)
+    private static void AddChatgpt(this IServiceCollection services)
     {
-        var apiKey = Environment.GetEnvironmentVariable("CustomGptApiKey")!;
-        var proxyAddress = Environment.GetEnvironmentVariable("PROXY_ADDRESS")!;
-        var proxyUsername = Environment.GetEnvironmentVariable("PROXY_USERNAME")!;
-        var proxyPassword = Environment.GetEnvironmentVariable("PROXY_PASSWORD")!;
+        string apiKey = Environment.GetEnvironmentVariable("CustomGptApiKey")!;
+        string proxyAddress = Environment.GetEnvironmentVariable("PROXY_ADDRESS")!;
+        string proxyUsername = Environment.GetEnvironmentVariable("PROXY_USERNAME")!;
+        string proxyPassword = Environment.GetEnvironmentVariable("PROXY_PASSWORD")!;
 
-        var gptHttpClient = new GptHttpClient(
-            apiKey: apiKey,
-            proxyAddress: proxyAddress,
-            proxyUsername: proxyUsername,
-            proxyPassword: proxyPassword
+        GptHttpClient gptHttpClient = new GptHttpClient(
+            apiKey,
+            proxyAddress,
+            proxyUsername,
+            proxyPassword
         );
 
         services.AddSingleton(_ => gptHttpClient);

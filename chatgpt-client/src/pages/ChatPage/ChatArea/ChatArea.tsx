@@ -92,10 +92,15 @@ const ChatArea = () => {
     }, [data]);
 
     useEffect(() => {
-        if (shouldAttachToBottom) {
-            scrollToBottom();
+        if (shouldAttachToBottom && mainRef.current) {
+            const element = mainRef.current;
+            const hasScrollbar = element.scrollHeight > element.clientHeight;
+
+            if (hasScrollbar) {
+                scrollToBottom();
+            }
         }
-    }, [JSON.stringify(displayedMessages), isStreaming]);
+    }, [displayedMessages, isStreaming]);
 
     const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
         const target = event.currentTarget;
