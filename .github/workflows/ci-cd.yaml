@@ -9,7 +9,7 @@ on:
 env:
   DOCKER_USERNAME: jasonstathamdev
   DOCKER_REPO: netiq
-  SERVER_IP: 89.169.154.188
+  SERVER_IP: REDACTED
 
 jobs:
   setup:
