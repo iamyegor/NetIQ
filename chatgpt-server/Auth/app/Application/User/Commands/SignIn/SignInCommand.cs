@@ -27,7 +27,7 @@ public class SignInCommandHandler : IRequestHandler<SignInCommand, Result<Tokens
         DeviceId deviceId = DeviceId.Create(command.DeviceId);
 
         Domain.User.User? user = await _context.Users.SingleOrDefaultAsync(
-            x => x.Email != null && x.Email.Value == command.Email,
+            x => x.Email != null && x.Email.Value == command.Email && x.IsEmailVerified,
             ct
         );
         if (user == null || user.Password == null || !user.Password.Matches(command.Password))
