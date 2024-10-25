@@ -1,7 +1,7 @@
 services:
   rabbitmq:
     image: rabbitmq:management
-    hostname: rabbitmq
+    hostname: netiq-rabbitmq
     ports:
       - 5672:5672
     environment:
