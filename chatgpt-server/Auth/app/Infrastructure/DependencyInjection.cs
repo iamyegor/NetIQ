@@ -56,10 +56,10 @@ public static class DependencyInjection
     )
     {
         services.Configure<EmailSettings>(config.GetSection(nameof(EmailSettings)));
-        services.PostConfigure<EmailSettings>(settings =>
-        {
-            settings.Password = Environment.GetEnvironmentVariable("EmailPassword")!;
-        });
+        // services.PostConfigure<EmailSettings>(settings =>
+        // {
+        //     settings.Password = Environment.GetEnvironmentVariable("EmailPassword")!;
+        // });
 
         services.AddTransient<DomainEmailSender>();
         services.AddTransient<EmailSender>();

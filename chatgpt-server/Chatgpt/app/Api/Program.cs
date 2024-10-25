@@ -1,3 +1,9 @@
 using Api;
+using Infrastructure.Data;
+using Infrastructure.Data.Dapper;
 
-WebApplication.CreateBuilder(args).ConfigureServices().ConfigureMiddlewares().Run();
+WebApplication app = WebApplication.CreateBuilder(args).ConfigureServices().ConfigureMiddlewares();
+
+await DatabaseAvailabilityChecker.WaitForDatabaseAsync(app.Services);
+
+app.Run();

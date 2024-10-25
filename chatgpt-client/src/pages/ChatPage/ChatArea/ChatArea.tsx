@@ -156,7 +156,7 @@ const ChatArea = () => {
         <main
             ref={mainRef}
             id="chat"
-            className="flex-1 flex justify-center overflow-y-auto !relative px-5 mt-[70px] mb-[90px] md:mb-0 md:mt-0"
+            className="flex-1 flex justify-center overflow-y-auto !relative px-5 mb-[90px] md:mb-0 md:mt-0"
             onScroll={handleScroll}
         >
             <div

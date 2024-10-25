@@ -13,36 +13,36 @@ public static class MassTransitServicesExtensions
         Assembly? assembly = null
     )
     {
-        services.AddMassTransit(
-            busConfigurator =>
+        services.AddMassTransit(busConfigurator =>
+        {
+            busConfigurator.SetKebabCaseEndpointNameFormatter();
+
+            if (assembly != null)
             {
-                busConfigurator.SetKebabCaseEndpointNameFormatter();
-
-                if (assembly != null)
-                {
-                    busConfigurator.AddConsumers(assembly);
-                }
-
-                busConfigurator.UsingRabbitMq(
-                    (context, configurator) =>
-                    {
-                        string username = config["RabbitMq:Username"]!;
-                        string password = config["RabbitMq:Password"]!;
-
-                        configurator.Host(
-                            new Uri(config["RabbitMq:Host"]!),
-                            hostConfigurator =>
-                            {
-                                hostConfigurator.Username(username);
-                                hostConfigurator.Password(password);
-                            }
-                        );
-
-                        configurator.ConfigureEndpoints(context);
-                    }
-                );
+                busConfigurator.AddConsumers(assembly);
             }
-        );
+
+            busConfigurator.UsingRabbitMq(
+                (context, configurator) =>
+                {
+                    string username = config["RabbitMq:Username"]!;
+                    string password = config["RabbitMq:Password"]!;
+
+                    configurator.Host(
+                        new Uri(config["RabbitMq:Host"]!),
+                        hostConfigurator =>
+                        {
+                            hostConfigurator.Username(username);
+                            hostConfigurator.Password(password);
+                        }
+                    );
+
+                    configurator.UseMessageRetry(r => r.Interval(10, TimeSpan.FromSeconds(10)));
+
+                    configurator.ConfigureEndpoints(context);
+                }
+            );
+        });
 
         return services;
     }

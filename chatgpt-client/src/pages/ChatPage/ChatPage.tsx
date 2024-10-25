@@ -18,6 +18,7 @@ const ChatPage = () => {
             <Sidebar />
             <div className="h-full w-full flex flex-col relative">
                 <Header />
+                <div className="block sm:hidden h-[70px] w-full"></div>
                 <ChatArea />
                 <InputArea />
                 <GoDownButton />
