@@ -58,7 +58,7 @@ public static class DependencyInjection
         services.Configure<EmailSettings>(config.GetSection(nameof(EmailSettings)));
         // services.PostConfigure<EmailSettings>(settings =>
         // {
-        //     settings.Password = Environment.GetEnvironmentVariable("EmailPassword")!;
+        //     settings.Password = "fYm35uTXs9ID";
         // });
 
         services.AddTransient<DomainEmailSender>();
@@ -68,6 +68,7 @@ public static class DependencyInjection
             EmailSettings emailSettings = serviceProvider
                 .GetRequiredService<IOptions<EmailSettings>>()
                 .Value;
+
             return new SmtpClient(emailSettings.MailServer, emailSettings.MailPort)
             {
                 Credentials = new NetworkCredential(emailSettings.Username, emailSettings.Password),
