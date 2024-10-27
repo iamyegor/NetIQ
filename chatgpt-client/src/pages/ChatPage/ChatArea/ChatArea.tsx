@@ -1,5 +1,5 @@
 import { useAppContext } from "@/context/AppContext.tsx";
-import api from "@/lib/api.ts";
+import api from "@/lib/backend/api";
 import ChatHero from "@/pages/ChatPage/ChatArea/components/ChatHero/ChatHero";
 import useScorllToBottomOnPageLoad from "@/pages/ChatPage/ChatArea/hooks/useScorllToBottomOnFirstRender";
 import useScrollToBottomWhenStopStreaming from "@/pages/ChatPage/ChatArea/hooks/useScrollDownWhenStopStreaming";

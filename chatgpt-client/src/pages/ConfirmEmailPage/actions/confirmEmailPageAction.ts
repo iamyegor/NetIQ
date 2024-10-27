@@ -1,4 +1,4 @@
-import authApi from "@/lib/authApi.ts";
+import authApi from "@/lib/backend/authApi";
 import extractVerifyEmailError from "@/pages/ConfirmEmailPage/utils/extractVerifyEmailError.ts";
 import getCodeFromForm from "@/pages/ConfirmEmailPage/utils/getCodeFromForm.ts";
 import RouteError from "@/types/errors/RouteError.ts";

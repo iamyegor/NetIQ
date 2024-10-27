@@ -1,10 +1,10 @@
-import classNames from "classnames";
-import { useEffect, useState } from "react";
-import authApi from "@/lib/authApi.ts";
+import { Button } from "@/components/ui/button.tsx";
+import authApi from "@/lib/backend/authApi";
 import FeedbackMessage from "@/types/FeedbackMessage.ts";
 import RouteError from "@/types/errors/RouteError.ts";
+import classNames from "classnames";
 import { Mail } from "lucide-react";
-import { Button } from "@/components/ui/button.tsx";
+import { useEffect, useState } from "react";
 import useResendCodeTranslation from "./hooks/useResendCodeTranslation";
 
 interface ResendCodeButtonProps {

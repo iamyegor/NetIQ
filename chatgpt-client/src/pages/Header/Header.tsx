@@ -1,3 +1,5 @@
+import netIqLogo from "@/assets/common/netiq.png";
+import SideBarSvg from "@/assets/common/sidebar.svg?react";
 import AddSvg from "@/assets/pages/chat/add.svg?react";
 import BoltSvg from "@/assets/pages/chat/bolt.svg?react";
 import BulbSvg from "@/assets/pages/chat/bulb.svg?react";
@@ -6,9 +8,7 @@ import { useAppContext } from "@/context/AppContext.tsx";
 import { Model } from "@/pages/ChatPage/types.ts";
 import ModelSelector from "@/pages/ModelSelector/ModelSelector";
 import { useEffect, useMemo } from "react";
-import { FiSidebar } from "react-icons/fi";
 import useModelTranslations from "./hooks/useModelTranslations";
-import SideBarSvg from "@/assets/common/sidebar.svg?react";
 
 const Header = () => {
     const {
@@ -73,6 +73,13 @@ const Header = () => {
                         </Button>
                     </div>
                 )}
+                <div className="absolute right-6">
+                    <img
+                        src={netIqLogo}
+                        alt="Logo"
+                        className="h-10 object-cover opacity-80 hover:opacity-70 cursor-pointer active:scale-95 transition"
+                    />
+                </div>
                 <ModelSelector
                     selectedModel={selectedModel}
                     models={models}

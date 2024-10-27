@@ -1,7 +1,7 @@
+import { useAppContext } from "@/context/AppContext.tsx";
+import api from "@/lib/backend/api";
 import { Message } from "@/pages/ChatPage/types.ts";
 import React from "react";
-import api from "@/lib/api.ts";
-import { useAppContext } from "@/context/AppContext.tsx";
 
 export function useSelectVariant(setMessages: React.Dispatch<React.SetStateAction<Message[]>>) {
     const { chatId, stopEventSource } = useAppContext();

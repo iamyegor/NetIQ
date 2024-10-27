@@ -1,7 +1,7 @@
-import authApi from "@/lib/authApi.ts";
+import authApi from "@/lib/backend/authApi";
+import RouteError from "@/types/errors/RouteError.ts";
 import FeedbackMessage from "@/types/FeedbackMessage.ts";
 import axios from "axios";
-import RouteError from "@/types/errors/RouteError.ts";
 import getRequestPasswordResetActionTranslations from "../hooks/getRequestPasswordResetActionTranslations";
 
 export default async function requestPasswordResetPageAction({ request }: any) {

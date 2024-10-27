@@ -1,4 +1,4 @@
-import authApi from "@/lib/authApi.ts";
+import authApi from "@/lib/backend/authApi";
 import FieldError from "@/types/errors/FieldError.ts";
 import RouteError from "@/types/errors/RouteError.ts";
 import ServerErrorResponse from "@/types/errors/ServerErrorResponse.ts";

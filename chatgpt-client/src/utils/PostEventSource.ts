@@ -1,4 +1,4 @@
-import authApi from "@/lib/authApi";
+import authApi from "@/lib/backend/authApi";
 
 export default class PostEventSource {
     private url: string;

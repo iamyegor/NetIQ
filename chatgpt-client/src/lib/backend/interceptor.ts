@@ -1,8 +1,8 @@
-import { AxiosError, AxiosRequestConfig } from "axios";
-import api from "@/lib/api.ts";
-import authApi from "@/lib/authApi.ts";
-import EmptyResult from "@/types/results/EmptyResult.ts";
+import api from "@/lib/backend/api";
+import authApi from "@/lib/backend/authApi";
 import ServerErrorResponse from "@/types/errors/ServerErrorResponse.ts";
+import EmptyResult from "@/types/results/EmptyResult.ts";
+import { AxiosError, AxiosRequestConfig } from "axios";
 
 interface CustomAxiosRequestConfig extends AxiosRequestConfig {
     _retry?: boolean;

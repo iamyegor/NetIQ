@@ -1,6 +1,6 @@
-import authApi from "@/lib/authApi.ts";
-import { redirect } from "react-router-dom";
+import authApi from "@/lib/backend/authApi";
 import axios from "axios";
+import { redirect } from "react-router-dom";
 import { getSignInActionTranslation } from "../utils/getSignInActionTranslation";
 
 export default async function signInPageAction({ request }: { request: Request }) {

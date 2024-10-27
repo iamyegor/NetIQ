@@ -1,8 +1,8 @@
-import { redirect } from "react-router-dom";
-import axios from "axios";
-import authApi from "@/lib/authApi.ts";
-import SuccessOr from "@/types/results/SuccessOr.ts";
+import authApi from "@/lib/backend/authApi";
 import validatePasswordResetData from "@/pages/ResetPassword/utils/validatePasswordResetData.ts";
+import SuccessOr from "@/types/results/SuccessOr.ts";
+import axios from "axios";
+import { redirect } from "react-router-dom";
 
 export default async function resetPasswordPageAction({
     request,

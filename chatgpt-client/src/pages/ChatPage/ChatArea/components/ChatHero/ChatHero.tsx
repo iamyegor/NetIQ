@@ -1,4 +1,3 @@
-import netIqLogo from "@/assets/common/netiq.png";
 import { useAppContext } from "@/context/AppContext";
 import useMediaQueries from "@/hooks/useMediaQueries";
 import Greeting from "@/pages/ChatPage/ChatArea/components/ChatHero/components/Greeting/Greeting";
@@ -26,12 +25,8 @@ export default function ChatHero({ hello }: { hello: string }) {
                 }}
             >
                 <div className="flex flex-col items-center">
-                    <img
-                        src={netIqLogo}
-                        alt="Logo"
-                        className="h-28 object-cover hover:opacity-70 cursor-pointer active:scale-95 transition"
-                    />
-                    <div className="mb-2 sm:mb-2">
+                    
+                    <div className="mb-4">
                         <Greeting greeting={hello} />
                     </div>
                     <p className="text-white mb-6 text-base">{t.tryPrompts}</p>

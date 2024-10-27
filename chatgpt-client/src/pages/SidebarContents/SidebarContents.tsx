@@ -1,17 +1,16 @@
-import AddSvg from "@/assets/pages/chat/add.svg?react";
-import { Button } from "@/components/ui/button.tsx";
 import SideBarSvg from "@/assets/common/sidebar.svg?react";
-import CategoryChats from "@/pages/ChatPage/CategoryChats/CategoryChats";
+import AddSvg from "@/assets/pages/chat/add.svg?react";
 import BaseSkeleton from "@/components/ui/BaseSkeleton.tsx";
-import { Chat } from "@/pages/ChatPage/types.ts";
-import { CircleUser, LogOut, Sparkles } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import api from "@/lib/api.ts";
-import authApi from "@/lib/authApi.ts";
-import { Link, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button.tsx";
 import { useAppContext } from "@/context/AppContext.tsx";
+import api from "@/lib/backend/api";
+import authApi from "@/lib/backend/authApi";
+import CategoryChats from "@/pages/ChatPage/CategoryChats/CategoryChats";
+import { Chat } from "@/pages/ChatPage/types.ts";
+import { useQuery } from "@tanstack/react-query";
+import { CircleUser, LogOut, Sparkles } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import useSidebarTranslations from "./hooks/useSidebarTranslations";
-import netiqLogoImg from "@/assets/common/netiq.png";
 
 async function fetchEmail() {
     const response = await api.get<{ email: string }>("user/email");

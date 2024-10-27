@@ -1,6 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
-import api from "@/lib/api.ts";
+import api from "@/lib/backend/api";
 import { SubscriptionStatus } from "@/pages/ChatPage/types.ts";
+import { useQuery } from "@tanstack/react-query";
 
 
 async function fetchSubscriptionStatus() {

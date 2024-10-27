@@ -1,8 +1,8 @@
-import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
-import api from "@/lib/api.ts";
-import { useInView } from "react-intersection-observer";
-import { useCallback, useEffect, useState } from "react";
+import api from "@/lib/backend/api";
 import { Chat, ChatsResponse } from "@/pages/ChatPage/types.ts";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import { useCallback, useEffect, useState } from "react";
+import { useInView } from "react-intersection-observer";
 
 export default function useChats() {
     const queryClient = useQueryClient();
