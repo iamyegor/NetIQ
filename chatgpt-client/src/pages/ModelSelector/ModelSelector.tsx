@@ -42,7 +42,7 @@ export default function ModelSelector({
 
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger className="outline-none flex items-center space-x-2 px-3 p-2 hover:bg-neutral-700 transition font-semibold rounded-xl -mt-0.5">
+            <DropdownMenuTrigger className="outline-none flex items-center space-x-2 px-3 p-2 hover:bg-neutral-700/50 transition font-semibold rounded-xl -mt-0.5">
                 <span className="text-lg">{selectedModel?.name ?? t.selectModel}</span>
                 <DownArrowSvg className="w-5 h-5" />
             </DropdownMenuTrigger>
@@ -52,7 +52,7 @@ export default function ModelSelector({
                 {models.map((model) => (
                     <DropdownMenuItem
                         key={model.name}
-                        className={`items-center justify-between !px-3 ${!isModelAccessible(model) ? "hover:!bg-neutral-800 !cursor-default" : ""}`}
+                        className={`items-center justify-between !px-3 ${!isModelAccessible(model) ? "hover:!bg-neutral-950 !cursor-default" : ""} hover:!bg-neutral-800`}
                         onSelect={(e) => handleModelSelect(e, model)}
                     >
                         <div className="space-x-3 flex items-center">

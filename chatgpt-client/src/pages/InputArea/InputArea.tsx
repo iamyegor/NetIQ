@@ -1,28 +1,35 @@
 // InputArea.tsx
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { FaRegStopCircle } from "react-icons/fa";
-import { Send } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
 import RotateRightSvg from "@/assets/pages/chat/rotate-right.svg?react";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { useAppContext } from "@/context/AppContext.tsx";
+import useResizeInputAutomatically from "@/pages/InputArea/hooks/useResizeInputAutomatically";
+import { Send } from "lucide-react";
+import React, { useRef, useState } from "react";
+import { FaRegStopCircle } from "react-icons/fa";
+import MagicWantSvg from "./assets/magic-wand.svg?react";
 import useInputAreaTranslations from "./hooks/useInputAreaTranslations";
 
-const InputArea = () => {
-    const [inputMessage, setInputMessage] = useState("");
+export default function InputArea() {
     const {
         chatId,
         isStreaming,
         stopEventSource,
-        setInputAreaHeight,
         appError,
         startChatEventSource,
         scrollToBottom,
+        inputMessage,
+        setInputMessage,
     } = useAppContext();
 
-    const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const duplicateTextArea = useRef<HTMLTextAreaElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const t = useInputAreaTranslations();
+    const { textAreaHeight } = useResizeInputAutomatically({
+        duplicateTextArea: duplicateTextArea.current,
+        inputMessage,
+    });
+    const chatRef = useRef<HTMLTextAreaElement | null>(null);
 
     async function sendMessage() {
         if (!inputMessage.trim()) return;
@@ -31,27 +38,11 @@ const InputArea = () => {
 
         await startChatEventSource(url, chatId ?? null, inputMessage.trim());
         setInputMessage("");
-        setTimeout(() => scrollToBottom(true), 70);
+        setTimeout(() => scrollToBottom({ scrollType: "smooth" }), 70);
     }
-
-    const resizeTextarea = () => {
-        if (textareaRef.current) {
-            textareaRef.current.style.height = "auto";
-            textareaRef.current.style.height = `${Math.max(textareaRef.current.scrollHeight, 57)}px`;
-
-            if (containerRef.current) {
-                setInputAreaHeight(containerRef.current.offsetHeight);
-            }
-        }
-    };
-
-    useEffect(() => {
-        resizeTextarea();
-    }, [inputMessage]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setInputMessage(e.target.value);
-        resizeTextarea();
     };
 
     const handleKeyDown = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -68,7 +59,7 @@ const InputArea = () => {
     return (
         <div
             ref={containerRef}
-            className="flex flex-col items-center px-2 xs:px-5 bottom-0 left-0 right-0 bg-neutral-800 fixed md:static"
+            className="flex flex-col items-center px-2 xs:px-5 bottom-0 left-0 right-0 bg-neutral-900 fixed md:static"
         >
             <div className="w-full max-w-[800px] flex space-x-2 items-end mb-2">
                 {appError ? (
@@ -79,30 +70,42 @@ const InputArea = () => {
                         </Button>
                     </div>
                 ) : (
-                    <>
-                        <div className="w-full bg-[#333333] pr-5 rounded-[35px] overflow-hidden">
+                    <div className="flex items-end justify-between w-full bg-secondary border border-neutral-800 rounded-2xl pb-3 pr-2">
+                        <div className="w-full flex pl-5 items-top pt-3 pr-2 overflow-hidden">
+                            <div className="pt-2.5">
+                                <MagicWantSvg className="w-5 h-5 fill-gray-200" />
+                            </div>
                             <Textarea
-                                ref={textareaRef}
-                                className={`text-white pb-4.5 pl-5 !bg-[#333333] max-h-[250px] w-full focus-visible:outline-none  ${textareaRef.current?.scrollHeight && textareaRef.current.scrollHeight < 250 ? "scrollbar-hide" : ""}`}
+                                ref={chatRef}
+                                className={`text-white min-h-[30px] mt-2 !bg-secondary max-h-[250px] w-full outline-none ${textAreaHeight < 250 ? "scrollbar-hide" : ""} transition-all`}
                                 value={inputMessage}
                                 onChange={handleInputChange}
                                 onKeyDown={handleKeyDown}
                                 placeholder={t.writeMessage}
+                                style={{ height: textAreaHeight }}
                                 rows={1}
-                                style={{ minHeight: "55px" }}
+                            />
+                            <Textarea
+                                ref={duplicateTextArea}
+                                className="absolute -left-[9999px] opacity-0 min-h-[30px] mt-2 !bg-secondary max-h-[250px] w-full outline-none"
+                                value={inputMessage}
+                                style={{ width: chatRef.current?.offsetWidth }}
+                                readOnly
+                                rows={1}
                             />
                         </div>
                         <Button
                             onClick={isStreaming ? stopEventSource : sendMessage}
-                            className="space-x-2 h-[55px] !w-[57px] !rounded-full flex-shrink-0"
+                            size="icon"
+                            variant="ghost"
                         >
                             {isStreaming ? (
-                                <FaRegStopCircle className="h-[18px] w-[18px] " />
+                                <FaRegStopCircle className="h-[18px] w-[18px] text-white" />
                             ) : (
-                                <Send className="h-[18px] w-[18px] " />
+                                <Send className="h-[18px] w-[18px] text-white" />
                             )}
                         </Button>
-                    </>
+                    </div>
                 )}
             </div>
             <p className="mb-2 text-neutral-400 text-[14px] font-medium space-x-1">
@@ -117,6 +120,4 @@ const InputArea = () => {
             </p>
         </div>
     );
-};
-
-export default InputArea;
+}

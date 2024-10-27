@@ -1,30 +1,34 @@
 import { Dispatch, SetStateAction } from "react";
 import { animateScroll } from "react-scroll";
 
+export type ScrollType = "smooth" | "moderate" | "jerky";
+
 export default function useScrollToBottom(
     setCanShowScrollButton: Dispatch<SetStateAction<boolean>>,
     setIsAtBottom: Dispatch<SetStateAction<boolean>>,
 ) {
-    return (smooth: boolean = false) => {
+    function scrollChatToBottom(
+        { scrollType }: { scrollType?: ScrollType } = { scrollType: "jerky" },
+    ) {
+        const scrollSpeed = scrollType === "smooth" ? 300 : scrollType === "moderate" ? 80 : 0;
+        const showScrollButtonTimeout =
+            scrollType === "smooth" || scrollType === "moderate" ? scrollSpeed + 50 : 0;
+
         setCanShowScrollButton(false);
         animateScroll.scrollToBottom({
             containerId: "chat",
-            duration: smooth ? 300 : 0,
-            smooth,
+            duration: scrollSpeed,
+            smooth: scrollType === "smooth" || scrollType === "moderate",
         });
 
-        setTimeout(
-            () => {
-                setIsAtBottom(true);
-            },
-            smooth ? 300 : 0,
-        );
+        setTimeout(() => {
+            setIsAtBottom(true);
+        }, scrollSpeed);
 
-        setTimeout(
-            () => {
-                setCanShowScrollButton(true);
-            },
-            smooth ? 350 : 0,
-        );
-    };
+        setTimeout(() => {
+            setCanShowScrollButton(true);
+        }, showScrollButtonTimeout);
+    }
+
+    return scrollChatToBottom;
 }

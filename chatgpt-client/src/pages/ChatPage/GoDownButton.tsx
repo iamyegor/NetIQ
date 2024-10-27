@@ -1,9 +1,8 @@
-import React from "react";
 import { Button } from "@/components/ui/button";
-import { FaArrowDown } from "react-icons/fa";
 import { useAppContext } from "@/context/AppContext.tsx";
+import { FaArrowDown } from "react-icons/fa";
 
-const GoDownButton = () => {
+export default function GoDownButton() {
     const {
         scrollToBottom,
         inputAreaHeight,
@@ -13,17 +12,17 @@ const GoDownButton = () => {
     } = useAppContext();
 
     return !shouldAttachToBottom && canShowGoDownButton && hasChatScrollbar ? (
-        <div className="absolute left-1/2 z-40" style={{ bottom: `${inputAreaHeight + 15}px` }}>
+        <div
+            className="absolute left-1/2 -translate-x-1/2 z-40"
+            style={{ bottom: `${inputAreaHeight + 30}px` }}
+        >
             <Button
                 size="icon"
-                variant="secondary"
-                className="border border-neutral-600 rounded-full w-9 h-9 hover:border-neutral-500"
-                onClick={() => scrollToBottom(true)}
+                className="!bg-secondary border border-neutral-700 rounded-full w-11 h-11 sm:w-9 sm:h-9 hover:border-neutral-600"
+                onClick={() => scrollToBottom({ scrollType: "smooth" })}
             >
-                <FaArrowDown />
+                <FaArrowDown className="text-neutral-200" />
             </Button>
         </div>
     ) : null;
-};
-
-export default GoDownButton;
+}

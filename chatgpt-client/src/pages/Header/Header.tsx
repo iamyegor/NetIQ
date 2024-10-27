@@ -8,6 +8,7 @@ import ModelSelector from "@/pages/ModelSelector/ModelSelector";
 import { useEffect, useMemo } from "react";
 import { FiSidebar } from "react-icons/fi";
 import useModelTranslations from "./hooks/useModelTranslations";
+import SideBarSvg from "@/assets/common/sidebar.svg?react";
 
 const Header = () => {
     const {
@@ -48,7 +49,7 @@ const Header = () => {
     };
 
     return (
-        <header className="bg-neutral-800 w-full h-min pb-2 md:pb-4 p-4 fill-faded text-faded fixed md:static z-50">
+        <header className="bg-neutral-900 w-full h-min pb-2 md:pb-4 p-4 fill-faded text-faded fixed md:static z-50">
             <div className="hidden md:flex space-x-2">
                 {!isSidebarExpanded && (
                     <div className="space-x-2 flex">
@@ -59,7 +60,7 @@ const Header = () => {
                             className={`transition-opacity duration-100`}
                             disabled={isSidebarExpanded}
                         >
-                            <FiSidebar className="h-6 w-6" />
+                            <SideBarSvg className="h-6 w-6" />
                         </Button>
                         <Button
                             onClick={() => createNewChat()}
@@ -85,7 +86,7 @@ const Header = () => {
                     size="icon"
                     className="transition-opacity duration-100"
                 >
-                    <FiSidebar className="h-6 w-6" />
+                    <SideBarSvg className="h-6 w-6" />
                 </Button>
                 <ModelSelector
                     selectedModel={selectedModel}

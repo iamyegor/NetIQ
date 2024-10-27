@@ -90,13 +90,13 @@ const CategoryChats: React.FC<CategoryChatsProps> = ({ categoryTitle, chats }) =
                     to={`/chats/${chat.id}`}
                     onClick={() => handleChatSwitch(chat.id)}
                     key={index}
-                    className={`w-full flex justify-start items-center text-white !text-sm font-normal h-9 min-w-[260px] mb-1 space-x-3 !px-2 group relative p-2 hover:bg-neutral-800 rounded-lg transition ${chatId === chat.id ? "bg-neutral-800" : ""}`}
+                    className={`w-full flex justify-start items-center text-white !text-sm font-normal h-9 min-w-[260px] mb-1 space-x-3 !px-2 group relative p-2 hover:bg-neutral-900 rounded-lg transition ${chatId === chat.id ? "bg-neutral-900" : ""}`}
                 >
                     <p className="overflow-hidden whitespace-nowrap truncate pt-0.5 pb-0.5">
                         {chat.title}
                     </p>
                     <TrashBinSvg
-                        className={`w-[24px] h-[24px] flex-shrink-0 fill-red-600 ${chatId == chat.id ? "opacity-100" : "opacity-0"} group-hover:opacity-100 transition-opacity absolute right-2 bg-neutral-800 px-1`}
+                        className={`w-[24px] h-[24px] flex-shrink-0 fill-red-600 ${chatId == chat.id ? "opacity-100" : "opacity-0"} group-hover:opacity-100 transition-opacity absolute right-2 bg-neutral-900 px-1`}
                         onClickCapture={(e) => handleShowDialog(e, chat.id)}
                     />
                 </Link>

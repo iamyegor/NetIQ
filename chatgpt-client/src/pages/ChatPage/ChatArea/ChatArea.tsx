@@ -1,17 +1,20 @@
-import { Message } from "@/pages/ChatPage/types.ts";
-import api from "@/lib/api.ts";
-import { useParams } from "react-router-dom";
-import React, { useEffect, useRef } from "react";
-import { useQuery } from "@tanstack/react-query";
-import ChatMessage from "@/pages/ChatPage/ChatMessage.tsx";
-import { useSelectVariant } from "@/pages/ChatPage/hooks/useSelectVariant.ts";
-import ErrorMessage from "@/pages/ChatPage/ErrorMessage/ErrorMessage";
-import "ldrs/ring2";
-import netIqLogo from "@/assets/common/netiq.png";
-import { AxiosError } from "axios";
-import ServerErrorResponse from "@/types/errors/ServerErrorResponse.ts";
-import RouteError from "@/types/errors/RouteError.ts";
 import { useAppContext } from "@/context/AppContext.tsx";
+import api from "@/lib/api.ts";
+import ChatHero from "@/pages/ChatPage/ChatArea/components/ChatHero/ChatHero";
+import useScorllToBottomOnPageLoad from "@/pages/ChatPage/ChatArea/hooks/useScorllToBottomOnFirstRender";
+import useScrollToBottomWhenStopStreaming from "@/pages/ChatPage/ChatArea/hooks/useScrollDownWhenStopStreaming";
+import ChatMessage from "@/pages/ChatPage/ChatMessage";
+import ErrorMessage from "@/pages/ChatPage/ErrorMessage/ErrorMessage";
+import { useSelectVariant } from "@/pages/ChatPage/hooks/useSelectVariant.ts";
+import { Message } from "@/pages/ChatPage/types.ts";
+import RouteError from "@/types/errors/RouteError.ts";
+import ServerErrorResponse from "@/types/errors/ServerErrorResponse.ts";
+import { useQuery } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { AnimatePresence } from "framer-motion";
+import "ldrs/ring2";
+import React, { useEffect, useRef } from "react";
+import { useParams } from "react-router-dom";
 import useChatAreaTranslation from "./hooks/useChatAreaTranslation";
 
 const fetchMessages = async (chatId: string): Promise<Message[]> => {
@@ -19,7 +22,7 @@ const fetchMessages = async (chatId: string): Promise<Message[]> => {
     return response.data;
 };
 
-const ChatArea = () => {
+export default function ChatArea() {
     const {
         messages,
         setMessages,
@@ -38,9 +41,11 @@ const ChatArea = () => {
     const prevScrollTop = useRef(0);
     const mainRef = useRef<HTMLElement | null>(null);
     const t = useChatAreaTranslation();
+    useScrollToBottomWhenStopStreaming();
+    useScorllToBottomOnPageLoad({ chatElement: mainRef.current, displayedMessages });
 
     useEffect(() => {
-        scrollToBottom();
+        scrollToBottom({ scrollType: "jerky" });
     }, [chatId]);
 
     useEffect(() => {
@@ -92,7 +97,7 @@ const ChatArea = () => {
     }, [data]);
 
     useEffect(() => {
-        if (shouldAttachToBottom && mainRef.current) {
+        if (isStreaming && shouldAttachToBottom && mainRef.current) {
             const element = mainRef.current;
             const hasScrollbar = element.scrollHeight > element.clientHeight;
 
@@ -102,7 +107,7 @@ const ChatArea = () => {
         }
     }, [displayedMessages, isStreaming]);
 
-    const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
+    function handleScroll(event: React.UIEvent<HTMLDivElement>) {
         const target = event.currentTarget;
         const atBottom = target.scrollHeight - target.scrollTop <= target.clientHeight + 5;
 
@@ -115,7 +120,7 @@ const ChatArea = () => {
         }
 
         prevScrollTop.current = currentScrollTop;
-    };
+    }
 
     if (isLoading) {
         return (
@@ -130,20 +135,7 @@ const ChatArea = () => {
     }
 
     if (messages.length === 0 && !chatId) {
-        return (
-            <main className="flex-1 flex justify-center items-center">
-                <div className="w-full max-w-[800px] flex items-center justify-center h-full">
-                    <div className="flex flex-col items-center space-y-8">
-                        <img
-                            src={netIqLogo}
-                            alt="Логотип"
-                            className="h-20 object-cover hover:opacity-70 cursor-pointer active:scale-95 transition"
-                        />
-                        <h2 className="text-2xl font-medium text-neutral-100">{t.hello}</h2>
-                    </div>
-                </div>
-            </main>
-        );
+        return <ChatHero hello={t.hello} />;
     }
 
     function getMessageVariants(message: Message) {
@@ -156,27 +148,27 @@ const ChatArea = () => {
         <main
             ref={mainRef}
             id="chat"
-            className="flex-1 flex justify-center overflow-y-auto !relative px-5 mb-[90px] md:mb-0 md:mt-0"
+            className="flex-1 flex justify-center overflow-y-auto !relative px-5 transition-transform"
             onScroll={handleScroll}
         >
             <div
                 className={`w-full max-w-[800px] ${appError && "h-full flex flex-col justify-between items-stretch"}`}
             >
-                <div className="space-y-5">
-                    {displayedMessages.map((message) => (
-                        <ChatMessage
-                            key={message.id}
-                            message={message}
-                            variants={getMessageVariants(message)}
-                            selectVariant={(variant: Message) => selectVariant(variant)}
-                        />
-                    ))}
+                <div className="pb-[120px] md:pb-[30px]">
+                    <AnimatePresence mode="popLayout">
+                        {displayedMessages.map((message, index) => (
+                            <ChatMessage
+                                key={index}
+                                message={message}
+                                variants={getMessageVariants(message)}
+                                selectVariant={(variant: Message) => selectVariant(variant)}
+                            />
+                        ))}
+                    </AnimatePresence>
                     <div id="chat-end" className="h-5"></div>
                 </div>
                 <ErrorMessage error={appError} />
             </div>
         </main>
     );
-};
-
-export default ChatArea;
+}

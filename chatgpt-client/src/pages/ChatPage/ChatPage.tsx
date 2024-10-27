@@ -14,7 +14,7 @@ const ChatPage = () => {
     }, []);
     
     return (
-        <div className="flex h-screen bg-neutral-800 relative">
+        <div className="flex h-screen bg-neutral-900 relative">
             <Sidebar />
             <div className="h-full w-full flex flex-col relative">
                 <Header />

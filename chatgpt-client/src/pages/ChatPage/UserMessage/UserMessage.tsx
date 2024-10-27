@@ -24,7 +24,8 @@ export default function UserMessage({
 
     async function handleEditPrompt(messageId: string, messageContent: string) {
         await editPrompt(messageId, messageContent);
-        setTimeout(() => scrollToBottom(true), 70);
+        setTimeout(() => scrollToBottom({ scrollType: "smooth" }), 70);
+        setIsEditing(false);
     }
 
     const resizeTextarea = () => {
@@ -44,14 +45,14 @@ export default function UserMessage({
     }
 
     return (
-        <div className="flex gap-x-2 justify-end group">
+        <div className="flex gap-x-2 justify-end group mb-8">
             {isEditing ? (
-                <div className="w-full flex flex-col !bg-[#333333] rounded-[35px] overflow-hidden pr-5 py-4 space-y-2">
+                <div className="w-full flex flex-col !bg-secondary border border-neutral-800 rounded-2xl overflow-hidden pr-5 py-4 space-y-2">
                     <Textarea
                         ref={textareaRef}
                         value={editedMessage}
                         onChange={(e) => setEditedMessage(e.target.value)}
-                        className={`w-full text-white !bg-[#333333] max-h-[350px] focus-visible:outline-none ${textareaRef.current?.scrollHeight && textareaRef.current.scrollHeight < 350 ? "scrollbar-hide" : ""}`}
+                        className={`w-full text-white !bg-secondary max-h-[350px] focus-visible:outline-none ${textareaRef.current?.scrollHeight && textareaRef.current.scrollHeight < 350 ? "scrollbar-hide" : ""}`}
                     />
                     <div className="flex justify-end space-x-3">
                         <Button
@@ -81,7 +82,7 @@ export default function UserMessage({
                             >
                                 <PencilSvg className="w-4 h-4 fill-neutral-300" />
                             </Button>
-                            <div className="p-3 rounded-[25px] text-white bg-neutral-700/50 px-5">
+                            <div className="p-3 rounded-2xl text-white bg-secondary border border-neutral-800 px-5">
                                 <p className="break-all" style={{ whiteSpace: "pre-wrap" }}>
                                     {message.content}
                                 </p>

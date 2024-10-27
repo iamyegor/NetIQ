@@ -3,7 +3,7 @@ import { useMemo } from "react";
 const inputAreaTranslations = [
     {
         locale: "en",
-        writeMessage: "Write a message...",
+        writeMessage: "Ask AI something...",
         reloadChat: "Reload chat",
         developer: {
             title: "Developer:",
@@ -13,7 +13,7 @@ const inputAreaTranslations = [
     },
     {
         locale: "ru",
-        writeMessage: "Напишите сообщение...",
+        writeMessage: "Спросите что-то у ИИ...",
         reloadChat: "Перезагрузить чат",
         developer: {
             title: "Разработчик:",

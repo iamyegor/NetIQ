@@ -1,7 +1,6 @@
-// SidebarContents.tsx
 import AddSvg from "@/assets/pages/chat/add.svg?react";
 import { Button } from "@/components/ui/button.tsx";
-import { FiSidebar } from "react-icons/fi";
+import SideBarSvg from "@/assets/common/sidebar.svg?react";
 import CategoryChats from "@/pages/ChatPage/CategoryChats/CategoryChats";
 import BaseSkeleton from "@/components/ui/BaseSkeleton.tsx";
 import { Chat } from "@/pages/ChatPage/types.ts";
@@ -12,6 +11,7 @@ import authApi from "@/lib/authApi.ts";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppContext } from "@/context/AppContext.tsx";
 import useSidebarTranslations from "./hooks/useSidebarTranslations";
+import netiqLogoImg from "@/assets/common/netiq.png";
 
 async function fetchEmail() {
     const response = await api.get<{ email: string }>("user/email");
@@ -61,25 +61,28 @@ export default function SidebarContents({
 
     return (
         <div
-            className={`bg-neutral-900 ${
+            className={`bg-neutral-950 ${
                 isSidebarExpanded ? "w-72" : "w-0"
-            } h-screen transition-all overflow-hidden flex flex-col relative`}
+            } h-screen transition-all duration-300 overflow-hidden flex flex-col relative`}
         >
             <div className="overflow-y-scroll overflow-x-hidden mb-[125px]">
                 <div className="p-2.5 py-4 pb-0 space-y-4">
                     <div className="flex flex-col gap-y-4 text-faded">
-                        <Button
-                            onClick={() => setIsSidebarExpanded(false)}
-                            variant="ghost"
-                            size="icon"
-                        >
-                            <FiSidebar className="h-6 w-6" />
-                        </Button>
+                        <div className="flex items-center justify-between">
+                            <Button
+                                onClick={() => setIsSidebarExpanded(false)}
+                                variant="ghost"
+                                size="icon"
+                            >
+                                <SideBarSvg className="h-6 w-6 fill-faded" />
+                            </Button>
+                        </div>
                         <Button
                             onClick={() => handleCreateNewChat()}
-                            className="flex gap-x-3 min-w-[262px]"
+                            variant="outline"
+                            className="flex gap-x-3 min-w-[262px] text-neutral-200 !border-neutral-800 !bg-secondary hover:!bg-secondary"
                         >
-                            <AddSvg className="h-6 w-6" />
+                            <AddSvg className="h-6 w-6 fill-neutral-200" />
                             <p>{t.newChat}</p>
                         </Button>
                     </div>
@@ -110,10 +113,10 @@ export default function SidebarContents({
                     </div>
                 </div>
             </div>
-            <div className="absolute bottom-0 left-0 right-0 bg-neutral-900 p-2 pt-1.5 space-y-2">
+            <div className="absolute bottom-0 left-0 right-0 bg-neutral-950 p-2 pt-1.5 space-y-2">
                 <Link
                     to="/pricing"
-                    className="hover:bg-neutral-800 rounded-xl flex items-center space-x-3 text-white px-2 text-sm cursor-pointer h-[50px] transition duration-300"
+                    className="hover:bg-neutral-900 rounded-xl flex items-center space-x-3 text-white px-2 text-sm cursor-pointer h-[50px] transition duration-300"
                 >
                     <Sparkles className="w-6 h-6 flex-shrink-0" />
                     <div className="text-nowrap">
@@ -121,7 +124,7 @@ export default function SidebarContents({
                         <p className="text-xs text-neutral-400">{t.getMoreFeatures}</p>
                     </div>
                 </Link>
-                <div className="bg-neutral-800 rounded-xl px-2 flex items-center justify-between text-white h-[50px]">
+                <div className="bg-neutral-900 rounded-xl px-2 flex items-center justify-between text-white h-[50px]">
                     <div className="flex items-center space-x-3">
                         <CircleUser className="w-6 h-6" />
                         <p className="text-sm truncate max-w-[21ch]">{email ?? t.profile}</p>

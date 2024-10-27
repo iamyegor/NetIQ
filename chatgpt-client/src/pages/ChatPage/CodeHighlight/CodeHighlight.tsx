@@ -14,6 +14,7 @@ const customStyle = {
     },
     'pre[class*="language-"]': {
         ...theme['pre[class*="language-"]'],
+        backgroundColor: "#18181b",
         fontFamily: "'JetBrains Mono', monospace",
         fontSize: 14,
         padding: "20px",
@@ -42,11 +43,9 @@ export default function CodeHighlight({ children, className, node, ...rest }: Co
         }, 1000);
     }
 
-    console.log({ copy: t.copy });
-
     return match ? (
-        <div className="border-4 border-neutral-900 rounded-2xl overflow-hidden">
-            <div className="bg-neutral-900 flex justify-between p-2.5 px-3 text-xs">
+        <div className="rounded-2xl overflow-hidden border border-neutral-800">
+            <div className="bg-secondary flex justify-between p-2.5 px-3 text-xs">
                 <div>{match[1]}</div>
                 <button className="flex items-center space-x-1" onClick={handleCopy}>
                     {isCopied ? (

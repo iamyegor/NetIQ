@@ -25,6 +25,7 @@ export default {
             },
             colors: {
                 faded: "#BCBCBC",
+                secondary: "#141415"
             },
         },
         container: {

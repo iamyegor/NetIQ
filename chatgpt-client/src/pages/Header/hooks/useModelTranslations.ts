@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-const modelTranslations = [
+export const modelTranslations = [
     {
         locale: "en",
         models: {

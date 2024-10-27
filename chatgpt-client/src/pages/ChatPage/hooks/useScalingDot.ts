@@ -1,5 +1,5 @@
-import { useEffect, RefObject } from "react";
 import { Message } from "@/pages/ChatPage/types.ts";
+import { RefObject, useEffect } from "react";
 
 export const useScalingDot = (
     contentRef: RefObject<HTMLDivElement>,
@@ -7,7 +7,6 @@ export const useScalingDot = (
     message: Message,
     isStreaming: boolean,
     isLast: boolean,
-    displayedMessages: Message[],
 ) => {
     useEffect(() => {
         if (contentRef.current && scalingDotRef.current) {

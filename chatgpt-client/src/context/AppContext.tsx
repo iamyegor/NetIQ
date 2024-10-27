@@ -1,3 +1,14 @@
+import useCreateNewChat from "@/context/hooks/useCreateNewChat.tsx";
+import useError from "@/context/hooks/useError.ts";
+import { useBaseEventSource } from "@/pages/ChatPage/hooks/useBaseEventSource.ts";
+import useChatEventSource from "@/pages/ChatPage/hooks/useChatEventSource.ts";
+import useChats from "@/pages/ChatPage/hooks/useChats.ts";
+import useDisplayedMessages from "@/pages/ChatPage/hooks/useDisplayedMessages.ts";
+import useEditPrompt from "@/pages/ChatPage/hooks/useEditPrompt.ts";
+import { useRegenerateResponse } from "@/pages/ChatPage/hooks/useRegenerateResponse.ts";
+import { ScrollType } from "@/pages/ChatPage/hooks/useScrollToBottom";
+import useScrollToBottom from "@/pages/ChatPage/hooks/useScrollToBottom.ts";
+import { AppError, Chat, Message, Model } from "@/pages/ChatPage/types.ts";
 import React, {
     createContext,
     Dispatch,
@@ -6,19 +17,9 @@ import React, {
     useContext,
     useState,
 } from "react";
-import { AppError, Chat, Message, Model } from "@/pages/ChatPage/types.ts";
-import { useBaseEventSource } from "@/pages/ChatPage/hooks/useBaseEventSource.ts";
-import useDisplayedMessages from "@/pages/ChatPage/hooks/useDisplayedMessages.ts";
-import { useParams } from "react-router-dom";
-import useError from "@/context/hooks/useError.ts";
-import useScrollToBottom from "@/pages/ChatPage/hooks/useScrollToBottom.ts";
-import useChats from "@/pages/ChatPage/hooks/useChats.ts";
-import { useRegenerateResponse } from "@/pages/ChatPage/hooks/useRegenerateResponse.ts";
-import useEditPrompt from "@/pages/ChatPage/hooks/useEditPrompt.ts";
-import useCreateNewChat from "@/context/hooks/useCreateNewChat.tsx";
 import { useMediaQuery } from "react-responsive";
-import useChatEventSource from "@/pages/ChatPage/hooks/useChatEventSource.ts";
-import useLanguageDetection from "./hooks/useLanguageDetection";
+import { useParams } from "react-router-dom";
+import useLanguageDetection, { Language } from "./hooks/useLanguageDetection";
 
 interface AppContextValue {
     messages: Message[];
@@ -34,12 +35,12 @@ interface AppContextValue {
     selectedModel: Model | null;
     setSelectedModel: Dispatch<SetStateAction<Model | null>>;
     inputAreaHeight: number;
-    setInputAreaHeight: Dispatch<SetStateAction<number>>;
+    setInputContainerHeight: Dispatch<SetStateAction<number>>;
     canShowGoDownButton: boolean;
     setCanShowGoDownButton: Dispatch<SetStateAction<boolean>>;
     shouldAttachToBottom: boolean;
     setShouldAttachToBottom: Dispatch<SetStateAction<boolean>>;
-    scrollToBottom: (smooth?: boolean) => void;
+    scrollToBottom: ({ scrollType }?: { scrollType?: ScrollType }) => void;
     hasChatScrollbar: boolean;
     setHasChatScrollbar: Dispatch<SetStateAction<boolean>>;
     chats: Chat[];
@@ -58,6 +59,9 @@ interface AppContextValue {
     createNewChat: () => void;
     isMdScreen: boolean;
     loadChats: () => void;
+    language: Language;
+    inputMessage: string;
+    setInputMessage: Dispatch<SetStateAction<string>>;
 }
 
 const AppContext = createContext<AppContextValue | null>(null);
@@ -70,7 +74,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const { appError, setAppError } = useError(chatId);
     const { startEventSource, stopEventSource } = useBaseEventSource(setIsStreaming, setAppError);
     const [selectedModel, setSelectedModel] = useState<Model | null>(null);
-    const [inputAreaHeight, setInputAreaHeight] = useState(0);
+    const [inputAreaHeight, setInputContainerHeight] = useState(0);
     const [canShowGoDownButton, setCanShowGoDownButton] = useState(true);
     const [shouldAttachToBottom, setShouldAttachToBottom] = useState(false);
     const scrollToBottom = useScrollToBottom(setCanShowGoDownButton, setShouldAttachToBottom);
@@ -91,12 +95,16 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const { editPrompt } = useEditPrompt(streamingData);
     const { createNewChat } = useCreateNewChat(setMessages, stopEventSource, setAppError);
     const { startChatEventSource } = useChatEventSource(streamingData);
+    const [inputMessage, setInputMessage] = useState<string>("");
     const isMdScreen = useMediaQuery({ minWidth: 768 });
-    useLanguageDetection();
+    const language = useLanguageDetection();
 
     return (
         <AppContext.Provider
             value={{
+                inputMessage,
+                setInputMessage,
+                language,
                 loadChats,
                 isMdScreen,
                 createNewChat,
@@ -115,7 +123,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
                 selectedModel,
                 setSelectedModel,
                 inputAreaHeight,
-                setInputAreaHeight,
+                setInputContainerHeight,
                 canShowGoDownButton,
                 setCanShowGoDownButton,
                 shouldAttachToBottom,

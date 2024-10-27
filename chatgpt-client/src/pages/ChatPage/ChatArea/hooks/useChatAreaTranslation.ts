@@ -3,11 +3,11 @@ import { useMemo } from "react";
 const translations = [
     {
         locale: "en",
-        hello: "Hello, What can I help with?",
+        hello: "Hello, what can I help with?",
     },
     {
         locale: "ru",
-        hello: "Привет, Чем могу помочь?",
+        hello: "Привет, задай любой вопрос",
     },
 ];
 

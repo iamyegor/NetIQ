@@ -37,7 +37,7 @@ public static class MassTransitServicesExtensions
                         }
                     );
 
-                    configurator.UseMessageRetry(r => r.Interval(10, TimeSpan.FromSeconds(10)));
+                    configurator.UseMessageRetry(r => r.Interval(5, TimeSpan.FromSeconds(10)));
 
                     configurator.ConfigureEndpoints(context);
                 }
