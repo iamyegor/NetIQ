@@ -40,7 +40,7 @@ interface AppContextValue {
     setCanShowGoDownButton: Dispatch<SetStateAction<boolean>>;
     shouldAttachToBottom: boolean;
     setShouldAttachToBottom: Dispatch<SetStateAction<boolean>>;
-    scrollToBottom: ({ scrollType }?: { scrollType?: ScrollType }) => void;
+    scrollToBottom: (params?: { scrollType?: ScrollType }) => void;
     hasChatScrollbar: boolean;
     setHasChatScrollbar: Dispatch<SetStateAction<boolean>>;
     chats: Chat[];
@@ -59,7 +59,7 @@ interface AppContextValue {
     createNewChat: () => void;
     isMdScreen: boolean;
     loadChats: () => void;
-    language: Language;
+    language: Language | null;
     inputMessage: string;
     setInputMessage: Dispatch<SetStateAction<string>>;
 }

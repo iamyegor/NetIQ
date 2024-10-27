@@ -4,11 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useAppContext } from "@/context/AppContext.tsx";
 import useResizeInputAutomatically from "@/pages/InputArea/hooks/useResizeInputAutomatically";
-import { Send } from "lucide-react";
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { FaRegStopCircle } from "react-icons/fa";
 import MagicWantSvg from "./assets/magic-wand.svg?react";
 import useInputAreaTranslations from "./hooks/useInputAreaTranslations";
+import SendSvg from "./assets/send.svg?react";
 
 export default function InputArea() {
     const {
@@ -102,7 +102,7 @@ export default function InputArea() {
                             {isStreaming ? (
                                 <FaRegStopCircle className="h-[18px] w-[18px] text-white" />
                             ) : (
-                                <Send className="h-[18px] w-[18px] text-white" />
+                                <SendSvg className="h-[18px] w-[18px] fill-white" />
                             )}
                         </Button>
                     </div>

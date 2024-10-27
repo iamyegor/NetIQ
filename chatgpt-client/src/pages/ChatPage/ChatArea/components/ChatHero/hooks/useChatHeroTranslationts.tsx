@@ -1,34 +1,34 @@
+import { Code, FileText, HelpCircle, Zap } from "lucide-react";
 import { useMemo } from "react";
 import CodeSvg from "../assets/code.svg?react";
 import ConceptSvg from "../assets/concept.svg?react";
 import ContentSvg from "../assets/content.svg?react";
 import PuzzleSvg from "../assets/puzzle.svg?react";
-import icon from "react-syntax-highlighter/dist/esm/languages/prism/icon";
 
-const iconClass = "w-5 h-5 fill-blue-400 flex-shrink-0";
+const iconClass = "w-4 h-4 flex-shrink-0";
 
 export const translations = [
     {
         locale: "en",
-        tryPrompts: "Try these prompts",
+        tryPrompts: "Try these prompts:",
         suggestedPrompts: [
             {
-                icon: <CodeSvg className={iconClass} />,
+                icon: <Code className={iconClass} />,
                 label: "Write Code",
                 prompt: "I need help writing code to [your task]. I'm using [programming language] and want to [specific goal]. Can you guide me through this step by step?",
             },
             {
-                icon: <ConceptSvg className={iconClass} />,
+                icon: <Zap className={iconClass} />,
                 label: "Master Concepts",
                 prompt: "Explain [topic] to me like I'm a beginner. Use simple examples and break it down into its most essential parts.",
             },
             {
-                icon: <ContentSvg className={iconClass} />,
+                icon: <FileText className={iconClass} />,
                 label: "Create Content",
                 prompt: "Help me write a [type of content] about [topic]. Make it [length] and focus on [specific aspects]. The target audience is [description].",
             },
             {
-                icon: <PuzzleSvg className={iconClass} />,
+                icon: <HelpCircle className={iconClass} />,
                 label: "Solve Problems",
                 prompt: "I'm trying to solve this problem: [describe situation]. What are the key factors I should consider, and what are some potential solutions?",
             },
