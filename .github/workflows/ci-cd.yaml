@@ -65,7 +65,7 @@ jobs:
       - name: Prepare Auth migrations
         run: |
           mkdir -p chatgpt-server/Auth/migrator/Migrator/Migrations
-          cp -r chatgpt-server/Auth/app/Infrastructure/Migrations/* chatgpt-server/Auth/migrator/Migrator/Migrations/
+          cp -r chatgpt-server/Auth/app/Infrastructure/Data/Migrations/* chatgpt-server/Auth/migrator/Migrator/Migrations/
 
       - name: Run MigrationChanger for Auth
         run: |
@@ -110,7 +110,7 @@ jobs:
       - name: Prepare Server migrations
         run: |
           mkdir -p chatgpt-server/Chatgpt/migrator/Migrator/Migrations
-          cp -r chatgpt-server/Chatgpt/app/Infrastructure/Migrations/* chatgpt-server/Chatgpt/migrator/Migrator/Migrations/
+          cp -r chatgpt-server/Chatgpt/app/Infrastructure/Data/Migrations/* chatgpt-server/Chatgpt/migrator/Migrator/Migrations/
 
       - name: Run MigrationChanger for Server
         run: |
