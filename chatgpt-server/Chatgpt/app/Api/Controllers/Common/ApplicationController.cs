@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text;
+using Domain.Common;
 using Domain.Errors;
 using Microsoft.AspNetCore.Mvc;
 using XResults;
@@ -21,9 +22,7 @@ public class ApplicationController : ControllerBase
     protected IActionResult FromResult<TValue>(Result<TValue, Error> result)
     {
         if (result.IsFailure)
-        {
             return Problem(result.Error);
-        }
 
         return Ok(result.Value);
     }

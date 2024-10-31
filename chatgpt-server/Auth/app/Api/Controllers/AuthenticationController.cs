@@ -14,7 +14,7 @@ using XResults;
 namespace Api.Controllers;
 
 [ApiController]
-[Route("auth/auth")]
+[Route("auth")]
 public class AuthenticationController : ApplicationController
 {
     private readonly IMediator _mediator;

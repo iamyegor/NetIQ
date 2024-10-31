@@ -1,5 +1,8 @@
 ﻿using Domain.Chat.Entities;
+using Domain.Chat.Entities.Message;
+using Domain.Chat.Entities.Message.Errors;
 using Domain.Common;
+using XResults;
 
 namespace Domain.Chat;
 
@@ -17,73 +20,36 @@ public class Chat : AggregateRoot<Guid>
         Title = title;
     }
 
-    public void AddMessage(Message message)
+    public void AddNewMessage(Message message)
     {
         _messages.Add(message);
-
         LastUpdatedAt = DateTime.UtcNow;
-    }
 
-    public void AppendChatGptResponse(string content)
-    {
-        Message message = _messages.OrderBy(x => x.CreatedAt).Last();
-        if (message.Sender != Sender.Assistant)
-            throw new InvalidOperationException("Cannot append to user message");
-
-        message.AppendContent(content);
-
-        LastUpdatedAt = DateTime.UtcNow;
-    }
-
-    public Message RegenerateResponse(Guid linkId)
-    {
-        foreach (Message message in _messages.Where(m => m.LinkId == linkId))
-        {
-            message.IsSelected = false;
-        }
-
-        Message assistantMessage = new("", Sender.Assistant, linkId) { IsSelected = true };
-        AddMessage(assistantMessage);
-
-        return assistantMessage;
-    }
-
-    public Message EditPrompt(string messageContent, Guid linkId)
-    {
-        foreach (Message message in _messages.Where(m => m.LinkId == linkId))
-        {
-            message.IsSelected = false;
-        }
-
-        Message editedPrompt = new(messageContent, Sender.User, linkId) { IsSelected = true };
-        Message assistantMessage = new("", Sender.Assistant, editedPrompt.Id) { IsSelected = true };
-
-        AddMessage(editedPrompt);
-        AddMessage(assistantMessage);
-
-        return editedPrompt;
-    }
-
-    public void UnselectMessages(Guid? linkId)
-    {
-        foreach (Message message in _messages.Where(m => m.LinkId == linkId))
-        {
-            message.IsSelected = false;
-        }
-    }
-
-    public void SelectMessage(Message message)
-    {
         foreach (Message msg in _messages.Where(m => m.LinkId == message.LinkId))
-        {
-            msg.IsSelected = false;
-        }
+            msg.Unselect();
 
-        message.IsSelected = true;
+        message.Select();
     }
 
     public bool ReachedMaxMessages()
     {
         return _messages.Count(m => m.Sender == Sender.User) >= 50;
+    }
+
+    public SuccessOr<Error> SelectMessage(Guid messageId)
+    {
+        Message? messageToSelect = _messages.SingleOrDefault(x => x.Id == messageId);
+        if (messageToSelect == null)
+            return ErrorsMessage.DoesNotExist;
+
+        foreach (Message message in _messages.Where(x => x.LinkId == messageToSelect.LinkId))
+        {
+            if (message.Id == messageToSelect.Id)
+                message.Select();
+            else
+                message.Unselect();
+        }
+
+        return Result.Ok();
     }
 }

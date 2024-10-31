@@ -11,7 +11,7 @@ export default async function requestPasswordResetPageAction({ request }: any) {
     const t = getRequestPasswordResetActionTranslations(locale);
 
     try {
-        await authApi.post("auth/request-password-reset", { email });
+        await authApi.post("password/request-password-reset", { email });
         return FeedbackMessage.createSuccess(t.successMessage);
     } catch (error) {
         if (axios.isAxiosError(error)) {

@@ -13,7 +13,7 @@ using XResults;
 namespace Api.Controllers;
 
 [ApiController]
-[Route("auth")]
+[Route("email")]
 public class EmailVerificationController : ApplicationController
 {
     private readonly IMediator _mediator;
@@ -28,7 +28,7 @@ public class EmailVerificationController : ApplicationController
     [Authorize]
     [HttpPost("confirm-email")]
     public async Task<IActionResult> ConfirmEmail(VerifyEmailDto dto)
-    {
+    { 
         Result<UserId, Error> userIdOrError = _userIdExtractor.ExtractUserId(Request.Cookies);
         if (userIdOrError.IsFailure)
         {

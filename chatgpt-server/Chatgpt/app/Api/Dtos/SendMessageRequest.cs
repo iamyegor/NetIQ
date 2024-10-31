@@ -1,6 +1,3 @@
 ﻿namespace Api.Dtos;
 
-public class SendMessageRequest
-{
-    public Guid? LinkId { get; set;  }
-}
+public record SendMessageRequest(Guid? LinkId);

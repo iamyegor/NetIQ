@@ -1,4 +1,5 @@
 using System.Net;
+using Domain.Common;
 using Domain.Errors;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,32 +1,26 @@
-import RootLayout from "@/components/ui/RootLayout.tsx";
+import RootLayout from "@/components/RootLayout/RootLayout";
 import ChatPage from "@/pages/ChatPage/ChatPage";
-import HomePage from "@/pages/HomePage/HomePage.tsx";
-import authenticateAndRedirectToChatOrSignInLoader from "@/loaders/authenticateAndRedirectToChatOrSignInLoader.ts";
-import redirectToSignInOnUnauthenticatedLoader from "@/loaders/redirectToSignInOnUnauthenticatedLoader.ts";
-import ErrorPage from "@/pages/ErrorPage/ErrorPage.tsx";
-import SignUpPage from "@/pages/SignUpPage/SignUpPage";
-import { signUpPageAction } from "@/pages/SignUpPage/actions/signUpPageAction";
 import ConfirmEmailPage from "@/pages/ConfirmEmailPage/ConfirmEmailPage.tsx";
 import confirmEmailPageAction from "@/pages/ConfirmEmailPage/actions/confirmEmailPageAction.ts";
-import SignInPage from "@/pages/SignInPage/SignInPage";
-import signInPageAction from "@/pages/SignInPage/actions/signInPageAction";
-import authenticateAndRedirectToChatOrStayLoader from "@/loaders/authenticateAndRedirectToChatOrStayLoader.ts";
+import ErrorPage from "@/pages/ErrorPage/ErrorPage.tsx";
+import HomePage from "@/pages/HomePage/HomePage.tsx";
+import PricingPage from "@/pages/PricingPage/PricingPage.tsx";
 import RequestPasswordResetPage from "@/pages/RequestPasswordReset/RequestPasswordResetPage";
 import requestPasswordResetPageAction from "@/pages/RequestPasswordReset/actions/requestPasswordResetPageAction";
 import ResetPasswordPage from "@/pages/ResetPassword/ResetPasswordPage.tsx";
 import resetPasswordPageAction from "@/pages/ResetPassword/actions/resetPasswordPageAction.ts";
-import { AppProvider } from "@/context/AppContext.tsx";
-import PricingPage from "@/pages/PricingPage/PricingPage.tsx";
-import AdminPage from "@/pages/AdminPage/AdminPage.tsx";
+import SignInPage from "@/pages/SignInPage/SignInPage";
+import signInPageAction from "@/pages/SignInPage/actions/signInPageAction";
+import SignUpPage from "@/pages/SignUpPage/SignUpPage";
+import { signUpPageAction } from "@/pages/SignUpPage/actions/signUpPageAction";
+import authenticateAndRedirectToChatOrSignInLoader from "@/utils/loaders/authenticateAndRedirectToChatOrSignInLoader";
+import authenticateAndRedirectToChatOrStayLoader from "@/utils/loaders/authenticateAndRedirectToChatOrStayLoader";
+import redirectToSignInOnUnauthenticatedLoader from "@/utils/loaders/redirectToSignInOnUnauthenticatedLoader";
 
 export const routes = [
     {
         path: "/",
-        element: (
-            <AppProvider>
-                <RootLayout />
-            </AppProvider>
-        ),
+        element: <RootLayout />,
         errorElement: <ErrorPage />,
         children: [
             {
@@ -77,10 +71,6 @@ export const routes = [
             {
                 path: "pricing",
                 element: <PricingPage />,
-            },
-            {
-                path: "admin",
-                element: <AdminPage />,
             },
             {
                 path: "*",

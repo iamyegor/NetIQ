@@ -1,5 +1,6 @@
 ﻿using Domain.Common;
 using Domain.User.ValueObjects;
+using Domain.User.ValueObjects.Email;
 
 namespace Domain.User;
 
@@ -9,7 +10,7 @@ public class User : AggregateRoot<Guid>
     public IReadOnlyList<Chat.Chat> Chats => _chats.AsReadOnly();
     private readonly List<Chat.Chat> _chats = [];
     public SubscriptionStatus SubscriptionStatus { get; } = SubscriptionStatus.Free;
-    public int SentMessages { get; set; }
+    public int SentMessages { get; private set; }
 
     public User()
         : base(Guid.NewGuid()) { }
@@ -17,15 +18,9 @@ public class User : AggregateRoot<Guid>
     private User(Guid id)
         : base(id) { }
 
-    public void AddChat(Chat.Chat chat)
-    {
-        _chats.Add(chat);
-    }
+    public void AddChat(Chat.Chat chat) => _chats.Add(chat);
 
-    public static User Create(Guid id, Email email)
-    {
-        return new User(id) { Email = email };
-    }
+    public static User Create(Guid id, Email email) => new User(id) { Email = email };
 
     public void DeleteChat(Guid chatId)
     {
@@ -39,8 +34,6 @@ public class User : AggregateRoot<Guid>
         return model != null && model.SubscriptionsWithAccess.Contains(SubscriptionStatus);
     }
 
-    public bool ReachedMaxMessages()
-    {
-        return SentMessages >= SubscriptionStatus.MaxMessages;
-    }
+    public bool ReachedMaxMessages() => SentMessages >= SubscriptionStatus.MaxMessages;
+    public void IncrementSentMessages() => SentMessages++;
 }

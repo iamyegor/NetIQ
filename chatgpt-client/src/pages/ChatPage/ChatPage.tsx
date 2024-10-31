@@ -1,18 +1,10 @@
-import { useAppContext } from "@/context/AppContext.tsx";
 import ChatArea from "@/pages/ChatPage/ChatArea/ChatArea";
-import GoDownButton from "@/pages/ChatPage/GoDownButton.tsx";
-import Sidebar from "@/pages/ChatPage/Sidebar.tsx";
-import Header from "@/pages/Header/Header";
-import InputArea from "@/pages/InputArea/InputArea";
-import { useEffect } from "react";
+import GoDownButton from "@/pages/ChatPage/_ui/GoDownButton.tsx";
+import Sidebar from "@/pages/ChatPage/Sidbar/Sidebar";
+import Header from "@/pages/ChatPage/Header/Header.tsx";
+import InputArea from "@/pages/ChatPage/InputArea/InputArea.tsx";
 
-const ChatPage = () => {
-    const { loadChats } = useAppContext();
-
-    useEffect(() => {
-        loadChats();
-    }, []);
-    
+export default function ChatPage() {
     return (
         <div className="flex h-screen bg-neutral-900 relative">
             <Sidebar />
@@ -25,6 +17,4 @@ const ChatPage = () => {
             </div>
         </div>
     );
-};
-
-export default ChatPage;
+}

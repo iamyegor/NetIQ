@@ -26,7 +26,7 @@ export default async function resetPasswordPageAction({
     if (!token) return { error: "Некорректная ссылка" };
 
     try {
-        await authApi.post("auth/reset-password", { newPassword: password, token });
+        await authApi.post("password/reset-password", { newPassword: password, token });
         return redirect("/");
     } catch (error) {
         if (axios.isAxiosError(error)) {

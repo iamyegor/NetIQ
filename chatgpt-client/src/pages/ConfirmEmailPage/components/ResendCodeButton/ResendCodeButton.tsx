@@ -40,7 +40,7 @@ export default function ResendCodeButton({
         setIsLoading(true);
 
         try {
-            await authApi.post("resend-email-code");
+            await authApi.post("email/resend-email-code");
             setMessage(FeedbackMessage.createSuccess(t.codeSent));
             setSecondsLeft(maxSeconds);
         } catch (err) {

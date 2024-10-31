@@ -2,14 +2,14 @@ import authApi from "@/lib/backend/authApi";
 
 export default class PostEventSource {
     private url: string;
-    private body: string;
+    private body: any;
     private abortController: AbortController | null = null;
 
     onmessage: ((event: MessageEvent) => void) | null = null;
     onerror: ((error: ErrorEvent) => void) | null = null;
     onclose: (() => void) | null = null;
 
-    constructor(url: string, body: string) {
+    constructor(url: string, body: any) {
         this.url = url;
         this.body = body;
     }
@@ -43,7 +43,7 @@ export default class PostEventSource {
     private async fetchWithTokenRefresh(isRetry: boolean = false): Promise<void> {
         try {
             const response = await fetch(
-                `https://${import.meta.env.VITE_BACKEND_ADDRESS}/api/${this.url}`,
+                `https://${import.meta.env.VITE_BACKEND_ADDRESS}/${this.url}`,
                 {
                     method: "POST",
                     headers: {
@@ -116,7 +116,7 @@ export default class PostEventSource {
 
     private async refreshToken(): Promise<boolean> {
         try {
-            await authApi.post("refresh-access-token");
+            await authApi.post("infra/refresh-access-token");
             return true;
         } catch (refreshError) {
             console.error("Token refresh failed:", refreshError);

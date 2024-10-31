@@ -8,7 +8,7 @@ namespace Application;
 
 public static class DependencyInjection
 {
-    public static void AddApplicationValidation(this IServiceCollection services)
+    public static void AddApplication(this IServiceCollection services)
     {
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
         services.AddMediatR(config =>

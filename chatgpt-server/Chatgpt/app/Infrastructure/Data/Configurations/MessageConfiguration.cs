@@ -1,4 +1,5 @@
 ﻿using Domain.Chat.Entities;
+using Domain.Chat.Entities.Message;
 using Domain.User;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using Api.Controllers.Common;
 using Domain.User.ValueObjects;
+using Domain.User.ValueObjects.Email;
 using Infrastructure.Auth;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
@@ -9,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Api.Controllers;
 
-[Route("api/user")]
+[Route("user")]
 [ApiController]
 public class UserController : ApplicationController
 {

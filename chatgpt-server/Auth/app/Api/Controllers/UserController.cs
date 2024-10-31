@@ -13,7 +13,7 @@ using XResults;
 namespace Api.Controllers;
 
 [ApiController]
-[Route("auth/user")]
+[Route("user")]
 public class UserController : ApplicationController
 {
     private readonly IMediator _mediator;

@@ -13,7 +13,7 @@ using XResults;
 namespace Api.Controllers;
 
 [ApiController]
-[Route("auth/vk")]
+[Route("vk")]
 public class VkController : ApplicationController
 {
     private readonly IMediator _mediator;

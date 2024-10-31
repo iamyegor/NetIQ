@@ -1,97 +1,35 @@
 ﻿using System.Security.Claims;
 using Api.Controllers.Common;
 using Api.Dtos;
-using Domain.Chat;
-using Domain.Chat.Entities;
-using Domain.Chat.Errors;
-using Domain.User;
+using Application.Chat.Commands;
+using Application.Chat.Queries;
+using Domain.Chat.Entities.Message;
+using Domain.Common;
 using Infrastructure.Auth;
 using Infrastructure.ChatGPT;
 using Infrastructure.Data;
 using Mapster;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using XResults;
 
 namespace Api.Controllers;
 
 [ApiController]
-[Route("api/chats/{chatId}/messages")]
+[Route("chats/{chatId}/messages")]
 public class MessagesController : StreamerController
 {
-    public MessagesController(ApplicationContext context, ChatGpt chatGpt)
-        : base(context, chatGpt) { }
+    private readonly IMediator _mediator;
 
-    [HttpPost("edit"), Authorize]
-    public async Task EditPrompt(Guid chatId, EditPromptRequest request, CancellationToken ct)
+    public MessagesController(ApplicationContext context, ChatGpt chatGpt, IMediator mediator)
+        : base(context, chatGpt)
     {
-        InitializeResponseHeaders();
-
-        Guid userId = Guid.Parse(User.FindFirstValue(JwtClaims.UserId)!);
-
-        User? user = await Context
-            .Users.Where(u => u.Id == userId)
-            .Include(u => u.Chats.Where(c => c.Id == chatId))
-            .SingleOrDefaultAsync(c => c.Id == userId, ct);
-
-        if (user == null)
-        {
-            await SendSseErrorAsync("User not found", CancellationToken.None);
-            return;
-        }
-
-        if (!user.CanAccess(request.Model))
-        {
-            await SendSseErrorAsync("User can't access the model", CancellationToken.None);
-            return;
-        }
-
-        Chat? chat = user.Chats.SingleOrDefault();
-        if (chat == null)
-        {
-            await SendSseErrorAsync("Chat not found", CancellationToken.None);
-            return;
-        }
-
-        await Context.Entry(chat).Collection(c => c.Messages).LoadAsync(ct);
-
-        if (chat.ReachedMaxMessages())
-        {
-            await SendSseErrorAsync("Chat reached max messages", CancellationToken.None);
-            return;
-        }
-
-        if (user.ReachedMaxMessages())
-        {
-            await SendSseErrorAsync("User reached max messages", CancellationToken.None);
-            return;
-        }
-
-        List<ChatGptMessage> gptMessages = chat
-            .Messages.Where(m => request.DisplayedMessageIds.Contains(m.Id))
-            .OrderBy(m => m.CreatedAt)
-            .Select(m => new ChatGptMessage(m.Sender.Value, m.Content))
-            .ToList();
-
-        Message userMessage = await AddUserMessage(
-            chat,
-            request.MessageContent,
-            request.DisplayedMessageIds,
-            ct,
-            true
-        );
-        await AddAssistantMessage(chat, userMessage.Id, ct);
-        gptMessages.Add(new ChatGptMessage(userMessage.Sender.Value, userMessage.Content));
-
-        await StreamChatGptResponse(chat.Messages.Last(), gptMessages, request.Model, ct);
-
-        user.SentMessages++;
-
-        await Context.SaveChangesAsync(CancellationToken.None);
-        await SendSseEventAsync("Stream ended", CancellationToken.None, "close");
+        _mediator = mediator;
     }
 
-    [HttpPost("regenerate"), Authorize]
+    [HttpPost("regenerate")]
+    [Authorize]
     public async Task RegenerateResponse(
         Guid chatId,
         RegenerateResponseRequest request,
@@ -102,56 +40,27 @@ public class MessagesController : StreamerController
 
         Guid userId = Guid.Parse(User.FindFirstValue(JwtClaims.UserId)!);
 
-        User? user = await Context
-            .Users.Where(u => u.Id == userId)
-            .Include(u => u.Chats.Where(c => c.Id == chatId))
-            .SingleOrDefaultAsync(c => c.Id == userId, ct);
+        Result<RegenerateResponseResult, Error> result = await _mediator.Send(
+            (userId, chatId, request).Adapt<RegenerateResponseCommand>(),
+            ct
+        );
 
-        if (user == null)
+        if (result.IsFailure)
         {
-            await SendSseErrorAsync("User not found", CancellationToken.None);
+            await SendSseErrorAsync(result.Error.Code, ct);
             return;
         }
 
-        if (!user.CanAccess(request.Model))
-        {
-            await SendSseErrorAsync("User can't access the model", CancellationToken.None);
-            return;
-        }
-
-        Chat? chat = user.Chats.SingleOrDefault();
-        if (chat == null)
-        {
-            await SendSseErrorAsync("Chat not found", CancellationToken.None);
-            return;
-        }
-
-        await Context.Entry(chat).Collection(c => c.Messages).LoadAsync(ct);
-
-        if (chat.ReachedMaxMessages())
-        {
-            await SendSseErrorAsync("Chat reached max messages", CancellationToken.None);
-            return;
-        }
-        
-        if (user.ReachedMaxMessages())
-        {
-            await SendSseErrorAsync("User reached max messages", CancellationToken.None);
-            return;
-        }
-
-        List<ChatGptMessage> gptMessages = chat
-            .Messages.Where(m => request.DisplayedMessageIds.Contains(m.Id))
+        List<ChatGptMessage> gptMessages = result
+            .Value.Chat.Messages.Where(m => request.DisplayedMessageIds.Contains(m.Id))
             .OrderBy(m => m.CreatedAt)
             .Select(m => new ChatGptMessage(m.Sender.Value, m.Content))
             .ToList();
 
-        Message regeneratedResponse = chat.RegenerateResponse(request.DisplayedMessageIds.Last());
-
-        await SendAssistantMessageStart(regeneratedResponse, ct);
-
+        Message regeneratedResponse = result.Value.RegeneratedResponse;
+        await StreamInitialDataForRegenerateResponse(regeneratedResponse, ct);
         await StreamChatGptResponse(regeneratedResponse, gptMessages, request.Model, ct);
-        
+
         await Context.SaveChangesAsync(CancellationToken.None);
         await SendSseEventAsync("Stream ended", CancellationToken.None, "close");
     }
@@ -165,25 +74,11 @@ public class MessagesController : StreamerController
     {
         Guid userId = Guid.Parse(User.FindFirstValue(JwtClaims.UserId)!);
 
-        List<Message> messages = await Context
-            .Users.Where(u => u.Id == userId)
-            .SelectMany(u => u.Chats.Where(c => c.Id == chatId))
-            .SelectMany(u => u.Messages.Where(m => m.LinkId == request.LinkId))
-            .ToListAsync();
+        SuccessOr<Error> result = await _mediator.Send(
+            new SelectMessageCommand(userId, chatId, messageId, request.LinkId)
+        );
 
-        if (!messages.Exists(x => x.Id == messageId))
-        {
-            return BadRequest("idi nahuy");
-        }
-
-        foreach (var message in messages)
-        {
-            message.IsSelected = message.Id == messageId;
-        }
-
-        await Context.SaveChangesAsync();
-
-        return Ok();
+        return FromResult(result);
     }
 
     [HttpGet, Authorize]
@@ -191,88 +86,13 @@ public class MessagesController : StreamerController
     {
         Guid userId = Guid.Parse(User.FindFirstValue(JwtClaims.UserId)!);
 
-        Chat? chat = await Context
-            .Users.Where(u => u.Id == userId)
-            .SelectMany(u => u.Chats)
-            .Include(c => c.Messages)
-            .SingleOrDefaultAsync(c => c.Id == chatId);
-
-        if (chat == null)
-        {
-            return BadRequest(Errors.Chat.NotFound);
-        }
-
-        await Context.Entry(chat).Collection(c => c.Messages).LoadAsync();
-
-        return Ok(chat.Messages.OrderBy(x => x.CreatedAt).Adapt<List<MessageDto>>());
-    }
-
-    [HttpPost, Authorize]
-    public async Task PromptAsync(Guid chatId, PromptRequest request, CancellationToken ct)
-    {
-        InitializeResponseHeaders();
-
-        Guid userId = Guid.Parse(User.FindFirstValue(JwtClaims.UserId)!);
-
-        User? user = await Context
-            .Users.Where(u => u.Id == userId)
-            .Include(u => u.Chats.Where(c => c.Id == chatId))
-            .SingleOrDefaultAsync(c => c.Id == userId, ct);
-
-        if (user == null)
-        {
-            await SendSseErrorAsync("User not found", CancellationToken.None);
-            return;
-        }
-
-        if (!user.CanAccess(request.Model))
-        {
-            await SendSseErrorAsync("User can't access the model", CancellationToken.None);
-            return;
-        }
-
-        Chat? chat = user.Chats.SingleOrDefault();
-        if (chat == null)
-        {
-            await SendSseErrorAsync("Chat not found", CancellationToken.None);
-            return;
-        }
-
-        await Context.Entry(chat).Collection(c => c.Messages).LoadAsync(ct);
-
-        if (chat.ReachedMaxMessages())
-        {
-            await SendSseErrorAsync("Chat reached max messages", CancellationToken.None);
-            return;
-        }
-
-        if (user.ReachedMaxMessages())
-        {
-            await SendSseErrorAsync("User reached max messages", CancellationToken.None);
-            return;
-        }
-
-        Message userMessage = await AddUserMessage(
-            chat,
-            request.MessageContent,
-            request.DisplayedMessageIds,
-            ct
+        Result<List<Message>, Error> messagesOrError = await _mediator.Send(
+            new GetMessagesQuery(userId, chatId)
         );
-        Message assistantMessage = await AddAssistantMessage(chat, userMessage.Id, ct);
 
-        List<ChatGptMessage> gptMessages = chat
-            .Messages.Where(m =>
-                request.DisplayedMessageIds.Contains(m.Id) || m.Id == userMessage.Id
-            )
-            .OrderBy(x => x.CreatedAt)
-            .Select(m => new ChatGptMessage(m.Sender.Value, m.Content))
-            .ToList();
+        if (messagesOrError.IsFailure)
+            return BadRequest(messagesOrError.Error);
 
-        await StreamChatGptResponse(assistantMessage, gptMessages, request.Model, ct);
-
-        user.SentMessages++;
-
-        await Context.SaveChangesAsync(CancellationToken.None);
-        await SendSseEventAsync("Stream ended", CancellationToken.None, "close");
+        return Ok(messagesOrError.Value.Adapt<List<MessageDto>>());
     }
 }

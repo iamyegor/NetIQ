@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Domain.Chat;
 using Domain.Chat.Entities;
-using Domain.User;
+using Domain.Chat.Entities.Message;
 using Infrastructure.ChatGPT;
 using Infrastructure.Data;
 using Newtonsoft.Json;
@@ -25,11 +25,10 @@ public class StreamerController : ApplicationController
         string? eventType = "message"
     )
     {
-        StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new();
         if (!string.IsNullOrEmpty(eventType))
-        {
             builder.Append($"event: {eventType}\n");
-        }
+
         string formattedData = data.Replace("\n", "\ndata: ");
         builder.Append($"data: {formattedData}\n\n");
 
@@ -39,7 +38,7 @@ public class StreamerController : ApplicationController
 
     protected async Task SendSseErrorAsync(string error, CancellationToken cancellationToken)
     {
-        var builder = new StringBuilder();
+        StringBuilder builder = new();
         builder.Append("event: error\n");
         builder.Append($"data: {error}\n\n");
 
@@ -53,70 +52,48 @@ public class StreamerController : ApplicationController
         Response.Headers.Append("Cache-Control", "no-cache");
     }
 
-    protected async Task<Message> AddUserMessage(
+    protected async Task StreamInitialDataForSendPrompt(
         Chat chat,
-        string message,
-        List<Guid> displayedMessagesList,
-        CancellationToken ct,
-        bool isSelected = false
+        Guid userMessageId,
+        Guid assistantMessageId,
+        CancellationToken ct
     )
     {
-        Guid? linkId = displayedMessagesList.LastOrDefault();
-        linkId = linkId == Guid.Empty ? null : linkId;
-        Message userMessage = new Message(message, Sender.User, linkId);
-        chat.AddMessage(userMessage);
-        chat.SelectMessage(userMessage);
         await Context.SaveChangesAsync(ct);
 
-        await SendSseEventAsync(
-            JsonConvert.SerializeObject(
-                new
-                {
-                    type = "user_message",
-                    id = userMessage.Id,
-                    content = userMessage.Content,
-                    createdAt = userMessage.CreatedAt,
-                    linkId = userMessage.LinkId,
-                    isSelected = userMessage.IsSelected,
-                    chat = new
-                    {
-                        id = chat.Id,
-                        title = chat.Title,
-                        lastUpdatedAt = chat.LastUpdatedAt
-                    }
-                }
-            ),
-            ct
-        );
-
-        return userMessage;
+        var data = new
+        {
+            type = "init_data",
+            userMessageId,
+            assistantMessageId,
+            chat = new
+            {
+                id = chat.Id,
+                title = chat.Title,
+                lastUpdatedAt = chat.LastUpdatedAt
+            }
+        };
+        await SendSseEventAsync(JsonConvert.SerializeObject(data), ct);
     }
 
-    protected async Task<Message> AddAssistantMessage(Chat chat, Guid? linkId, CancellationToken ct)
+    protected async Task StreamInitialDataForRegenerateResponse(
+        Message assistantMessage,
+        CancellationToken ct
+    )
     {
-        Message assistantMessage = new("", Sender.Assistant, linkId) { IsSelected = true };
-        chat.AddMessage(assistantMessage);
-
-        await SendAssistantMessageStart(assistantMessage, ct);
-
-        return assistantMessage;
+        var data = new { type = "init_data", assistantMessageId = assistantMessage.Id, };
+        await SendSseEventAsync(JsonConvert.SerializeObject(data), ct);
     }
 
-    protected async Task SendAssistantMessageStart(Message assestantMessage, CancellationToken ct)
+    protected async Task StreamChatGptResponse(
+        Message assistantMessage,
+        string userMessage,
+        string model,
+        CancellationToken ct
+    )
     {
-        await SendSseEventAsync(
-            JsonConvert.SerializeObject(
-                new
-                {
-                    type = "assistant_message_start",
-                    id = assestantMessage.Id,
-                    createdAt = assestantMessage.CreatedAt,
-                    linkId = assestantMessage.LinkId,
-                    isSelected = assestantMessage.IsSelected
-                }
-            ),
-            ct
-        );
+        ChatGptMessage userChatgptMessage = new(Sender.User.Value, userMessage);
+        await StreamChatGptResponse(assistantMessage, [userChatgptMessage], model, ct);
     }
 
     protected async Task StreamChatGptResponse(
@@ -129,7 +106,7 @@ public class StreamerController : ApplicationController
         try
         {
             await foreach (
-                var chatGptUpdate in ChatGpt
+                ChatGptUpdate chatGptUpdate in ChatGpt
                     .GetStreamResponseAsync(gptMessages, model)
                     .WithCancellation(ct)
             )
@@ -152,5 +129,7 @@ public class StreamerController : ApplicationController
             }
         }
         catch (OperationCanceledException) { }
+
+        await Context.SaveChangesAsync(CancellationToken.None);
     }
 }

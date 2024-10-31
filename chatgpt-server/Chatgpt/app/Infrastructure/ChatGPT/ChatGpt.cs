@@ -1,5 +1,4 @@
 using Newtonsoft.Json;
-using Serilog;
 
 namespace Infrastructure.ChatGPT;
 
@@ -65,7 +64,7 @@ public class ChatGpt
         HttpResponseMessage response = await _gptClient.SendAsync(messages, false);
         string responseBody = await response.Content.ReadAsStringAsync();
 
-        var jsonResponse = JsonConvert.DeserializeObject<GptResponse>(responseBody);
+        GptResponse? jsonResponse = JsonConvert.DeserializeObject<GptResponse>(responseBody);
         string content = jsonResponse?.Choices.FirstOrDefault()?.Message.Content ?? string.Empty;
         return content;
     }

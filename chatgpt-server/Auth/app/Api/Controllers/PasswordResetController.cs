@@ -13,7 +13,7 @@ using XResults;
 namespace Api.Controllers;
 
 [ApiController]
-[Route("auth/auth")]
+[Route("password")]
 public class PasswordResetController : ApplicationController
 {
     private readonly IMediator _mediator;

@@ -1,5 +1,6 @@
 ﻿using Api.Dtos;
 using Domain.Chat.Entities;
+using Domain.Chat.Entities.Message;
 using Domain.User;
 using Mapster;
 

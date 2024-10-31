@@ -16,7 +16,7 @@ export default async function confirmEmailPageAction({ request }: any) {
     }
 
     try {
-        await authApi.post("confirm-email", { code });
+        await authApi.post("email/confirm-email", { code });
         return redirect("/");
     } catch (error) {
         if (axios.isAxiosError(error)) {

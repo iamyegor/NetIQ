@@ -1,7 +1,8 @@
 using Infrastructure.ChatGPT;
+using Infrastructure.ChatGPT.ChatTitle;
 using Infrastructure.Data;
 using Infrastructure.Data.Dapper;
-using Infrastructure.Utils;
+using Infrastructure.EnvironmentUtils;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SharedKernel.Auth;
@@ -46,5 +47,6 @@ public static class DependencyInjection
 
         services.AddSingleton(_ => gptHttpClient);
         services.AddScoped<ChatGpt>();
+        services.AddTransient<ChatTitleService>();
     }
 }
