@@ -34,7 +34,7 @@ public class PasswordResetController : ApplicationController
     [HttpPost("reset-password")]
     public async Task<IActionResult> ResetPassword(ResetPasswordDto dto)
     {
-        Request.Cookies.TryGetValue(CookiesInfo.DeviceId.Name, out string? deviceId);
+        Request.Cookies.TryGetValue(CookiesSettings.DeviceId.Name, out string? deviceId);
         ResetPasswordCommand command = new ResetPasswordCommand(
             dto.Token,
             dto.NewPassword,

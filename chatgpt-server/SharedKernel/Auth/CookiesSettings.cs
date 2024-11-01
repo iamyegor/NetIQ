@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Http;
+using SharedKernel.Utils;
 
 namespace SharedKernel.Auth;
 
-public static class CookiesInfo
+public static class CookiesSettings
 {
     public static class AccessToken
     {
@@ -15,7 +16,10 @@ public static class CookiesInfo
                 HttpOnly = true,
                 IsEssential = true,
                 Secure = true,
-                SameSite = SameSiteMode.None
+                SameSite = SameSiteMode.None,
+                Domain = AppEnv.IsProduction
+                    ? Environment.GetEnvironmentVariable("DOMAIN")
+                    : "localhost"
             };
     }
 
@@ -30,7 +34,10 @@ public static class CookiesInfo
                 HttpOnly = true,
                 IsEssential = true,
                 Secure = true,
-                SameSite = SameSiteMode.None
+                SameSite = SameSiteMode.None,
+                Domain = AppEnv.IsProduction
+                    ? Environment.GetEnvironmentVariable("DOMAIN")
+                    : "localhost"
             };
     }
 
@@ -45,7 +52,10 @@ public static class CookiesInfo
                 HttpOnly = true,
                 IsEssential = true,
                 Secure = true,
-                SameSite = SameSiteMode.None
+                SameSite = SameSiteMode.None,
+                Domain = AppEnv.IsProduction
+                    ? Environment.GetEnvironmentVariable("DOMAIN")
+                    : "localhost"
             };
     }
 }

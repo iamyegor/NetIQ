@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Configuration;
+using SharedKernel.Utils;
 
 namespace Infrastructure.Utils;
 
@@ -13,7 +14,7 @@ public class ConnectionStringResolver
 
     public string GetBasedOnEnvironment()
     {
-        return ApplicationEnvirontment.IsDevelopment()
+        return AppEnv.IsDevelopment
             ? _configuration.GetConnectionString("Default")!
             : Environment.GetEnvironmentVariable("CONNECTION_STRING")!;
     }

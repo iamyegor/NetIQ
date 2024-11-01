@@ -26,7 +26,7 @@ public class VkController : ApplicationController
     [HttpPost("sign-in")]
     public async Task<IActionResult> SignInWithVk(VkSignInDto dto)
     {
-        Request.Cookies.TryGetValue(CookiesInfo.DeviceId.Name, out string? deviceId);
+        Request.Cookies.TryGetValue(CookiesSettings.DeviceId.Name, out string? deviceId);
         SignInWithVkCommand command = new SignInWithVkCommand(dto.Code, dto.VkDeviceId, deviceId);
 
         Result<VkAuthResult, Error> result = await _mediator.Send(command);

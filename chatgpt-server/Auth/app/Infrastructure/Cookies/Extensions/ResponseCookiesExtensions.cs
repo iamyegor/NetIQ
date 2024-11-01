@@ -9,14 +9,14 @@ public static class ResponseCookiesExtensions
     public static void Append(this IResponseCookies cookies, Tokens tokens)
     {
         cookies.Append(
-            CookiesInfo.AccessToken.Name,
+            CookiesSettings.AccessToken.Name,
             tokens.AccessToken,
-            CookiesInfo.AccessToken.Options
+            CookiesSettings.AccessToken.Options
         );
         cookies.Append(
-            CookiesInfo.RefreshToken.Name,
+            CookiesSettings.RefreshToken.Name,
             tokens.RefreshToken,
-            CookiesInfo.RefreshToken.Options
+            CookiesSettings.RefreshToken.Options
         );
     }
 }

@@ -11,7 +11,7 @@ public class TokenFromCookieExtractor
             OnMessageReceived = context =>
             {
                 bool containsCookie = context.Request.Cookies.TryGetValue(
-                    CookiesInfo.AccessToken.Name,
+                    CookiesSettings.AccessToken.Name,
                     out string? accesToken
                 );
 

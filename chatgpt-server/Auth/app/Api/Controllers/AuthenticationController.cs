@@ -27,7 +27,7 @@ public class AuthenticationController : ApplicationController
     [HttpPost("sign-up")]
     public async Task<IActionResult> SignUp(SignupDto dto)
     {
-        Request.Cookies.TryGetValue(CookiesInfo.DeviceId.Name, out string? deviceId);
+        Request.Cookies.TryGetValue(CookiesSettings.DeviceId.Name, out string? deviceId);
         SignUpCommand signUpCommand = new SignUpCommand(dto.Email, dto.Password, deviceId);
 
         Result<Tokens, Error> tokensOrError = await _mediator.Send(signUpCommand);
@@ -44,7 +44,7 @@ public class AuthenticationController : ApplicationController
     [HttpPost("sign-in")]
     public async Task<IActionResult> Signin(SigninDto dto)
     {
-        Request.Cookies.TryGetValue(CookiesInfo.DeviceId.Name, out string? deviceId);
+        Request.Cookies.TryGetValue(CookiesSettings.DeviceId.Name, out string? deviceId);
         SignInCommand signInCommand = new SignInCommand(dto.Email, dto.Password, deviceId);
 
         Result<Tokens, Error> tokensOrError = await _mediator.Send(signInCommand);
@@ -61,8 +61,8 @@ public class AuthenticationController : ApplicationController
     [HttpPost("log-out"), Authorize]
     public IActionResult LogOut()
     {
-        Response.Cookies.Delete(CookiesInfo.AccessToken.Name, CookiesInfo.AccessToken.Options);
-        Response.Cookies.Delete(CookiesInfo.RefreshToken.Name, CookiesInfo.RefreshToken.Options);
+        Response.Cookies.Delete(CookiesSettings.AccessToken.Name, CookiesSettings.AccessToken.Options);
+        Response.Cookies.Delete(CookiesSettings.RefreshToken.Name, CookiesSettings.RefreshToken.Options);
 
         return Ok();
     }

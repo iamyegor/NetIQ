@@ -21,7 +21,7 @@ public class UserIdExtractor
 
     public Result<UserId, Error> ExtractUserId(IRequestCookieCollection cookies)
     {
-        cookies.TryGetValue(CookiesInfo.AccessToken.Name, out string? accessToken);
+        cookies.TryGetValue(CookiesSettings.AccessToken.Name, out string? accessToken);
 
         try
         {

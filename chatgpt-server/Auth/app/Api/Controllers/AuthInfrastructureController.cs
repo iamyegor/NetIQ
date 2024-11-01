@@ -24,8 +24,8 @@ public class AuthInfrastructureController : ApplicationController
     [HttpPost("refresh-access-token")]
     public async Task<IActionResult> RefreshAccessToken()
     {
-        Request.Cookies.TryGetValue(CookiesInfo.DeviceId.Name, out string? deviceId);
-        Request.Cookies.TryGetValue(CookiesInfo.RefreshToken.Name, out string? refreshToken);
+        Request.Cookies.TryGetValue(CookiesSettings.DeviceId.Name, out string? deviceId);
+        Request.Cookies.TryGetValue(CookiesSettings.RefreshToken.Name, out string? refreshToken);
 
         RefreshAccessTokenCommand command = new RefreshAccessTokenCommand(refreshToken, deviceId);
         Result<Tokens, Error> tokensOrError = await _mediator.Send(command);
@@ -43,13 +43,13 @@ public class AuthInfrastructureController : ApplicationController
     [HttpPost("issue-device-id")]
     public IActionResult IssueDeviceId()
     {
-        Request.Cookies.TryGetValue(CookiesInfo.DeviceId.Name, out string? currentDeviceId);
+        Request.Cookies.TryGetValue(CookiesSettings.DeviceId.Name, out string? currentDeviceId);
         if (currentDeviceId == null || !Guid.TryParse(currentDeviceId, out _))
         {
             Response.Cookies.Append(
-                CookiesInfo.DeviceId.Name,
+                CookiesSettings.DeviceId.Name,
                 Guid.NewGuid().ToString(),
-                CookiesInfo.DeviceId.Options
+                CookiesSettings.DeviceId.Options
             );
         }
 
