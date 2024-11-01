@@ -33,7 +33,11 @@ public static class DependencyInjection
                 policy =>
                 {
                     policy
-                        .WithOrigins("http://localhost", "http://localhost:5173")
+                        .WithOrigins(
+                            "http://localhost",
+                            "http://localhost:5173",
+                            "https://netiq.ru"
+                        )
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials();
