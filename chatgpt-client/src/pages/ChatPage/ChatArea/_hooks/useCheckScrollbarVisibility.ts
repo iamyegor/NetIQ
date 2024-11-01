@@ -8,11 +8,13 @@ export default function useCheckScrollbarVisibility({
     chatElement: HTMLElement | null;
 }) {
     const { displayedMessages } = useMessageStore();
-    const { hasChatScrollbar, setHasChatScrollbar } = useUiStore();
+    const { setHasChatScrollbar } = useUiStore();
 
     useEffect(() => {
         if (chatElement) {
             adjustScrollbarVisibility();
+        } else {
+            setHasChatScrollbar(false);
         }
     }, [displayedMessages]);
 

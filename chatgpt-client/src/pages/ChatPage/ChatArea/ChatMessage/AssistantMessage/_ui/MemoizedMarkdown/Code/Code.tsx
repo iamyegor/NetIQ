@@ -37,7 +37,7 @@ export default function Code({ rawCode, className, codeDictionary }: CodeProps) 
     }
 
     return (
-        <div className="rounded-2xl overflow-hidden border border-neutral-800">
+        <div className="rounded-2xl overflow-hidden border border-neutral-800 w-full">
             <div className="bg-secondary flex justify-between p-2.5 px-3 text-xs">
                 <div>{language}</div>
                 <button className="flex items-center space-x-1" onClick={handleCopy}>

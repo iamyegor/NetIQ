@@ -10,8 +10,6 @@ export default function useLoadChats() {
         queryFn: fetchChats,
         initialPageParam: 1,
         getNextPageParam: (lastPage) => lastPage.nextPageNumber,
-        gcTime: 0,
-        retry: false,
     });
 
     async function fetchChats({ pageParam }: { pageParam: number }) {
@@ -28,7 +26,6 @@ export default function useLoadChats() {
             fetchNextPage();
         }
     }, [chats.length, inView, hasNextPage, fetchNextPage]);
-
 
     return {
         chats,

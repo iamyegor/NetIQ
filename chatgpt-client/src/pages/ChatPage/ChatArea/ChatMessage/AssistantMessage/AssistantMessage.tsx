@@ -55,9 +55,9 @@ export default function AssistantMessage({
     }
 
     return (
-        <div className="flex gap-x-1.5 md:gap-x-3 justify-start md:pr-7 group">
+        <div className="flex gap-x-1.5 md:gap-x-3 justify-start pr-4 md:pr-7 group">
             <div className="fill-white flex-shrink-0 w-5 h-5 md:w-9 md:h-9 rounded-lg border border-neutral-700 p-[5px] md:p-[9px] mt-1.5 flex items-center">
-                <img src={shortenedLogo} alt="ассистент" className="w-full" />
+                <img src={shortenedLogo} alt="assistant logo" className="w-full" />
             </div>
             <div className="pl-3 pt-1 rounded-[25px] text-white flex flex-col gap-y-2.5 w-full">
                 <div ref={contentRef}>

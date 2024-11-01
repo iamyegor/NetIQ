@@ -10,7 +10,7 @@ export default function MemoizedMarkdown({ content }: { content: string }) {
     return useMemo(
         () => (
             <Markdown
-                className="flex flex-col gap-y-5 markdown-content"
+                className="flex flex-col gap-y-5 markdown-content break-all sm:break-normal"
                 components={{
                     code: ({ children, ...rest }) => {
                         return (

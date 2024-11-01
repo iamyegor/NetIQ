@@ -10,19 +10,12 @@ export default function Sidebar() {
 
     const isMdScreen = useMediaQuery({ minWidth: 768 });
 
-    const handlers = useSwipeable({
-        onSwipedRight: () => toggleSidebarExpanded(),
-        delta: 30,
-        trackMouse: true,
-    });
-
     return (
         <aside className="ease-in-out flex">
             {isMdScreen ? (
                 <SidebarContents />
             ) : (
                 <>
-                    <div {...handlers} className="fixed left-0 top-0 bottom-0 w-16 bg-primary/10" />
                     <Drawer
                         open={isSidebarExpanded}
                         onOpenChange={() => toggleSidebarExpanded()}

@@ -79,8 +79,10 @@ export default function SidebarContents() {
                     </div>
                     <div className="space-y-1 w-full">
                         {chatsLoading && (
-                            <div className="flex -full  mt-12">
-                                <BaseSkeleton className="w-full h-9" count={22} />
+                            <div className="flex flex-col w-full mt-12 space-y-1">
+                                {Array.from({ length: 5 }).map((_, index) => (
+                                    <BaseSkeleton key={index} className="w-full h-9" />
+                                ))}
                             </div>
                         )}
                         <CategoryChats categoryTitle={t.today} chats={categorizedChats.today} />

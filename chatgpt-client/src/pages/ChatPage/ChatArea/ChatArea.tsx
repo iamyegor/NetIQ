@@ -67,7 +67,7 @@ export default function ChatArea() {
             ref={mainRef}
             onLoad={() => adjustScrollbarVisibility()}
             id="chat"
-            className="flex-1 flex justify-center overflow-y-auto !relative px-5 transition-transform mb-[105px] md:mb-[5px]"
+            className="flex-1 flex justify-center overflow-y-auto !relative px-5 transition-transform mb-[95px] md:mb-[5px]"
             onScroll={attachToBottomBasedOnScroll}
         >
             <div
