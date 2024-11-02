@@ -1,4 +1,4 @@
-import ElementType from "@/pages/ChatPage/ChatArea/_hooks/useVirtualizedMessages/types/ElementType";
+import ElementType from "@/pages/ChatPage/ChatArea/_hooks/useVirtualizedMessages/_types/ElementType";
 import Message from "@/types/chat/Message";
 
 export default function estimateMessageHeight(message: Message, containerWidth: number): number {
@@ -45,6 +45,10 @@ export default function estimateMessageHeight(message: Message, containerWidth: 
 
         if (inCodeBlock) {
             totalHeight += lineHeights.code;
+            continue;
+        }
+
+        if (trimmedLine === "" && inList) {
             continue;
         }
 

@@ -8,9 +8,10 @@ import { useState } from "react";
 interface CodeProps {
     rawCode: string | undefined;
     className: string | undefined;
+    shouldHighlightCode: boolean;
 }
 
-export default function Code({ rawCode, className }: CodeProps) {
+export default function Code({ rawCode, className, shouldHighlightCode }: CodeProps) {
     const { codeMap } = useMessageStore();
     const [isCopied, setIsCopied] = useState(false);
     const t = useCodeHighlightTranslation();
@@ -20,12 +21,14 @@ export default function Code({ rawCode, className }: CodeProps) {
 
     const language = /language-(\w+)/.exec(className || "")![1];
 
-    const highlightedCode = codeMap.get(rawCode);
-    let code = highlightedCode;
-    if (!code) {
-        console.log("highlighting code");
+    let code = codeMap.get(rawCode);
+    if (!code && shouldHighlightCode) {
         code = hljs.highlight(rawCode, { language: language }).value;
         codeMap.set(rawCode, code);
+    }
+
+    if (!code) {
+        code = rawCode;
     }
 
     function handleCopy() {

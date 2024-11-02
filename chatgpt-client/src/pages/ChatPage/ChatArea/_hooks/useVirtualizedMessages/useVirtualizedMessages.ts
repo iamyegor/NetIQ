@@ -1,23 +1,19 @@
-import useChatUiStore from "@/lib/zustand/chatsUi/useChatsUiStore";
 import useMessageStore from "@/lib/zustand/messages/useMessageStore";
-import estimateMessageHeight from "@/pages/ChatPage/ChatArea/_hooks/useVirtualizedMessages/_utils/estimateMessageHeight";
 import Message from "@/types/chat/Message";
-import { useEffect, useRef, useState } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
+import useChatUiStore from "@/lib/zustand/chatsUi/useChatsUiStore.ts";
 
 export default function useVirtualizedMessages({
     containerRef,
 }: {
-    containerRef: React.RefObject<HTMLElement | null>;
+    containerRef: RefObject<HTMLElement | null>;
 }) {
-    const [version, setVersion] = useState(1);
     const { displayedMessages } = useMessageStore();
-    const [scrollTop, setScrollTop] = useState(0);
+    const { chatScrollTop } = useChatUiStore();
     const [visibleIndices, setVisibleIndices] = useState({ start: 0, end: 0 });
     const messageHeights = useRef<Map<string, number>>(new Map());
-    const estimatedHeights = useRef<Map<string, number>>(new Map());
     const [containerHeight, setContainerHeight] = useState(0);
     const [containerWidth, setContainerWidth] = useState(760);
-    const { chatHeight } = useChatUiStore();
 
     useEffect(() => {
         if (containerRef.current) {
@@ -29,45 +25,22 @@ export default function useVirtualizedMessages({
             });
             resizeObserver.observe(containerRef.current);
             return () => resizeObserver.disconnect();
-        } else {
-            setVersion((prev) => prev + 1);
         }
-    }, [containerRef, version]);
+    }, [containerRef]);
 
     useEffect(() => {
-        if (displayedMessages.length > 0) {
-            estimatedHeights.current = new Map();
-            displayedMessages.forEach((message) => {
-                estimatedHeights.current.set(
-                    message.id,
-                    estimateMessageHeight(message, containerWidth),
-                );
-            });
-        }
-    }, [displayedMessages, containerWidth]);
+        setContainerWidth(containerRef.current?.offsetWidth ?? 0);
+        setContainerHeight(containerRef.current?.offsetHeight ?? 0);
+    }, [displayedMessages, messageHeights]);
 
     useEffect(() => {
         calculateVisibleIndices();
-    }, [scrollTop, containerHeight, displayedMessages, containerWidth]);
+    }, [chatScrollTop, containerHeight, displayedMessages, containerWidth, messageHeights]);
 
-    function onScroll() {
-        if (containerRef.current) {
-            setScrollTop(containerRef.current.scrollTop);
-        }
-    }
-
-    const estimatedHeight = Array.from(estimatedHeights.current.values()).reduce(
-        (accumulator, currentValue) => accumulator + currentValue,
-        0,
-    );
-
-    console.log({ estimatedHeights });
-    // console.log({ estimatedHeight, chatHeight });
+    console.log({ messageHeights });
 
     function getMessageHeight(message: Message): number {
-        return (
-            messageHeights.current.get(message.id) || estimatedHeights.current.get(message.id) || 0
-        );
+        return messageHeights.current.get(message.id) || 0;
     }
 
     function calculateVisibleIndices() {
@@ -78,7 +51,7 @@ export default function useVirtualizedMessages({
         for (let i = 0; i < displayedMessages.length; i++) {
             const message = displayedMessages[i];
             const height = getMessageHeight(message);
-            if (cumulativeHeight + height > scrollTop - bufferHeight) {
+            if (cumulativeHeight + height > chatScrollTop - bufferHeight) {
                 startIdx = i;
                 break;
             }
@@ -92,7 +65,7 @@ export default function useVirtualizedMessages({
             const message = displayedMessages[i];
             const height = getMessageHeight(message);
             cumulativeHeight += height;
-            if (cumulativeHeight > scrollTop + containerHeight + bufferHeight) {
+            if (cumulativeHeight > chatScrollTop + containerHeight + bufferHeight) {
                 endIdx = i;
                 break;
             }
@@ -125,11 +98,10 @@ export default function useVirtualizedMessages({
     const paddingTop = getHeightBeforeIndex(start);
     const paddingBottom = getHeightAfterIndex(end);
 
-    function setMessageHeight(id: string, height: number) {
-        if (messageHeights.current.get(id) !== height) {
-            messageHeights.current.set(id, height);
-        }
-    }
-
-    return { visibleMessages, paddingTop, paddingBottom, onScroll, setMessageHeight };
+    return {
+        visibleMessages,
+        paddingTop,
+        paddingBottom,
+        messageHeights,
+    };
 }

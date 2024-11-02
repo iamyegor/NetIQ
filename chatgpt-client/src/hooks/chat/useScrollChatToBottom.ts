@@ -25,8 +25,7 @@ export default function useScrollChatToBottom() {
 
         setScrollingInProgress(true);
 
-        const bufferLength = (chatHeight - chatScrollTop) / 15;
-        const wholePath = chatHeight - chatScrollTop + bufferLength;
+        const wholePath = chatHeight - chatScrollTop;
         const duration = wholePath / 20;
         animateScroll.scrollMore(wholePath, {
             containerId: "chat",
