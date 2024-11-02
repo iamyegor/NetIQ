@@ -1,16 +1,17 @@
 import CheckmarkSvg from "@/assets/pages/chat/check.svg?react";
 import ClipboardSvg from "@/assets/pages/chat/clipboard.svg?react";
+import useMessageStore from "@/lib/zustand/messages/useMessageStore";
 import useCodeHighlightTranslation from "@/pages/ChatPage/ChatArea/ChatMessage/AssistantMessage/CodeHightlight/_hooks/useCodeHighlightTranslation";
-import { useState } from "react";
 import hljs from "highlight.js";
+import { useState } from "react";
 
 interface CodeProps {
     rawCode: string | undefined;
     className: string | undefined;
-    codeDictionary: Record<string, string>;
 }
 
-export default function Code({ rawCode, className, codeDictionary }: CodeProps) {
+export default function Code({ rawCode, className }: CodeProps) {
+    const { codeMap } = useMessageStore();
     const [isCopied, setIsCopied] = useState(false);
     const t = useCodeHighlightTranslation();
 
@@ -19,16 +20,16 @@ export default function Code({ rawCode, className, codeDictionary }: CodeProps) 
 
     const language = /language-(\w+)/.exec(className || "")![1];
 
-    let code = "";
-    if (codeDictionary[rawCode]) {
-        code = codeDictionary[rawCode];
-    } else {
+    const highlightedCode = codeMap.get(rawCode);
+    let code = highlightedCode;
+    if (!code) {
+        console.log("highlighting code");
         code = hljs.highlight(rawCode, { language: language }).value;
-        codeDictionary[rawCode] = code;
+        codeMap.set(rawCode, code);
     }
 
     function handleCopy() {
-        navigator.clipboard.writeText(code);
+        navigator.clipboard.writeText(rawCode!);
         setIsCopied(true);
 
         setTimeout(() => {
@@ -37,7 +38,7 @@ export default function Code({ rawCode, className, codeDictionary }: CodeProps) 
     }
 
     return (
-        <div className="rounded-2xl overflow-hidden border border-neutral-800 w-full">
+        <div className="rounded-2xl border overflow-hidden border-neutral-800 w-full">
             <div className="bg-secondary flex justify-between p-2.5 px-3 text-xs">
                 <div>{language}</div>
                 <button className="flex items-center space-x-1" onClick={handleCopy}>
@@ -53,12 +54,12 @@ export default function Code({ rawCode, className, codeDictionary }: CodeProps) 
                 className="bg-[#18181b] text-sm p-5 py-3 pr-0"
                 style={{ fontFamily: "'JetBrains Mono', monospace" }}
             >
-                <pre className="m-0 overflow-scroll">
+                <div className="overflow-scroll">
                     <code
                         className={`!bg-transparent`}
                         dangerouslySetInnerHTML={{ __html: code }}
                     />
-                </pre>
+                </div>
             </div>
         </div>
     );

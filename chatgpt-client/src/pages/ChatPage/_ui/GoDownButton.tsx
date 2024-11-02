@@ -17,7 +17,7 @@ export default function GoDownButton() {
             <Button
                 size="icon"
                 className="!bg-secondary border border-neutral-700 rounded-full w-11 h-11 sm:w-9 sm:h-9 hover:border-neutral-600"
-                onClick={() => scrollChatToBottom({ scrollType: "smooth" })}
+                onClick={() => scrollChatToBottom({  })}
             >
                 <FaArrowDown className="text-neutral-200" />
             </Button>

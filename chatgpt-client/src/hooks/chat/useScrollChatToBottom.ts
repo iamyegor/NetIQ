@@ -1,3 +1,4 @@
+import useChatUiStore from "@/lib/zustand/chatsUi/useChatsUiStore";
 import useUiStore from "@/lib/zustand/ui/useUiStore.ts";
 import { animateScroll } from "react-scroll";
 
@@ -5,9 +6,12 @@ export type ScrollType = "smooth" | "moderate" | "jerky" | "super-smooth";
 
 export default function useScrollChatToBottom() {
     const { setScrollingInProgress, setShouldAttachToBottom } = useUiStore();
+    const { chatHeight, chatScrollTop } = useChatUiStore();
 
     function scrollChatToBottom(
-        { scrollType }: { scrollType?: ScrollType } = { scrollType: "jerky" },
+        { scrollType }: { scrollType?: ScrollType } = {
+            scrollType: "jerky",
+        },
     ) {
         const scrollSpeed =
             scrollType === "super-smooth"
@@ -20,11 +24,22 @@ export default function useScrollChatToBottom() {
         const showScrollButtonTimeout = scrollType !== "jerky" ? scrollSpeed + 50 : 0;
 
         setScrollingInProgress(true);
-        animateScroll.scrollToBottom({
+
+        const bufferLength = (chatHeight - chatScrollTop) / 15;
+        const wholePath = chatHeight - chatScrollTop + bufferLength;
+        const duration = wholePath / 20;
+        animateScroll.scrollMore(wholePath, {
             containerId: "chat",
-            duration: scrollSpeed,
-            smooth: scrollType !== "jerky",
+            smooth: true,
+            duration: duration < 500 ? 500 : duration,
         });
+
+        console.log({ time: duration < 500 ? 500 : duration });
+        // animateScroll.scrollToBottom({
+        //     containerId: "chat",
+        //     duration: wholePath / 20,
+        //     smooth: true,
+        // });
 
         setTimeout(() => {
             setShouldAttachToBottom(true);

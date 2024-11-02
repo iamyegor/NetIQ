@@ -12,6 +12,7 @@ interface MessagesState {
     displayedMessages: Message[];
     inputMessage: string;
     isStreaming: boolean;
+    codeMap: Map<string, string>;
     setIsStreaming: (isStreaming: boolean) => void;
     selectMessage: (message: Message) => void;
     addNewMessage: (message: Message) => void;
@@ -26,6 +27,7 @@ const useMessageStore = create<MessagesState>()((set) => ({
     displayedMessages: [],
     inputMessage: "",
     isStreaming: false,
+    codeMap: new Map(),
     setMessages: (messages) => set(createMessageState(messages)),
     selectMessage: (messageToSelect: Message) =>
         set((state) => createMessageState(updateMessageSelection(state.messages, messageToSelect))),

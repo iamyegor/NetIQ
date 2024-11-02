@@ -39,8 +39,6 @@ export default function SwipeDetector({ children }: { children: React.ReactNode 
 
         const scrollableParent = findScrollableParent(touchStartElement.current);
 
-        console.log({ scrollableParent });
-
         if (
             !scrollableParent &&
             horizontalDistance > 50 &&

@@ -1,32 +1,38 @@
-import AssistantMessage from "@/pages/ChatPage/ChatArea/ChatMessage/AssistantMessage/AssistantMessage.tsx";
-import UserMessage from "@/pages/ChatPage/ChatArea/ChatMessage/UserMessage/UserMessage.tsx";
-import { AnimatePresence, motion } from "framer-motion";
-import Message from "@/types/chat/Message.ts";
+import AssistantMessage from "@/pages/ChatPage/ChatArea/ChatMessage/AssistantMessage/AssistantMessage";
+import UserMessage from "@/pages/ChatPage/ChatArea/ChatMessage/UserMessage/UserMessage";
+import Message from "@/types/chat/Message";
+import { useRef, useEffect } from "react";
+
+const gapBetweenMessages = 50;
 
 export default function ChatMessage({
     message,
     selectVariant,
+    setMessageHeight,
 }: {
     message: Message;
     selectVariant: (message: Message) => void;
+    setMessageHeight: (id: string, height: number) => void;
 }) {
+    const ref = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (ref.current) {
+            const height = ref.current.offsetHeight;
+            setMessageHeight(
+                message.id,
+                height + (message.sender === "user" ? gapBetweenMessages : 0),
+            );
+        }
+    }, [ref.current?.offsetHeight]);
+
     return (
-        <AnimatePresence mode="wait">
-            <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{
-                    duration: 0.3,
-                    ease: "easeInOut",
-                }}
-            >
-                {message.sender === "user" ? (
-                    <UserMessage message={message} selectVariant={selectVariant} />
-                ) : message.sender === "assistant" ? (
-                    <AssistantMessage message={message} selectVariant={selectVariant} />
-                ) : null}
-            </motion.div>
-        </AnimatePresence>
+        <div ref={ref}>
+            {message.sender === "user" ? (
+                <UserMessage message={message} selectVariant={selectVariant} />
+            ) : message.sender === "assistant" ? (
+                <AssistantMessage message={message} selectVariant={selectVariant} />
+            ) : null}
+        </div>
     );
 }
