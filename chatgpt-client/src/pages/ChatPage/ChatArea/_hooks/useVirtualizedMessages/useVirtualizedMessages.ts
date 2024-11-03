@@ -34,10 +34,12 @@ export default function useVirtualizedMessages({
     }, [displayedMessages, messageHeights]);
 
     useEffect(() => {
-        calculateVisibleIndices();
+        if (displayedMessages.length > 0) {
+            calculateVisibleIndices();
+        }
     }, [chatScrollTop, containerHeight, displayedMessages, containerWidth, messageHeights]);
 
-    console.log({ messageHeights });
+    // console.log({ messageHeights });
 
     function getMessageHeight(message: Message): number {
         return messageHeights.current.get(message.id) || 0;
@@ -78,6 +80,9 @@ export default function useVirtualizedMessages({
         let total = 0;
         for (let i = 0; i < index; i++) {
             const message = displayedMessages[i];
+            if (!message) {
+                return 0;
+            }
             total += getMessageHeight(message);
         }
         return total;
@@ -87,12 +92,16 @@ export default function useVirtualizedMessages({
         let total = 0;
         for (let i = index + 1; i < displayedMessages.length; i++) {
             const message = displayedMessages[i];
+            if (!message) {
+                return 0;
+            }
             total += getMessageHeight(message);
         }
         return total;
     }
 
     const { start, end } = visibleIndices;
+
     const visibleMessages = displayedMessages.slice(start, end + 1);
 
     const paddingTop = getHeightBeforeIndex(start);

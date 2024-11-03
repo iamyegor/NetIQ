@@ -41,7 +41,7 @@ export default function InputArea() {
         await sendPromptAndStreamChat(chatId ?? null, inputMessage.trim());
         setInputMessage("");
 
-        scrollChatToBottom({ scrollType: "super-smooth" });
+        scrollChatToBottom({ isSmooth: true });
         setPromptWasSentLessThan100MsAgo(true);
         setTimeout(() => setPromptWasSentLessThan100MsAgo(false), 100);
     }

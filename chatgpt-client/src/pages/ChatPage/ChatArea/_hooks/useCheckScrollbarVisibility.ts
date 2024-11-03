@@ -1,35 +1,25 @@
-import useMessageStore from "@/lib/zustand/messages/useMessageStore";
-import useUiStore from "@/lib/zustand/ui/useUiStore";
-import { useEffect } from "react";
+import { RefObject, useEffect } from "react";
+import useChatUiStore from "@/lib/zustand/chatsUi/useChatsUiStore.ts";
 
-export default function useCheckScrollbarVisibility({
-    chatElement,
-}: {
-    chatElement: HTMLElement | null;
-}) {
-    const { displayedMessages } = useMessageStore();
-    const { setHasChatScrollbar } = useUiStore();
+export default function useCheckScrollbarVisibility(chatRef: RefObject<HTMLDivElement>) {
+    const { setHasChatScrollbar } = useChatUiStore();
 
     useEffect(() => {
-        if (chatElement) {
-            adjustScrollbarVisibility();
-        } else {
-            setHasChatScrollbar(false);
-        }
-    }, [displayedMessages]);
+        function checkScrollbar() {
+            const chatElement = chatRef.current;
+            if (!chatElement) return;
 
-    function adjustScrollbarVisibility() {
-        // console.log({
-        //     scrollHeight: chatElement?.scrollHeight,
-        //     clientHeight: chatElement?.clientHeight,
-        //     chatElement,
-        // });
-        if (chatElement) {
-            const hasScroll = chatElement.scrollHeight > chatElement.clientHeight;
-            // console.log({ hasScroll });
-            setHasChatScrollbar(hasScroll);
+            const hasVerticalScrollbar = chatElement.scrollHeight > chatElement.clientHeight;
+            setHasChatScrollbar(hasVerticalScrollbar);
         }
-    }
 
-    return { adjustScrollbarVisibility };
+        checkScrollbar();
+
+        const resizeObserver = new ResizeObserver(checkScrollbar);
+        if (chatRef.current) {
+            resizeObserver.observe(chatRef.current);
+        }
+
+        return () => resizeObserver.disconnect();
+    }, []);
 }

@@ -2,14 +2,12 @@ import useScrollChatToBottom from "@/hooks/chat/useScrollChatToBottom";
 import useMessageStore from "@/lib/zustand/messages/useMessageStore";
 import useUiStore from "@/lib/zustand/ui/useUiStore";
 import { useEffect } from "react";
+import useChatUiStore from "@/lib/zustand/chatsUi/useChatsUiStore.ts";
 
-export default function useScrollToBottomWhenStreaming({
-    chatElement,
-}: {
-    chatElement: HTMLElement | null;
-}) {
+export default function useScrollToBottomWhenStreaming() {
     const { isStreaming, displayedMessages } = useMessageStore();
-    const { hasChatScrollbar, shouldAttachToBottom, promptWasSentLessThan100MsAgo } = useUiStore();
+    const { shouldAttachToBottom, promptWasSentLessThan100MsAgo } = useUiStore();
+    const { hasChatScrollbar } = useChatUiStore();
     const { scrollChatToBottom } = useScrollChatToBottom();
 
     useEffect(() => {
@@ -19,7 +17,7 @@ export default function useScrollToBottomWhenStreaming({
             !promptWasSentLessThan100MsAgo &&
             hasChatScrollbar
         ) {
-            scrollChatToBottom();
+            scrollChatToBottom({ isSmooth: false });
         }
     }, [displayedMessages, isStreaming]);
 }

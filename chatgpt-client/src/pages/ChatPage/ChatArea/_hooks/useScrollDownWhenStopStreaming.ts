@@ -15,7 +15,7 @@ export default function useScrollToBottomWhenStopStreaming() {
             prevIsStreaming.current != isStreaming &&
             shouldAttachToBottom
         ) {
-            scrollChatToBottom({ scrollType: "moderate" });
+            scrollChatToBottom({ isSmooth: true });
         }
 
         prevIsStreaming.current = isStreaming;

@@ -5,6 +5,8 @@ interface ChatsUiState {
     setChatHeight: (chatHeight: number) => void;
     chatScrollTop: number;
     setChatScrollTop: (chatScrollTop: number) => void;
+    hasChatScrollbar: boolean;
+    setHasChatScrollbar: (hasChatScrollbar: boolean) => void;
 }
 
 const useChatUiStore = create<ChatsUiState>()((set) => ({
@@ -12,6 +14,8 @@ const useChatUiStore = create<ChatsUiState>()((set) => ({
     setChatHeight: (chatHeight) => set({ chatHeight }),
     chatScrollTop: 0,
     setChatScrollTop: (chatScrollTop) => set({ chatScrollTop }),
+    hasChatScrollbar: false,
+    setHasChatScrollbar: (hasChatScrollbar: boolean) => set({ hasChatScrollbar }),
 }));
 
 export default useChatUiStore;

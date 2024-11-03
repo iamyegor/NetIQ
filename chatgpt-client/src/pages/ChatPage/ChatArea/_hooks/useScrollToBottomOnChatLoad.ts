@@ -1,35 +1,22 @@
 import useScrollChatToBottom from "@/hooks/chat/useScrollChatToBottom";
-import useMessageStore from "@/lib/zustand/messages/useMessageStore";
-import Message from "@/types/chat/Message";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { animateScroll } from "react-scroll";
+import useChatUiStore from "@/lib/zustand/chatsUi/useChatsUiStore.ts";
 
-export default function useScrollToBottomOnChatLoad({
-    visibleMessages,
-}: {
-    visibleMessages: Message[];
-}) {
+export default function useScrollToBottomOnChatLoad() {
     const { chatId } = useParams();
     const prevChatIdRef = useRef<string | null>(null);
     const { scrollChatToBottom } = useScrollChatToBottom();
-    const { displayedMessages } = useMessageStore();
-    const [isFirstRender, setIsFirstRender] = useState(true);
+    // const { displayedMessages } = useMessageStore();
+    // // const [isFirstRender, setIsFirstRender] = useState(true);
+    const { hasChatScrollbar } = useChatUiStore();
+    // const { chatHeight } = useChatUiStore();
 
     useEffect(() => {
-        if (visibleMessages.length > 0) {
-            // if (chatEnd && (isFirstRender || prevChatIdRef.current != chatId)) {
-            if (isFirstRender) {
-                setIsFirstRender(false);
-                animateScroll.scrollToBottom({
-                    containerId: "chat-end",
-                    duration: 1000,
-                    smooth: true,
-                });
-                // scrollChatToBottom({ scrollType: "super-smooth" });
-            }
-
-            prevChatIdRef.current = chatId ?? null;
+        if (prevChatIdRef.current != chatId && hasChatScrollbar) {
+            scrollChatToBottom({ isSmooth: true });
         }
-    }, [displayedMessages, visibleMessages]);
+
+        prevChatIdRef.current = chatId ?? null;
+    }, [chatId, hasChatScrollbar]);
 }

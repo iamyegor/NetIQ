@@ -16,14 +16,14 @@ import ChatMessage from "@/pages/ChatPage/ChatArea/ChatMessage/ChatMessage";
 import ErrorMessage from "@/pages/ChatPage/ChatArea/ErrorMessage/ErrorMessage";
 import Message from "@/types/chat/Message";
 import "ldrs/ring2";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import MessageHeightMeasurer from "@/pages/ChatPage/ChatArea/MessageHeightMeasurer/MessageHeightMeasurer.tsx";
 import "highlight.js/styles/atom-one-dark.css";
 import useInitialHeightMeasurement from "@/pages/ChatPage/ChatArea/_hooks/useVirtualizedMessages/_hooks/useInitialHeightMeasurement.ts";
 
 export default function ChatArea() {
-    const mainRef = useRef<HTMLDivElement | null>(null);
+    const mainRef = useRef<HTMLDivElement>(null);
 
     const { messages } = useMessageStore();
     const { appError } = useErrorStore();
@@ -34,9 +34,12 @@ export default function ChatArea() {
     const t = useChatAreaTranslation();
     const { messagesLoading } = useLoadMessages();
     const { attachToBottomBasedOnScroll } = useAttachToBottomBasedOnScroll();
-    const { adjustScrollbarVisibility } = useCheckScrollbarVisibility({
-        chatElement: mainRef.current,
-    });
+    useCheckScrollbarVisibility(mainRef);
+
+    const myRef = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+        console.log("myRef", myRef.current?.className);
+    }, []);
 
     const { visibleMessages, paddingTop, paddingBottom, messageHeights } = useVirtualizedMessages({
         containerRef: mainRef,
@@ -72,14 +75,15 @@ export default function ChatArea() {
             id="chat"
             className="flex flex-1 w-full justify-center h-full overflow-y-auto !relative px-5 transition-transform mb-[95px] md:mb-[5px]"
             onLoad={(e) => {
-                adjustScrollbarVisibility();
                 setChatHeight(e.currentTarget.scrollHeight);
                 setChatScrollTop(e.currentTarget.scrollTop);
+                // adjustScrollbarVisibility();
             }}
             onScroll={(e: React.UIEvent<HTMLDivElement>) => {
-                attachToBottomBasedOnScroll(e);
+                // adjustScrollbarVisibility(e.currentTarget);
                 setChatHeight(e.currentTarget.scrollHeight);
                 setChatScrollTop(e.currentTarget.scrollTop);
+                attachToBottomBasedOnScroll(e);
             }}
         >
             {/* Hidden messages for initial measurement */}
