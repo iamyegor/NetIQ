@@ -2,13 +2,13 @@ import useMediaQueries from "@/hooks/other/useMediaQueries.tsx";
 import useMessageStore from "@/lib/zustand/messages/useMessageStore.ts";
 import useUiStore from "@/lib/zustand/ui/useUiStore.ts";
 import Greeting from "@/pages/ChatPage/ChatArea/ChatHero/Greeting/Greeting.tsx";
-import useChatHeroTranslationts from "@/pages/ChatPage/ChatArea/ChatHero/_hooks/useChatHeroTranslationts.tsx";
+import useChatHeroTranslations from "@/pages/ChatPage/ChatArea/ChatHero/_hooks/useChatHeroTranslationts.tsx";
 
 export default function ChatHero({ hello }: { hello: string }) {
     const { isMdScreen, isSmScreen } = useMediaQueries();
     const { inputContainerHeight } = useUiStore();
     const { setInputMessage } = useMessageStore();
-    const t = useChatHeroTranslationts();
+    const t = useChatHeroTranslations();
 
     function useSuggestedPrompt(prompt: string) {
         setInputMessage(prompt);
@@ -36,7 +36,7 @@ export default function ChatHero({ hello }: { hello: string }) {
                             <button
                                 key={prompt.label}
                                 onClick={() => useSuggestedPrompt(prompt.prompt)}
-                                className="bg-secondary hover:bg-neutral-950 border text-[13px] border-neutral-700 py-3 px-4 rounded-full flex items-center justify-center xs:justify-start gap-x-3"
+                                className="bg-secondary hover:bg-neutral-950 border text-[12px] xs:text-[13px] border-neutral-700 py-3 px-4 rounded-full flex items-center justify-center xs:justify-start gap-x-3"
                             >
                                 <div className="hidden xs:block">{prompt.icon}</div>
                                 <p>{prompt.label}</p>

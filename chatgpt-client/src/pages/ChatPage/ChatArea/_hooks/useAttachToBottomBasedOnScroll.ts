@@ -1,11 +1,11 @@
 import useMessageStore from "@/lib/zustand/messages/useMessageStore";
 import useUiStore from "@/lib/zustand/ui/useUiStore";
-import { useRef } from "react";
+import React, { useRef } from "react";
 
 export default function useAttachToBottomBasedOnScroll() {
     const prevScrollTop = useRef(0);
     const { displayedMessages } = useMessageStore();
-    const { setShouldAttachToBottom } = useUiStore();
+    const { setIsAttachedToBottom } = useUiStore();
 
     function attachToBottomBasedOnScroll(event: React.UIEvent<HTMLDivElement>) {
         const target = event.currentTarget;
@@ -14,9 +14,9 @@ export default function useAttachToBottomBasedOnScroll() {
         const currentScrollTop = target.scrollTop;
 
         if (displayedMessages.length > 0 && currentScrollTop < prevScrollTop.current) {
-            setShouldAttachToBottom(false);
+            setIsAttachedToBottom(false);
         } else if (atBottom) {
-            setShouldAttachToBottom(true);
+            setIsAttachedToBottom(true);
         }
 
         prevScrollTop.current = currentScrollTop;

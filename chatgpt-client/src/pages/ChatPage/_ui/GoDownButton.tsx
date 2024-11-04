@@ -2,18 +2,17 @@ import { Button } from "@/components/ui/button.tsx";
 import useScrollChatToBottom from "@/hooks/chat/useScrollChatToBottom.ts";
 import useUiStore from "@/lib/zustand/ui/useUiStore.ts";
 import { FaArrowDown } from "react-icons/fa";
-import useChatUiStore from "@/lib/zustand/chatsUi/useChatsUiStore.ts";
+import useHasChatScrollbar from "@/hooks/chat/useHasChatScrollbar.ts";
 
 export default function GoDownButton() {
-    const { shouldAttachToBottom, scrollingInProgress, inputContainerHeight } = useUiStore();
-    const { hasChatScrollbar } = useChatUiStore();
-
+    const { isAttachedToBottom, scrollingInProgress, inputContainerHeight } = useUiStore();
+    const hasChatScrollbar = useHasChatScrollbar();
     const { scrollChatToBottom } = useScrollChatToBottom();
 
-    return !shouldAttachToBottom && !scrollingInProgress && hasChatScrollbar ? (
+    return !isAttachedToBottom && !scrollingInProgress && hasChatScrollbar ? (
         <div
             className="absolute left-1/2 -translate-x-1/2 z-40"
-            style={{ bottom: `${inputContainerHeight + 30}px` }}
+            style={{ bottom: `${inputContainerHeight + 90}px` }}
         >
             <Button
                 size="icon"

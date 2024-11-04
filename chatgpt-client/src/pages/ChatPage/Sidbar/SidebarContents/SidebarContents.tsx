@@ -14,7 +14,6 @@ import { useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useSidebarTranslations from "@/pages/ChatPage/Sidbar/SidebarContents/_hooks/useSidebarTranslations.ts";
 import useCreateNewChat from "@/pages/ChatPage/Header/_hooks/useCreateNewChat";
-import useMediaQueries from "@/hooks/other/useMediaQueries";
 
 async function fetchEmail() {
     const response = await api.get<{ email: string }>("user/email");
@@ -23,7 +22,6 @@ async function fetchEmail() {
 
 export default function SidebarContents() {
     const { createNewChat } = useCreateNewChat();
-    const { isMdScreen } = useMediaQueries();
     const { isSidebarExpanded, setIsSidebarExpanded } = useUiStore();
     const { chats, chatsLoading, chatsEndRef, allChatsLoaded } = useLoadChats();
 
@@ -43,9 +41,7 @@ export default function SidebarContents() {
 
     function handleCreateNewChat() {
         createNewChat();
-        if (!isMdScreen) {
-            setIsSidebarExpanded(false);
-        }
+        setIsSidebarExpanded(false);
     }
 
     const categorizedChats = useMemo(() => categorizeChats(chats), [chats.length]);
@@ -79,9 +75,13 @@ export default function SidebarContents() {
                     </div>
                     <div className="space-y-1 w-full">
                         {chatsLoading && (
-                            <div className="flex flex-col w-full mt-12 space-y-1">
-                                {Array.from({ length: 5 }).map((_, index) => (
-                                    <BaseSkeleton key={index} className="w-full h-9" />
+                            <div className="flex flex-col w-full mt-14 space-y-1">
+                                {Array.from({ length: 7 }).map((_, index) => (
+                                    <BaseSkeleton
+                                        key={index}
+                                        className="w-full h-7"
+                                        borderRadius={7}
+                                    />
                                 ))}
                             </div>
                         )}

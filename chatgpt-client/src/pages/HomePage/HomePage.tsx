@@ -4,7 +4,6 @@ export default function HomePage() {
     const mainRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        console.log("myRef", mainRef.current?.className);
     }, []);
 
     return (

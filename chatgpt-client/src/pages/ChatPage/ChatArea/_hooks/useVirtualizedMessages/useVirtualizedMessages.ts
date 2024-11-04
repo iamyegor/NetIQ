@@ -1,45 +1,14 @@
 import useMessageStore from "@/lib/zustand/messages/useMessageStore";
 import Message from "@/types/chat/Message";
-import { RefObject, useEffect, useRef, useState } from "react";
+import { MutableRefObject, useMemo } from "react";
 import useChatUiStore from "@/lib/zustand/chatsUi/useChatsUiStore.ts";
 
-export default function useVirtualizedMessages({
-    containerRef,
-}: {
-    containerRef: RefObject<HTMLElement | null>;
-}) {
+export default function useVirtualizedMessages(
+    messageHeights: MutableRefObject<Map<string, number>>,
+) {
     const { displayedMessages } = useMessageStore();
     const { chatScrollTop } = useChatUiStore();
-    const [visibleIndices, setVisibleIndices] = useState({ start: 0, end: 0 });
-    const messageHeights = useRef<Map<string, number>>(new Map());
-    const [containerHeight, setContainerHeight] = useState(0);
-    const [containerWidth, setContainerWidth] = useState(760);
-
-    useEffect(() => {
-        if (containerRef.current) {
-            const resizeObserver = new ResizeObserver((entries) => {
-                for (let entry of entries) {
-                    setContainerHeight(entry.contentRect.height);
-                    setContainerWidth(entry.contentRect.width);
-                }
-            });
-            resizeObserver.observe(containerRef.current);
-            return () => resizeObserver.disconnect();
-        }
-    }, [containerRef]);
-
-    useEffect(() => {
-        setContainerWidth(containerRef.current?.offsetWidth ?? 0);
-        setContainerHeight(containerRef.current?.offsetHeight ?? 0);
-    }, [displayedMessages, messageHeights]);
-
-    useEffect(() => {
-        if (displayedMessages.length > 0) {
-            calculateVisibleIndices();
-        }
-    }, [chatScrollTop, containerHeight, displayedMessages, containerWidth, messageHeights]);
-
-    // console.log({ messageHeights });
+    const { chatRef } = useChatUiStore();
 
     function getMessageHeight(message: Message): number {
         return messageHeights.current.get(message.id) || 0;
@@ -48,7 +17,7 @@ export default function useVirtualizedMessages({
     function calculateVisibleIndices() {
         let cumulativeHeight = 0;
         let startIdx = 0;
-        const bufferHeight = containerHeight;
+        const bufferHeight = 120;
 
         for (let i = 0; i < displayedMessages.length; i++) {
             const message = displayedMessages[i];
@@ -63,6 +32,8 @@ export default function useVirtualizedMessages({
         cumulativeHeight = 0;
         let endIdx = displayedMessages.length - 1;
 
+        const containerHeight = chatRef.current?.clientHeight ?? 0;
+
         for (let i = 0; i < displayedMessages.length; i++) {
             const message = displayedMessages[i];
             const height = getMessageHeight(message);
@@ -73,7 +44,7 @@ export default function useVirtualizedMessages({
             }
         }
 
-        setVisibleIndices({ start: startIdx, end: endIdx });
+        return { start: startIdx, end: endIdx };
     }
 
     function getHeightBeforeIndex(index: number) {
@@ -100,10 +71,15 @@ export default function useVirtualizedMessages({
         return total;
     }
 
-    const { start, end } = visibleIndices;
+    const { start, end } = useMemo(() => {
+        if (displayedMessages.length > 0) {
+            return calculateVisibleIndices();
+        } else {
+            return { start: 0, end: 0 };
+        }
+    }, [chatScrollTop, displayedMessages, messageHeights]);
 
     const visibleMessages = displayedMessages.slice(start, end + 1);
-
     const paddingTop = getHeightBeforeIndex(start);
     const paddingBottom = getHeightAfterIndex(end);
 

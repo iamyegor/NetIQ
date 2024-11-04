@@ -1,21 +1,28 @@
 import { create } from "zustand";
+import { RefObject } from "react";
 
 interface ChatsUiState {
-    chatHeight: number;
-    setChatHeight: (chatHeight: number) => void;
+    chatRef: RefObject<HTMLDivElement>;
     chatScrollTop: number;
     setChatScrollTop: (chatScrollTop: number) => void;
-    hasChatScrollbar: boolean;
-    setHasChatScrollbar: (hasChatScrollbar: boolean) => void;
+
+    chatHeight: number;
+    setChatHeight: (chatHeight: number) => void;
+
+    chatContainerHeight: number;
+    setChatContainerHeight: (chatContainerHeight: number) => void;
 }
 
 const useChatUiStore = create<ChatsUiState>()((set) => ({
-    chatHeight: 0,
-    setChatHeight: (chatHeight) => set({ chatHeight }),
+    chatRef: { current: null },
     chatScrollTop: 0,
     setChatScrollTop: (chatScrollTop) => set({ chatScrollTop }),
-    hasChatScrollbar: false,
-    setHasChatScrollbar: (hasChatScrollbar: boolean) => set({ hasChatScrollbar }),
+
+    chatHeight: 0,
+    setChatHeight: (chatHeight) => set({ chatHeight }),
+
+    chatContainerHeight: 0,
+    setChatContainerHeight: (chatContainerHeight) => set({ chatContainerHeight }),
 }));
 
 export default useChatUiStore;

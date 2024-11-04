@@ -11,7 +11,6 @@ export default function ChatPage() {
             <Sidebar />
             <div className="h-full w-full flex flex-col relative">
                 <Header />
-                <div className="block md:hidden h-[90px] w-full"></div>
                 <SwipeDetector>
                     <ChatArea />
                 </SwipeDetector>

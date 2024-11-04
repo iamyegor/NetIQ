@@ -3,18 +3,17 @@ import useUiStore from "@/lib/zustand/ui/useUiStore";
 import { animateScroll } from "react-scroll";
 
 export default function useScrollChatToBottom() {
-    const { chatHeight, chatScrollTop } = useChatUiStore();
-    const { setScrollingInProgress, setShouldAttachToBottom } = useUiStore();
+    const { chatRef } = useChatUiStore();
+    const { setScrollingInProgress, setIsAttachedToBottom } = useUiStore();
 
     function scrollChatToBottom({ isSmooth }: { isSmooth: boolean }) {
-        console.log("go");
+        const chat = chatRef.current;
+        if (!chat) return;
+
         setScrollingInProgress(true);
-        const wholePath = chatHeight - chatScrollTop;
-        // animateScroll.scrollMore(wholePath, {
-        //     containerId: "chat",
-        //     smooth: config.smooth,
-        // });
+        const wholePath = chat.scrollHeight - chat.scrollTop;
         const duration = isSmooth ? Math.max(500, wholePath / 20) : 0;
+
         animateScroll.scrollToBottom({
             containerId: "chat",
             smooth: isSmooth ? "easeOutQuad" : false,
@@ -22,7 +21,7 @@ export default function useScrollChatToBottom() {
         });
 
         setTimeout(() => {
-            setShouldAttachToBottom(true);
+            setIsAttachedToBottom(true);
             setScrollingInProgress(false);
         }, duration);
     }
