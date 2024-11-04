@@ -22,9 +22,11 @@ import { useRef, useState } from "react";
 export default function AssistantMessage({
     message,
     selectVariant,
+    shouldHighlightCode,
 }: {
     message: Message;
     selectVariant: (message: Message) => void;
+    shouldHighlightCode: boolean;
 }) {
     const [isCopied, setIsCopied] = useState(false);
     const contentRef = useRef<HTMLDivElement>(null);
@@ -61,7 +63,10 @@ export default function AssistantMessage({
             </div>
             <div className="pl-3 pt-1 rounded-[25px] text-white flex flex-col gap-y-2.5 w-full">
                 <div ref={contentRef}>
-                    <MemoizedMarkdown content={message.content} />
+                    <MemoizedMarkdown
+                        shouldHighlightCode={shouldHighlightCode}
+                        content={message.content}
+                    />
                     <div
                         className={!message.content && isStreaming && isLast ? "visible" : "hidden"}
                     >

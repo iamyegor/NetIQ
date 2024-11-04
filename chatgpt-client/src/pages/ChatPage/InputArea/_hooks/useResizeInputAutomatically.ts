@@ -24,7 +24,7 @@ export default function useResizeInputAutomatically({
         }
 
         setTextAreaHeight(height);
-        setInputContainerHeight(height + 70);
+        setInputContainerHeight(height);
     }, [chatId, inputMessage]);
 
     return { textAreaHeight };

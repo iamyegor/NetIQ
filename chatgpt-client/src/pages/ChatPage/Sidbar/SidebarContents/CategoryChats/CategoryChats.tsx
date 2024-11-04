@@ -27,7 +27,7 @@ export default function CategoryChats({ categoryTitle, chats }: CategoryChatsPro
     const [showDialog, setShowDialog] = useState(false);
     const [chatToDelete, setChatToDelete] = useState<string | null>(null);
 
-    const { setMessages } = useMessageStore();
+    const { setMessages, setInputMessage } = useMessageStore();
     const { stopEventSource } = useEventSourceStore();
     const { setIsSidebarExpanded } = useUiStore();
 
@@ -37,9 +37,10 @@ export default function CategoryChats({ categoryTitle, chats }: CategoryChatsPro
     const { chatId } = useParams();
     const navigate = useNavigate();
 
-    function handleChatSwitch(newChat: string | undefined) {
+    function handleSwitchChat(newChat: string | undefined) {
         if (chatId === newChat) return;
 
+        setInputMessage("");
         stopEventSource();
         setMessages([]);
         if (!isMdScreen) {
@@ -95,7 +96,7 @@ export default function CategoryChats({ categoryTitle, chats }: CategoryChatsPro
             {chats.map((chat, index) => (
                 <Link
                     to={`/chats/${chat.id}`}
-                    onClick={() => handleChatSwitch(chat.id)}
+                    onClick={() => handleSwitchChat(chat.id)}
                     key={index}
                     className={`w-full flex justify-start items-center text-white !text-sm font-normal h-9 min-w-[260px] mb-1 space-x-3 !px-2 group relative p-2 hover:bg-neutral-900 rounded-lg transition ${chatId === chat.id ? "bg-neutral-900" : ""}`}
                 >

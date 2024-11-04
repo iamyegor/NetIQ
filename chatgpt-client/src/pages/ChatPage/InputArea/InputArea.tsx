@@ -6,19 +6,20 @@ import useErrorStore from "@/lib/zustand/error/useModelStore.ts";
 import useEventSourceStore from "@/lib/zustand/evenSource/useEventSourceStore.ts";
 import useMessageStore from "@/lib/zustand/messages/useMessageStore.ts";
 import useUiStore from "@/lib/zustand/ui/useUiStore.ts";
-import useScrollChatToBottom from "@/hooks/chat/useScrollChatToBottom.ts";
 import useResizeInputAutomatically from "@/pages/ChatPage/InputArea/_hooks/useResizeInputAutomatically.ts";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { FaRegStopCircle } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import MagicWantSvg from "@/pages/ChatPage/InputArea/_assets/magic-wand.svg?react";
 import SendSvg from "@/pages/ChatPage/InputArea/_assets/send.svg?react";
 import useInputAreaTranslations from "@/pages/ChatPage/InputArea/_hooks/useInputAreaTranslations.ts";
+import useScrollToBottomOnMessageSend from "@/pages/ChatPage/InputArea/_hooks/useScrollToBottomOnMessageSend.ts";
 
 export default function InputArea() {
     const duplicateTextArea = useRef<HTMLTextAreaElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLTextAreaElement | null>(null);
+    const [isPromptSent, setIsPromptSent] = useState(false);
 
     const { setPromptWasSentLessThan100MsAgo } = useUiStore();
     const { inputMessage, setInputMessage } = useMessageStore();
@@ -27,7 +28,6 @@ export default function InputArea() {
     const { stopEventSource } = useEventSourceStore();
 
     const { chatId } = useParams();
-    const { scrollChatToBottom } = useScrollChatToBottom();
     const { sendPromptAndStreamChat } = useSendPromptAndStreamChat();
     const t = useInputAreaTranslations();
     const { textAreaHeight } = useResizeInputAutomatically({
@@ -35,13 +35,15 @@ export default function InputArea() {
         inputMessage,
     });
 
+    useScrollToBottomOnMessageSend({ isPromptSent, setIsPromptSent });
+
     async function sendMessage() {
         if (!inputMessage.trim()) return;
 
         await sendPromptAndStreamChat(chatId ?? null, inputMessage.trim());
         setInputMessage("");
 
-        scrollChatToBottom({ scrollType: "super-smooth" });
+        setIsPromptSent(true);
         setPromptWasSentLessThan100MsAgo(true);
         setTimeout(() => setPromptWasSentLessThan100MsAgo(false), 100);
     }

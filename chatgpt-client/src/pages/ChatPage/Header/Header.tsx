@@ -5,10 +5,18 @@ import { Button } from "@/components/ui/button.tsx";
 import useUiStore from "@/lib/zustand/ui/useUiStore.ts";
 import useCreateNewChat from "@/pages/ChatPage/Header/_hooks/useCreateNewChat";
 import ModelSelector from "@/pages/ChatPage/Header/ModelSelector/ModelSelector.tsx";
+import { useParams } from "react-router-dom";
 
 export default function Header() {
     const { isSidebarExpanded, setIsSidebarExpanded } = useUiStore();
+    const { chatId } = useParams();
     const { createNewChat } = useCreateNewChat();
+
+    function handleCreateNewChat() {
+        if (chatId) {
+            createNewChat();
+        }
+    }
 
     return (
         <header className="bg-neutral-900 w-full h-min pb-2 md:pb-4 p-4 fill-faded text-faded fixed md:static z-50">
@@ -25,7 +33,7 @@ export default function Header() {
                             <SideBarSvg className="h-6 w-6" />
                         </Button>
                         <Button
-                            onClick={() => createNewChat()}
+                            onClick={handleCreateNewChat}
                             variant="ghost"
                             size="icon"
                             className={`transition-opacity duration-100`}
@@ -55,7 +63,7 @@ export default function Header() {
                 </Button>
                 <ModelSelector />
                 <Button
-                    onClick={createNewChat}
+                    onClick={handleCreateNewChat}
                     variant="ghost"
                     size="icon"
                     className="transition-opacity duration-100"

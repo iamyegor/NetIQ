@@ -27,12 +27,12 @@ export default function TypewriterGreetingAnimation({ greeting }: { greeting: st
 
     return (
         <div className="p-4">
-            <div className="flex flex-wrap gap-2 text-center justify-center leading-[1.1] tracking-tight">
+            <div className="flex flex-wrap gap-2 text-center justify-center leading-none  tracking-tight">
                 {words.map((word, index) => (
                     <motion.span
                         key={`${word}-${index}`}
                         {...createTypewriterAnimation(index, language === "en")}
-                        className="text-[38px] xs:text-[45px] sm:text-[39px] leading-[1.1] font-semibold text-neutral-100"
+                        className="text-[34px] xs:text-[45px] sm:text-[39px] font-semibold text-neutral-100"
                     >
                         {word}
                     </motion.span>

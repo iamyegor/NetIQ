@@ -37,7 +37,7 @@ export default function UserMessage({
 
     async function handleEditPrompt(message: Message, messageContent: string) {
         editPromptAndPrompt(message, messageContent);
-        setTimeout(() => scrollChatToBottom({ scrollType: "smooth" }), 70);
+        setTimeout(() => scrollChatToBottom({ isSmooth: true }), 70);
         setIsEditing(false);
     }
 

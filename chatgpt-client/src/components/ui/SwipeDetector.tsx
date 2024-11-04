@@ -1,5 +1,5 @@
 import useUiStore from "@/lib/zustand/ui/useUiStore";
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 interface TouchPosition {
     x: number;
@@ -39,11 +39,9 @@ export default function SwipeDetector({ children }: { children: React.ReactNode 
 
         const scrollableParent = findScrollableParent(touchStartElement.current);
 
-        console.log({ scrollableParent });
-
         if (
             !scrollableParent &&
-            horizontalDistance > 50 &&
+            horizontalDistance > 30 &&
             horizontalDistance > verticalDistance * 2 &&
             verticalDistance < 40
         ) {
