@@ -32,7 +32,7 @@ export default function ChatArea() {
     const t = useChatAreaTranslation();
     const { messagesLoading } = useLoadMessages();
     const { attachToBottomBasedOnScroll } = useAttachToBottomBasedOnScroll();
-
+    
     useClearMessageHeightsOnChatSwitch({ messageHeights });
     useCheckChatCharacteristics(chatRef);
     useScrollToBottomOnChatLoad();
