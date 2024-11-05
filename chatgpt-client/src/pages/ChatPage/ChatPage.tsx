@@ -7,9 +7,9 @@ import SwipeDetector from "@/components/ui/SwipeDetector";
 
 export default function ChatPage() {
     return (
-        <div className="flex h-screen bg-neutral-900 relative">
+        <div className="flex w-full h-full max-h-screen md:h-screen bg-neutral-900 relative overflow-y-auto">
             <Sidebar />
-            <div className="h-full w-full flex flex-col relative">
+            <div className="w-full h-full flex flex-col relative">
                 <Header />
                 <SwipeDetector>
                     <ChatArea />

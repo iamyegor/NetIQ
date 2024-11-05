@@ -36,7 +36,7 @@ export default function ChatHero({ hello }: { hello: string }) {
                             <button
                                 key={prompt.label}
                                 onClick={() => useSuggestedPrompt(prompt.prompt)}
-                                className="bg-secondary hover:bg-neutral-950 border text-[12px] xs:text-[13px] border-neutral-700 py-3 px-4 rounded-full flex items-center justify-center xs:justify-start gap-x-3"
+                                className="bg-secondary hover:bg-neutral-950 border text-[12px] xs:text-[13px] border-neutral-700 py-3 px-2 xs:px-4 rounded-full flex items-center justify-center xs:justify-start gap-x-3"
                             >
                                 <div className="hidden xs:block">{prompt.icon}</div>
                                 <p>{prompt.label}</p>

@@ -85,7 +85,7 @@ export default function UserMessage({
                                 <PencilSvg className="w-4 h-4 fill-neutral-300" />
                             </Button>
                             <div className="p-3 rounded-2xl text-white bg-secondary border border-neutral-800 px-5">
-                                <p className="break-all" style={{ whiteSpace: "pre-wrap" }}>
+                                <p className="break-words" style={{ whiteSpace: "pre-wrap" }}>
                                     {message.content}
                                 </p>
                             </div>

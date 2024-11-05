@@ -43,7 +43,7 @@ export default function ChatArea() {
         <main
             ref={chatRef}
             id="chat"
-            className="flex flex-1 w-full justify-center h-full overflow-y-auto !relative px-5 transition-transform mt-[100px] mb-[110px] md:mt-0 md:mb-[5px]"
+            className="flex w-full justify-center flex-1 overflow-y-auto mt-[70px] mb-[110px] md:mt-0 md:mb-0 !relative px-5 transition-transform"
             onScroll={(e: React.UIEvent<HTMLDivElement>) => {
                 attachToBottomBasedOnScroll(e);
                 setChatScrollTop(e.currentTarget.scrollTop);
@@ -63,7 +63,7 @@ export default function ChatArea() {
             ) : (
                 <div
                     ref={chatWidthElementRef}
-                    className={`w-full max-w-[800px] h-full ${appError && "h-full flex flex-col justify-between items-stretch"}`}
+                    className={`w-full max-w-[800px] h-full ${appError && "flex flex-col justify-between items-stretch"}`}
                 >
                     {messagesLoading ? (
                         <div className="flex w-full h-full justify-center items-center">
