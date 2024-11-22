@@ -34,16 +34,11 @@ public static class DependencyInjection
     private static void AddChatgpt(this IServiceCollection services)
     {
         string apiKey = Environment.GetEnvironmentVariable("CustomGptApiKey")!;
-        string proxyAddress = Environment.GetEnvironmentVariable("PROXY_ADDRESS")!;
-        string proxyUsername = Environment.GetEnvironmentVariable("PROXY_USERNAME")!;
-        string proxyPassword = Environment.GetEnvironmentVariable("PROXY_PASSWORD")!;
+        // string proxyAddress = Environment.GetEnvironmentVariable("PROXY_ADDRESS")!;
+        // string proxyUsername = Environment.GetEnvironmentVariable("PROXY_USERNAME")!;
+        // string proxyPassword = Environment.GetEnvironmentVariable("PROXY_PASSWORD")!;
 
-        GptHttpClient gptHttpClient = new GptHttpClient(
-            apiKey,
-            proxyAddress,
-            proxyUsername,
-            proxyPassword
-        );
+        GptHttpClient gptHttpClient = new(apiKey);
 
         services.AddSingleton(_ => gptHttpClient);
         services.AddScoped<ChatGpt>();

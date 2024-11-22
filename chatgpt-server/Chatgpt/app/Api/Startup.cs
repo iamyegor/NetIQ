@@ -1,9 +1,6 @@
 using System.Reflection;
-using Api.Mappings;
 using Api.Utils;
-using DotNetEnv;
 using Infrastructure;
-using Mapster;
 using SharedKernel.Communication.Extensions;
 
 namespace Api;
@@ -14,13 +11,11 @@ public static class Startup
 
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
-        Env.Load(".asp-env");
         builder.Host.AddSerilog();
 
         builder
             .Services.AddBaseServices(CorsPolicy)
             .AddInfrastructureServices(builder.Configuration, builder.Environment.IsDevelopment())
-            .AddMapsterMappings()
             .AddMassTransit(builder.Configuration, Assembly.GetExecutingAssembly());
 
         return builder.Build();

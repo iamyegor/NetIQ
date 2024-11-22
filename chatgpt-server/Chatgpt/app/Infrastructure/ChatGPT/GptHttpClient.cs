@@ -10,25 +10,9 @@ public class GptHttpClient
     private const string ApiUrl = "https://api.openai.com/v1/chat/completions";
     private readonly HttpClient _client;
 
-    public GptHttpClient(
-        string apiKey,
-        string proxyAddress,
-        string proxyUsername,
-        string proxyPassword
-    )
+    public GptHttpClient(string apiKey)
     {
-        WebProxy proxy = new WebProxy(proxyAddress)
-        {
-            Credentials = new NetworkCredential(proxyUsername, proxyPassword)
-        };
-
-        HttpClientHandler httpClientHandler = new HttpClientHandler
-        {
-            Proxy = proxy,
-            UseProxy = true
-        };
-
-        HttpClient client = new HttpClient(httpClientHandler);
+        HttpClient client = new();
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
             "Bearer",
             apiKey

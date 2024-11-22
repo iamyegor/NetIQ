@@ -1,3 +1,4 @@
+using Api.Mappings;
 using Application;
 using Serilog;
 
@@ -14,6 +15,7 @@ public static class DependencyInjection
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
         services.AddCors(corsPolicy);
+        services.AddMapsterMappings();
         services.AddApplication();
 
         return services;
