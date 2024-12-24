@@ -1,7 +1,7 @@
 import ExclamationSvg from "@/assets/pages/chat/exclamation.svg?react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert.tsx";
+import useErrorStore from "@/lib/zustand/error/useErrorStore";
 import { useErrorTranslations } from "@/pages/ChatPage/ChatArea/ErrorMessage/_hooks/useErrorTranslations.ts";
-import useErrorStore from "@/lib/zustand/error/useModelStore.ts";
 
 export default function ErrorMessage() {
     const { appError } = useErrorStore();

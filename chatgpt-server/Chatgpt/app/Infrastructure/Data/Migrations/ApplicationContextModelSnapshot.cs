@@ -48,7 +48,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("chats", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Chat.Entities.Message", b =>
+            modelBuilder.Entity("Domain.Chat.Entities.Message.Message", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
@@ -81,6 +81,54 @@ namespace Infrastructure.Migrations
                     b.ToTable("messages", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.User.Entities.Subscription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("MaxMessages")
+                        .HasColumnType("integer")
+                        .HasColumnName("max_messages");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("numeric")
+                        .HasColumnName("price");
+
+                    b.Property<string>("PriceIdDev")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("price_id_dev");
+
+                    b.Property<string>("PriceIdProd")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("price_id_prod");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("subscriptions", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            MaxMessages = 99999999,
+                            Name = "plus",
+                            Price = 20m,
+                            PriceIdDev = "price_1QZZCzHXcNm6rEhrhlLXQCuE",
+                            PriceIdProd = "price_1QX4OCHXcNm6rEhrVFa1lJVm"
+                        });
+                });
+
             modelBuilder.Entity("Domain.User.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -90,6 +138,13 @@ namespace Infrastructure.Migrations
                     b.Property<int>("SentMessages")
                         .HasColumnType("integer")
                         .HasColumnName("sent_messages");
+
+                    b.Property<string>("StripeCustomerId")
+                        .HasColumnType("text")
+                        .HasColumnName("stripe_customer_id");
+
+                    b.Property<int?>("subscription_id")
+                        .HasColumnType("integer");
 
                     b.ComplexProperty<Dictionary<string, object>>("Email", "Domain.User.User.Email#Email", b1 =>
                         {
@@ -101,21 +156,9 @@ namespace Infrastructure.Migrations
                                 .HasColumnName("email");
                         });
 
-                    b.ComplexProperty<Dictionary<string, object>>("SubscriptionStatus", "Domain.User.User.SubscriptionStatus#SubscriptionStatus", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<int>("MaxMessages")
-                                .HasColumnType("integer")
-                                .HasColumnName("subscription_max_messages");
-
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("subscription_status");
-                        });
-
                     b.HasKey("Id");
+
+                    b.HasIndex("subscription_id");
 
                     b.ToTable("users", (string)null);
                 });
@@ -129,7 +172,7 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Chat.Entities.Message", b =>
+            modelBuilder.Entity("Domain.Chat.Entities.Message.Message", b =>
                 {
                     b.HasOne("Domain.Chat.Chat", null)
                         .WithMany("Messages")
@@ -156,6 +199,15 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("Sender")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.User.User", b =>
+                {
+                    b.HasOne("Domain.User.Entities.Subscription", "Subscription")
+                        .WithMany()
+                        .HasForeignKey("subscription_id");
+
+                    b.Navigation("Subscription");
                 });
 
             modelBuilder.Entity("Domain.Chat.Chat", b =>

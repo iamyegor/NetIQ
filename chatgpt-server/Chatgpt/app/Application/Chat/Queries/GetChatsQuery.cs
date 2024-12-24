@@ -32,7 +32,7 @@ public class GetChatsQueryHandler : IRequestHandler<GetChatsQuery, Result<GetCha
             .SingleOrDefaultAsync(u => u.Id == query.UserId, cancellationToken: ct);
 
         if (user == null)
-            return ErrorsUser.NotFound;
+            return ErrorsUser.NotFound();
 
         int totalChats = user.Chats.Count;
         int totalPages = (int)Math.Ceiling(totalChats / (double)PageSize);

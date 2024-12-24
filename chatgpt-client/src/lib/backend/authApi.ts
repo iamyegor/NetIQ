@@ -2,7 +2,7 @@ import interceptor from "@/lib/backend/interceptor";
 import axios, { AxiosResponse } from "axios";
 
 const authApi = axios.create({
-    baseURL: "https://" + import.meta.env.VITE_AUTH_BACKEND_ADDRESS,
+    baseURL: import.meta.env.VITE_AUTH_BACKEND_ADDRESS,
     withCredentials: true,
 });
 

@@ -15,14 +15,14 @@ export default function SignInPage() {
 
     return (
         <div className="min-h-full bg-neutral-950 flex items-center justify-center py-5 px-2.5 xs:px-5 sm:px-10">
-            <div className="bg-neutral-800 p-4 xs:p-8 pt-5 rounded-xl shadow-lg w-full max-w-md space-y-8 border border-neutral-600">
+            <div className="bg-neutral-800 p-4 xs:p-8 pt-5 rounded-xl shadow-lg w-full max-w-md border border-neutral-600">
                 <div className="flex flex-col items-center space-y-6">
                     <img src={netIqLogo} alt="Logo" className="h-20 object-cover" />
                     <h2 className="text-2xl font-bold text-white text-center">{t.signIn}</h2>
                 </div>
 
-                <Form method="post" className="space-y-4 text-white">
-                    <div className="space-y-4">
+                <Form method="post" className="text-white">
+                    <div className="space-y-2 mb-4">
                         <Label htmlFor="email" className="text-white">
                             {t.email}
                         </Label>
@@ -35,27 +35,26 @@ export default function SignInPage() {
                         />
                     </div>
 
-                    <div className="space-y-4">
+                    <div className="space-y-4 mb-4">
                         <Label htmlFor="password" className="text-white">
                             {t.password}
                         </Label>
                         <PasswordInput id="password" name="password" required />
-                        <p className="space-x-2 text-sm">
-                            <span>{t.forgotPassword}</span>
-                            <Link
-                                className="text-blue-400 hover:underline"
-                                to="/request-password-reset"
-                            >
-                                {t.recoverAccess}
-                            </Link>
-                        </p>
                     </div>
 
-                    {error && <p className="text-red-500 text-sm !mt-6">{error}</p>}
+                    <p className="space-x-2 text-sm flex justify-between mb-6">
+                        <span>{t.forgotPassword}</span>
+                        <Link
+                            className="text-blue-400 hover:underline"
+                            to="/request-password-reset"
+                        >
+                            {t.recoverAccess}
+                        </Link>
+                    </p>
 
                     <Button
                         type="submit"
-                        className="w-full !p-6 !mt-8"
+                        className="w-full !p-6"
                         disabled={state === "submitting"}
                     >
                         {state === "submitting" ? (
@@ -64,9 +63,11 @@ export default function SignInPage() {
                             <span>{t.enter}</span>
                         )}
                     </Button>
+
+                    {error && <p className="text-red-500 text-sm text-center mt-6">{error}</p>}
                 </Form>
 
-                <p className="text-center text-white !mt-10 text-sm text-nowrap">
+                <p className="text-center text-white mt-6 text-sm text-nowrap">
                     {t.noAccount}{" "}
                     <Link to="/sign-up" className="text-blue-400 hover:underline">
                         {t.register}

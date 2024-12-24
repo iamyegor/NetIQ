@@ -2,18 +2,18 @@ import RotateRightSvg from "@/assets/pages/chat/rotate-right.svg?react";
 import { Button } from "@/components/ui/button.tsx";
 import { Textarea } from "@/components/ui/textarea.tsx";
 import useSendPromptAndStreamChat from "@/hooks/streaming/useSendPromptAndStreamChat.ts";
-import useErrorStore from "@/lib/zustand/error/useModelStore.ts";
+import useErrorStore from "@/lib/zustand/error/useErrorStore";
 import useEventSourceStore from "@/lib/zustand/evenSource/useEventSourceStore.ts";
 import useMessageStore from "@/lib/zustand/messages/useMessageStore.ts";
 import useUiStore from "@/lib/zustand/ui/useUiStore.ts";
-import useResizeInputAutomatically from "@/pages/ChatPage/InputArea/_hooks/useResizeInputAutomatically.ts";
-import React, { useRef, useState } from "react";
-import { FaRegStopCircle } from "react-icons/fa";
-import { useParams } from "react-router-dom";
 import MagicWantSvg from "@/pages/ChatPage/InputArea/_assets/magic-wand.svg?react";
 import SendSvg from "@/pages/ChatPage/InputArea/_assets/send.svg?react";
 import useInputAreaTranslations from "@/pages/ChatPage/InputArea/_hooks/useInputAreaTranslations.ts";
+import useResizeInputAutomatically from "@/pages/ChatPage/InputArea/_hooks/useResizeInputAutomatically.ts";
 import useScrollToBottomOnMessageSend from "@/pages/ChatPage/InputArea/_hooks/useScrollToBottomOnMessageSend.ts";
+import React, { useRef, useState } from "react";
+import { FaRegStopCircle } from "react-icons/fa";
+import { useParams } from "react-router-dom";
 
 export default function InputArea() {
     const duplicateTextArea = useRef<HTMLTextAreaElement>(null);

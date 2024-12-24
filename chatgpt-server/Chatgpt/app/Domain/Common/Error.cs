@@ -6,10 +6,12 @@ namespace Domain.Common;
 public class Error : ValueObject
 {
     public string Code { get; set; }
+    public string? Details { get; set; }
 
-    public Error(string code)
+    public Error(string code, string? details = null)
     {
         Code = code;
+        Details = details;
     }
 
     public string Serialize()

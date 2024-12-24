@@ -1,3 +1,7 @@
+import DownArrowSvg from "@/assets/pages/chat/arrow-down.svg?react";
+import BoltSvg from "@/assets/pages/chat/bolt.svg?react";
+import BulbSvg from "@/assets/pages/chat/bulb.svg?react";
+import { Checkbox } from "@/components/ui/checkbox.tsx";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -6,20 +10,16 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu.tsx";
-import { Checkbox } from "@/components/ui/checkbox.tsx";
-import DownArrowSvg from "@/assets/pages/chat/arrow-down.svg?react";
-import { useMediaQuery } from "react-responsive";
-import useSubscriptionStatus from "@/pages/ChatPage/Header/ModelSelector/_hooks/useSubscriptionStatus.ts";
-import { Link } from "react-router-dom";
-import useModelSelectorTranslation from "@/pages/ChatPage/Header/ModelSelector/_hooks/useModelSelectorTranslation.ts";
-import Model from "@/types/chat/Model.ts";
 import useModelStore from "@/lib/zustand/model/useModelStore";
+import useModelSelectorTranslation from "@/pages/ChatPage/Header/ModelSelector/_hooks/useModelSelectorTranslation.ts";
+import useSubscription from "@/pages/ChatPage/Header/ModelSelector/_hooks/useSubscription";
+import Model from "@/types/chat/Model.ts";
 import { useEffect, useMemo } from "react";
-import BoltSvg from "@/assets/pages/chat/bolt.svg?react";
-import BulbSvg from "@/assets/pages/chat/bulb.svg?react";
+import { useMediaQuery } from "react-responsive";
+import { Link } from "react-router-dom";
 
 export default function ModelSelector() {
-    const { subscriptionStatus } = useSubscriptionStatus();
+    const { subscription } = useSubscription();
     const isMdScreen = useMediaQuery({ minWidth: 768 });
     const { selectedModel, setSelectedModel } = useModelStore();
     const t = useModelSelectorTranslation();
@@ -38,7 +38,7 @@ export default function ModelSelector() {
                 name: "GPT-4o mini",
                 description: t.models["gpt-4o-mini"].description,
                 icon: BoltSvg,
-                subscriptionAccess: ["free", "plus"],
+                subscriptionAccess: [],
             },
         ],
         [window.uiLanguage],
@@ -58,7 +58,8 @@ export default function ModelSelector() {
     }
 
     function isModelAccessible(model: Model) {
-        return !!subscriptionStatus && model.subscriptionAccess.includes(subscriptionStatus);
+        if (model.subscriptionAccess.length === 0) return true;
+        return !!subscription && model.subscriptionAccess.includes(subscription);
     }
 
     return (

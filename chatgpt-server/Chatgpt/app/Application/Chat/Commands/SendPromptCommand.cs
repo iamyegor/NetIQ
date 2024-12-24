@@ -49,7 +49,7 @@ public class SendPromptCommandHandler
             .SingleOrDefaultAsync(cancellationToken: ct);
 
         if (user == null)
-            return ErrorsUser.NotFound;
+            return ErrorsUser.NotFound();
 
         if (!user.CanAccess(command.Model))
             return ErrorsUser.HasNoModelAccess;

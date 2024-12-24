@@ -41,7 +41,7 @@ public class RegenerateResponseCommandHandler
             .SingleOrDefaultAsync(c => c.Id == command.UserId, ct);
 
         if (user == null)
-            return ErrorsUser.NotFound;
+            return ErrorsUser.NotFound();
 
         if (!user.CanAccess(command.Model))
             return ErrorsUser.HasNoModelAccess;

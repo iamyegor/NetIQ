@@ -53,10 +53,10 @@ public class SignUpCommandHandler : IRequestHandler<SignUpCommand, Result<Tokens
         await _context.Users.AddAsync(user, ct);
         await _context.SaveChangesAsync(ct);
 
-        await _emailSender.SendEmailVerificationCode(
-            email.Value,
-            user.EmailVerificationCode!.Value
-        );
+        // await _emailSender.SendEmailVerificationCode(
+        //     email.Value,
+        //     user.EmailVerificationCode!.Value
+        // );
 
         return tokens;
     }

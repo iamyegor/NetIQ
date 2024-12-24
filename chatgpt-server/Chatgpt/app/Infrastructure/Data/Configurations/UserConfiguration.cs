@@ -19,14 +19,10 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
                 eBuilder.Property(x => x.Value).HasColumnName("email");
             }
         );
-        builder.ComplexProperty(
-            x => x.SubscriptionStatus,
-            sBuilder =>
-            {
-                sBuilder.Property(s => s.Value).HasColumnName("subscription_status");
-                sBuilder.Property(s => s.MaxMessages).HasColumnName("subscription_max_messages");
-            }
-        );
+
+        builder.Property(user => user.StripeCustomerId).HasColumnName("stripe_customer_id");
+        builder.HasOne(user => user.Subscription).WithMany().HasForeignKey("subscription_id");
+
         builder.Property(user => user.SentMessages).HasColumnName("sent_messages");
     }
 }

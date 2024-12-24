@@ -14,6 +14,7 @@ import { useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useSidebarTranslations from "@/pages/ChatPage/Sidbar/SidebarContents/_hooks/useSidebarTranslations.ts";
 import useCreateNewChat from "@/pages/ChatPage/Header/_hooks/useCreateNewChat";
+import useModelStore from "@/lib/zustand/model/useModelStore";
 
 async function fetchEmail() {
     const response = await api.get<{ email: string }>("user/email");
@@ -24,6 +25,7 @@ export default function SidebarContents() {
     const { createNewChat } = useCreateNewChat();
     const { isSidebarExpanded, setIsSidebarExpanded } = useUiStore();
     const { chats, chatsLoading, chatsEndRef, allChatsLoaded } = useLoadChats();
+    const { subscription } = useModelStore();
 
     const { data } = useQuery({
         queryKey: ["email"],
@@ -107,16 +109,18 @@ export default function SidebarContents() {
                 </div>
             </div>
             <div className="absolute bottom-0 left-0 right-0 bg-neutral-950 p-2 pt-1.5 space-y-2">
-                <Link
-                    to="/pricing"
-                    className="hover:bg-neutral-900 rounded-xl flex items-center space-x-3 text-white px-2 text-sm cursor-pointer h-[50px] transition duration-300"
-                >
-                    <Sparkles className="w-6 h-6 flex-shrink-0" />
-                    <div className="text-nowrap">
-                        <p>{t.upgradePlan}</p>
-                        <p className="text-xs text-neutral-400">{t.getMoreFeatures}</p>
-                    </div>
-                </Link>
+                {!subscription && (
+                    <Link
+                        to="/pricing"
+                        className="hover:bg-neutral-900 rounded-xl flex items-center space-x-3 text-white px-2 text-sm cursor-pointer h-[50px] transition duration-300"
+                    >
+                        <Sparkles className="w-6 h-6 flex-shrink-0" />
+                        <div className="text-nowrap">
+                            <p>{t.upgradePlan}</p>
+                            <p className="text-xs text-neutral-400">{t.getMoreFeatures}</p>
+                        </div>
+                    </Link>
+                )}
                 <div className="bg-neutral-900 rounded-xl px-2 flex items-center justify-between text-white h-[50px]">
                     <div className="flex items-center space-x-3">
                         <CircleUser className="w-6 h-6" />

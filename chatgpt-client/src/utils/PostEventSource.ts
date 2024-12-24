@@ -43,7 +43,7 @@ export default class PostEventSource {
     private async fetchWithTokenRefresh(isRetry: boolean = false): Promise<void> {
         try {
             const response = await fetch(
-                `https://${import.meta.env.VITE_BACKEND_ADDRESS}/${this.url}`,
+                `${import.meta.env.VITE_BACKEND_ADDRESS}/${this.url}`,
                 {
                     method: "POST",
                     headers: {

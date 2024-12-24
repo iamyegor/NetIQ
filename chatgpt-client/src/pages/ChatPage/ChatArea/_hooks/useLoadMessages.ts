@@ -1,5 +1,5 @@
 import api from "@/lib/backend/api";
-import useErrorStore from "@/lib/zustand/error/useModelStore";
+import useErrorStore from "@/lib/zustand/error/useErrorStore";
 import useMessageStore from "@/lib/zustand/messages/useMessageStore";
 import Message from "@/types/chat/Message";
 import RouteError from "@/types/errors/RouteError";

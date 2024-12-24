@@ -30,7 +30,7 @@ public class DeleteChatCommandHandler : IRequestHandler<DeleteChatCommand, Succe
             .FirstOrDefaultAsync(u => u.Id == command.UserId, cancellationToken);
 
         if (user is null)
-            return ErrorsUser.NotFound;
+            return ErrorsUser.NotFound();
 
         if (user.Chats.Count == 0)
             return ErrorsChat.NotFound;

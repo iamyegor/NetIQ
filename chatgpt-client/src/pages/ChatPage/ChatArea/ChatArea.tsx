@@ -1,5 +1,5 @@
 import useChatUiStore from "@/lib/zustand/chatsUi/useChatsUiStore";
-import useErrorStore from "@/lib/zustand/error/useModelStore";
+import useErrorStore from "@/lib/zustand/error/useErrorStore";
 import useMessageStore from "@/lib/zustand/messages/useMessageStore";
 import useAttachToBottomBasedOnScroll from "@/pages/ChatPage/ChatArea/_hooks/useAttachToBottomBasedOnScroll";
 import useChatAreaTranslation from "@/pages/ChatPage/ChatArea/_hooks/useChatAreaTranslation";
@@ -8,15 +8,15 @@ import useClearCodeMap from "@/pages/ChatPage/ChatArea/_hooks/useClearCodeMap";
 import useLoadMessages from "@/pages/ChatPage/ChatArea/_hooks/useLoadMessages";
 import useScrollToBottomOnChatLoad from "@/pages/ChatPage/ChatArea/_hooks/useScrollToBottomOnChatLoad";
 import useScrollToBottomWhenStreaming from "@/pages/ChatPage/ChatArea/_hooks/useScrollToBottomWhenStreaming";
+import useClearMessageHeightsOnChatSwitch from "@/pages/ChatPage/ChatArea/_hooks/useVirtualizedMessages/_hooks/useClearMessageHeightsOnChatSwitch.ts";
 import ChatHero from "@/pages/ChatPage/ChatArea/ChatHero/ChatHero";
 import ErrorMessage from "@/pages/ChatPage/ChatArea/ErrorMessage/ErrorMessage";
-import "ldrs/ring2";
-import React, { useRef } from "react";
-import { useParams } from "react-router-dom";
 import MessageHeightMeasurer from "@/pages/ChatPage/ChatArea/MessageHeightMeasurer/MessageHeightMeasurer.tsx";
 import VirtualizedMessages from "@/pages/ChatPage/ChatArea/VisibleMessages/VirtualizedMessages.tsx";
 import "highlight.js/styles/atom-one-dark.css";
-import useClearMessageHeightsOnChatSwitch from "@/pages/ChatPage/ChatArea/_hooks/useVirtualizedMessages/_hooks/useClearMessageHeightsOnChatSwitch.ts";
+import "ldrs/ring2";
+import React, { useRef } from "react";
+import { useParams } from "react-router-dom";
 
 export default function ChatArea() {
     const { chatRef } = useChatUiStore();

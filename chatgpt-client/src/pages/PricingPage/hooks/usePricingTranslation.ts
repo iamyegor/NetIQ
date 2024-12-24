@@ -17,6 +17,7 @@ const translations = [
         paymentError: "An error occurred while trying to upgrade to Plus subscription.",
         regionUnavailable:
             "Subscription is currently unavailable in your region. We are working on it.",
+        price: 20
     },
     {
         locale: "ru",
@@ -34,6 +35,7 @@ const translations = [
         paymentError: "Произоишла ошибка при попытке перейти на Plus подписку.",
         regionUnavailable:
             "Оформление подписки пока недоступно в вашем регионе. Мы уже работает над этим.",
+        price: 1500
     },
 ];
 

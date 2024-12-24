@@ -3,6 +3,7 @@ using Infrastructure.ChatGPT.ChatTitle;
 using Infrastructure.Data;
 using Infrastructure.Data.Dapper;
 using Infrastructure.EnvironmentUtils;
+using Infrastructure.Stripe;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SharedKernel.Auth;
@@ -26,14 +27,16 @@ public static class DependencyInjection
             .AddTransient<HttpClient>()
             .AddTransient<ConnectionStringResolver>()
             .AddAuth(config)
-            .AddChatgpt();
+            .AddChatgpt(config);
+
+        services.AddOptions<StripeSettings>().Bind(config.GetSection("Stripe"));
 
         return services;
     }
 
-    private static void AddChatgpt(this IServiceCollection services)
+    private static void AddChatgpt(this IServiceCollection services, IConfiguration config)
     {
-        string apiKey = Environment.GetEnvironmentVariable("CustomGptApiKey")!;
+        string apiKey = config.GetValue<string>("ChatGpt:ApiKey")!;
         // string proxyAddress = Environment.GetEnvironmentVariable("PROXY_ADDRESS")!;
         // string proxyUsername = Environment.GetEnvironmentVariable("PROXY_USERNAME")!;
         // string proxyPassword = Environment.GetEnvironmentVariable("PROXY_PASSWORD")!;

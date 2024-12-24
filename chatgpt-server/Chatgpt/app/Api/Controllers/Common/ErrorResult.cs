@@ -1,6 +1,5 @@
 using System.Net;
 using Domain.Common;
-using Domain.Errors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers.Common;
@@ -18,7 +17,11 @@ public class ErrorResult : IActionResult
 
     public Task ExecuteResultAsync(ActionContext context)
     {
-        var payload = new Dictionary<string, object?>() { ["errorCode"] = _error.Code, };
+        var payload = new Dictionary<string, object?>()
+        {
+            ["errorCode"] = _error.Code,
+            ["details"] = _error.Details,
+        };
 
         ObjectResult objectResult = new ObjectResult(payload)
         {

@@ -1,5 +1,6 @@
 using System.Reflection;
 using Domain.User;
+using Domain.User.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -11,6 +12,7 @@ public class ApplicationContext : DbContext
     private readonly string _connectionString;
     private readonly bool _useLogger;
     public DbSet<User> Users => Set<User>();
+    public DbSet<Subscription> Subscriptions => Set<Subscription>();
 
     public ApplicationContext() { }
 

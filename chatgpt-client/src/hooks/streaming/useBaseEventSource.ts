@@ -1,5 +1,5 @@
 import getErrorBasedOnMessage from "@/hooks/streaming/utils/getErrorBasedOnMessage";
-import useErrorStore from "@/lib/zustand/error/useModelStore";
+import useErrorStore from "@/lib/zustand/error/useErrorStore";
 import useEventSourceStore from "@/lib/zustand/evenSource/useEventSourceStore";
 import useMessageStore from "@/lib/zustand/messages/useMessageStore";
 import EventSourceParameters from "@/types/EventSourceParameters";

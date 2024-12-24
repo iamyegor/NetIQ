@@ -1,6 +1,9 @@
 ﻿using Domain.Common;
+using Domain.User.Entities;
+using Domain.User.Errors;
 using Domain.User.ValueObjects;
 using Domain.User.ValueObjects.Email;
+using XResults;
 
 namespace Domain.User;
 
@@ -9,8 +12,9 @@ public class User : AggregateRoot<Guid>
     public Email Email { get; private set; }
     public IReadOnlyList<Chat.Chat> Chats => _chats.AsReadOnly();
     private readonly List<Chat.Chat> _chats = [];
-    public SubscriptionStatus SubscriptionStatus { get; } = SubscriptionStatus.Free;
     public int SentMessages { get; private set; }
+    public Subscription? Subscription { get; private set; }
+    public string? StripeCustomerId { get; private set; }
 
     public User()
         : base(Guid.NewGuid()) { }
@@ -31,9 +35,36 @@ public class User : AggregateRoot<Guid>
     public bool CanAccess(string modelName)
     {
         Model? model = Model.GetByName(modelName);
-        return model != null && model.SubscriptionsWithAccess.Contains(SubscriptionStatus);
+        return model != null && model.CanBeAccessedBy(Subscription);
     }
 
-    public bool ReachedMaxMessages() => SentMessages >= SubscriptionStatus.MaxMessages;
+    public bool ReachedMaxMessages()
+    {
+        if (Subscription == null)
+            return SentMessages >= 30;
+
+        return SentMessages >= Subscription.MaxMessages;
+    }
+
     public void IncrementSentMessages() => SentMessages++;
+
+    public SuccessOr<Error> CancelSubscription()
+    {
+        if (Subscription == null)
+            return Result.Fail(ErrorsUser.NotFound());
+
+        Subscription = null;
+
+        return Result.Ok();
+    }
+
+    public void UpdateSubscription(Subscription subscription)
+    {
+        Subscription = subscription;
+    }
+
+    public void UpdateCustomerId(string stripeCustomerId)
+    {
+        StripeCustomerId = stripeCustomerId;
+    }
 }
