@@ -11,8 +11,8 @@ import SendSvg from "@/pages/ChatPage/InputArea/_assets/send.svg?react";
 import useInputAreaTranslations from "@/pages/ChatPage/InputArea/_hooks/useInputAreaTranslations.ts";
 import useResizeInputAutomatically from "@/pages/ChatPage/InputArea/_hooks/useResizeInputAutomatically.ts";
 import useScrollToBottomOnMessageSend from "@/pages/ChatPage/InputArea/_hooks/useScrollToBottomOnMessageSend.ts";
+import { CircleStop } from "lucide-react";
 import React, { useRef, useState } from "react";
-import { FaRegStopCircle } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 
 export default function InputArea() {
@@ -107,7 +107,7 @@ export default function InputArea() {
                             variant="ghost"
                         >
                             {isStreaming ? (
-                                <FaRegStopCircle className="h-[18px] w-[18px] text-white" />
+                                <CircleStop className="h-[18px] w-[18px] text-white" />
                             ) : (
                                 <SendSvg className="h-[18px] w-[18px] fill-white" />
                             )}

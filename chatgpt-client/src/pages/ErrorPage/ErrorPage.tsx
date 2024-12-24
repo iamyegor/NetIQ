@@ -1,7 +1,6 @@
+import { ArrowLeft, TriangleAlert } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Link, useRouteError } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
-import { LuAlertTriangle } from "react-icons/lu";
 import RouteError from "@/types/errors/RouteError.ts";
 
 const ErrorPage: React.FC = () => {
@@ -21,7 +20,7 @@ const ErrorPage: React.FC = () => {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-neutral-800 text-gray-100 space-y-7 px-5">
-            <LuAlertTriangle className="w-20 h-20 text-white" />
+            <TriangleAlert className="w-20 h-20 text-white" />
             <h1 className="text-5xl font-bold text-center">{title}</h1>
             <p className="text-xl text-center">{message}</p>
             <Link
