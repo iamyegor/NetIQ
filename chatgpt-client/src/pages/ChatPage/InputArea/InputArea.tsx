@@ -115,7 +115,7 @@ export default function InputArea() {
                     </div>
                 )}
             </div>
-            <p className="mb-2 text-neutral-400 text-[14px] font-medium space-x-1">
+            {/*<p className="mb-2 text-neutral-400 text-[14px] font-medium space-x-1">
                 <span>{t.developer.title}</span>
                 <a
                     className="font-notable font-bold hover:text-white transition-colors cursor-pointer"
@@ -124,7 +124,7 @@ export default function InputArea() {
                 >
                     {t.developer.name}
                 </a>
-            </p>
+            </p>*/}
         </div>
     );
 }
