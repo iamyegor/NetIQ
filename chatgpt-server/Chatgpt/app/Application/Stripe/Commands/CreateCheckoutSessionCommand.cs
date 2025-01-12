@@ -57,7 +57,7 @@ public class CreateCheckoutSessionCommandHandler
         SessionService stripeSessionService = new SessionService();
 
         string siteUrl = Environment.GetEnvironmentVariable("SITE_URL")!;
-        string origin = AppEnv.IsProduction ? $"https://{siteUrl}" : "http://localhost";
+        string origin = AppEnv.IsProduction ? siteUrl : "http://localhost";
 
         Session? stripeCheckoutSession = await stripeSessionService.CreateAsync(
             new SessionCreateOptions

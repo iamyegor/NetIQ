@@ -1,5 +1,4 @@
 ﻿using Domain.Common;
-using XResults;
 
 namespace Domain.User.Errors;
 
