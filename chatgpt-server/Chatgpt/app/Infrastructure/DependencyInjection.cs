@@ -22,7 +22,7 @@ public static class DependencyInjection
         string connectionString = connectionStringResolver.GetBasedOnEnvironment();
 
         services
-            .AddScoped(_ => new ApplicationContext(connectionString, isDevelopment))
+            .AddScoped(_ => new ApplicationContext(connectionString))
             .AddTransient<DapperConnectionFactory>()
             .AddTransient<HttpClient>()
             .AddTransient<ConnectionStringResolver>()

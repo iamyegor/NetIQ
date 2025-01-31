@@ -19,15 +19,14 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructureServices(
         this IServiceCollection services,
-        IConfiguration config,
-        bool isDevelopment
+        IConfiguration config
     )
     {
         ConnectionStringResolver connectionStringResolver = new ConnectionStringResolver(config);
         string connectionString = connectionStringResolver.GetBasedOnEnvironment();
 
         services
-            .AddScoped(_ => new ApplicationContext(connectionString, isDevelopment))
+            .AddScoped(_ => new ApplicationContext(connectionString))
             .AddTransient<DapperConnectionFactory>()
             .AddTransient<HttpClient>()
             .AddTransient<ConnectionStringResolver>()
@@ -63,18 +62,18 @@ public static class DependencyInjection
 
         services.AddTransient<DomainEmailSender>();
         services.AddTransient<EmailSender>();
-        services.AddTransient(serviceProvider =>
-        {
-            EmailSettings emailSettings = serviceProvider
-                .GetRequiredService<IOptions<EmailSettings>>()
-                .Value;
-
-            return new SmtpClient(emailSettings.MailServer, emailSettings.MailPort)
-            {
-                Credentials = new NetworkCredential(emailSettings.Username, emailSettings.Password),
-                EnableSsl = true
-            };
-        });
+        // services.AddTransient(serviceProvider =>
+        // {
+        //     EmailSettings emailSettings = serviceProvider
+        //         .GetRequiredService<IOptions<EmailSettings>>()
+        //         .Value;
+        //
+        //     return new SmtpClient(emailSettings.MailServer, emailSettings.MailPort)
+        //     {
+        //         Credentials = new NetworkCredential(emailSettings.Username, emailSettings.Password),
+        //         EnableSsl = true
+        //     };
+        // });
 
         return services;
     }

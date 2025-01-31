@@ -1,13 +1,12 @@
-using MailKit.Net.Smtp;
-using MailKit.Security;
+using Flurl.Http;
 using Microsoft.Extensions.Options;
-using MimeKit;
 
 namespace Infrastructure.Emails;
 
 public class EmailSender
 {
     private readonly EmailSettings _emailSettings;
+    private const string ResendApiUrl = "https://api.resend.com/emails";
 
     public EmailSender(IOptions<EmailSettings> emailSettings)
     {
@@ -16,23 +15,16 @@ public class EmailSender
 
     public async Task SendAsync(string subject, string html, string recipient)
     {
-        MimeMessage email = new();
-        email.From.Add(new MailboxAddress(_emailSettings.SenderName, _emailSettings.SenderEmail));
-        email.To.Add(MailboxAddress.Parse(recipient));
-        email.Subject = subject;
+        var request = new
+        {
+            from = $"{_emailSettings.SenderName} <{_emailSettings.SenderEmail}>",
+            to = new[] { recipient },
+            subject,
+            html
+        };
 
-        BodyBuilder bodyBuilder = new BodyBuilder { HtmlBody = html };
-        email.Body = bodyBuilder.ToMessageBody();
-
-        using SmtpClient client = new();
-        await client.ConnectAsync(
-            _emailSettings.MailServer,
-            _emailSettings.MailPort,
-            SecureSocketOptions.StartTls
-        );
-        await client.AuthenticateAsync(_emailSettings.Username, _emailSettings.Password);
-        await client.SendAsync(email);
-
-        await client.DisconnectAsync(true);
+        await ResendApiUrl
+            .WithHeader("Authorization", $"Bearer {_emailSettings.ResendApiKey}")
+            .PostJsonAsync(request);
     }
 }

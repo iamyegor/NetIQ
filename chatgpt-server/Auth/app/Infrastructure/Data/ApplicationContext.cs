@@ -4,20 +4,19 @@ using Infrastructure.Specifications;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using SharedKernel.Utils;
 
 namespace Infrastructure.Data;
 
 public class ApplicationContext : DbContext
 {
     private readonly string _connectionString;
-    private readonly bool _useLogger;
 
     public ApplicationContext() { }
 
-    public ApplicationContext(string connectionString, bool useLogger)
+    public ApplicationContext(string connectionString)
     {
         _connectionString = connectionString;
-        _useLogger = useLogger;
     }
 
     public DbSet<User> Users => Set<User>();
@@ -26,7 +25,7 @@ public class ApplicationContext : DbContext
     {
         optionsBuilder.UseNpgsql(_connectionString);
 
-        if (_useLogger)
+        if (AppEnv.IsDevelopment)
         {
             optionsBuilder
                 .UseLoggerFactory(LoggerFactory.Create(builder => builder.AddSerilog()))

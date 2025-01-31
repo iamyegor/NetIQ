@@ -18,8 +18,14 @@ export default function SignInPage() {
             <div className="bg-neutral-800 p-4 xs:p-8 pt-5 rounded-xl shadow-lg w-full max-w-md border border-neutral-600">
                 <div className="flex flex-col items-center space-y-6">
                     <img src={netIqLogo} alt="Logo" className="h-20 object-cover" />
-                    <h2 className="text-2xl font-bold text-white text-center">{t.signIn}</h2>
+                    <h2 className="text-4xl font-bold text-white text-center">{t.signIn}</h2>
                 </div>
+
+                {error && (
+                    <p className="bg-red-900 p-2 py-3 rounded-lg text-red-200 text-sm text-center mb-4 mt-4">
+                        {error}
+                    </p>
+                )}
 
                 <Form method="post" className="text-white">
                     <div className="space-y-2 mb-4">
@@ -35,14 +41,14 @@ export default function SignInPage() {
                         />
                     </div>
 
-                    <div className="space-y-4 mb-4">
+                    <div className="space-y-2 mb-6">
                         <Label htmlFor="password" className="text-white">
                             {t.password}
                         </Label>
                         <PasswordInput id="password" name="password" required />
                     </div>
 
-                    <p className="space-x-2 text-sm flex justify-between mb-6">
+                    <p className="space-x-2 text-sm flex justify-between mb-4">
                         <span>{t.forgotPassword}</span>
                         <Link
                             className="text-blue-400 hover:underline"
@@ -52,19 +58,13 @@ export default function SignInPage() {
                         </Link>
                     </p>
 
-                    <Button
-                        type="submit"
-                        className="w-full !p-6"
-                        disabled={state === "submitting"}
-                    >
+                    <Button type="submit" className="w-full !p-6" disabled={state === "submitting"}>
                         {state === "submitting" ? (
                             <l-ring-2 color="#424242" size={25} stroke={4} />
                         ) : (
                             <span>{t.enter}</span>
                         )}
                     </Button>
-
-                    {error && <p className="text-red-500 text-sm text-center mt-6">{error}</p>}
                 </Form>
 
                 <p className="text-center text-white mt-6 text-sm text-nowrap">

@@ -100,11 +100,6 @@ export default function SidebarContents() {
                             categoryTitle={t.lastThirtyDays}
                             chats={categorizedChats.previousThirtyDays}
                         />
-                        <div ref={chatsEndRef} className="flex justify-center">
-                            {!chatsLoading && !allChatsLoaded && (
-                                <l-ring-2 color="#e5e5e5" size="25" stroke="4"></l-ring-2>
-                            )}
-                        </div>
                     </div>
                 </div>
             </div>

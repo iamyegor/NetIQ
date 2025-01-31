@@ -11,6 +11,6 @@ public class DbContextDesignTimeFactory : IDesignTimeDbContextFactory<Applicatio
         configBuilder.AddJsonFile("appsettings.Development.json");
         IConfigurationRoot config = configBuilder.Build();
 
-        return new ApplicationContext(config.GetConnectionString("Default")!, false);
+        return new ApplicationContext(config.GetConnectionString("Default")!);
     }
 }

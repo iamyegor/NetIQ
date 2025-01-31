@@ -2,9 +2,11 @@ using System.Net;
 using Api.Mappings;
 using MailKit.Security;
 using Serilog;
+using Serilog.Debugging;
 using Serilog.Events;
 using Serilog.Formatting.Display;
 using Serilog.Sinks.Email;
+using SharedKernel.Utils;
 
 namespace Api;
 
@@ -48,31 +50,29 @@ public static class DependencyInjection
 
     public static void AddSerilog(this ConfigureHostBuilder host)
     {
-        string outlookPassword = Environment.GetEnvironmentVariable("OUTLOOK_PASSWORD")!;
-        Log.Logger = new LoggerConfiguration()
+        LoggerConfiguration loggerConfig = new LoggerConfiguration()
             .MinimumLevel.Information()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-            .Enrich.FromLogContext()
-            .WriteTo.Console()
-            .WriteTo.File(path: "/logs/log-.log", rollingInterval: RollingInterval.Day)
-            .WriteTo.Email(
-                options: new EmailSinkOptions
-                {
-                    From = "yyegor@outlook.com",
-                    To = ["astery227@gmail.com", "yyegor@outlook.com"],
-                    Host = "smtp.office365.com",
-                    Port = 587,
-                    ConnectionSecurity = SecureSocketOptions.StartTls,
-                    Credentials = new NetworkCredential("yyegor@outlook.com", outlookPassword),
-                    Subject = new MessageTemplateTextFormatter("Error In Attire Auth"),
-                    Body = new MessageTemplateTextFormatter(
-                        "{Timestamp} [{Level}] {Message}{NewLine}{Exception}"
-                    )
-                },
-                restrictedToMinimumLevel: LogEventLevel.Error
-            )
-            .CreateLogger();
+            .Enrich.FromLogContext();
 
+        if (AppEnv.IsProduction)
+        {
+            loggerConfig.WriteTo.Async(writeTo =>
+                writeTo.File(
+                    "/logs/log-.txt",
+                    rollingInterval: RollingInterval.Day,
+                    rollOnFileSizeLimit: true
+                )
+            );
+        }
+        else
+        {
+            loggerConfig.WriteTo.Async(writeTo => writeTo.Console());
+        }
+
+        Log.Logger = loggerConfig.CreateLogger();
+
+        // SelfLog.Enable(Console.Out);
         host.UseSerilog();
     }
 }

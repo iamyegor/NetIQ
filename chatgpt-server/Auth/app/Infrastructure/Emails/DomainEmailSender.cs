@@ -30,7 +30,7 @@ public class DomainEmailSender
         );
 
         string emailBody = htmlContent.Replace("{code}", code.ToString());
-        await _emailSender.SendAsync("Код подтверждения NetIQ", emailBody, email);
+        await _emailSender.SendAsync("NetIQ Verification Code", emailBody, email);
     }
 
     public async Task SendPasswordReset(PasswordResetToken token, string email)
@@ -48,6 +48,6 @@ public class DomainEmailSender
         string emailBody = htmlContent
             .Replace("{host}", address)
             .Replace("{token}", token.Value.ToString());
-        await _emailSender.SendAsync("Сброс пароля NetIQ", emailBody, email);
+        await _emailSender.SendAsync("NetIQ Password Reset", emailBody, email);
     }
 }

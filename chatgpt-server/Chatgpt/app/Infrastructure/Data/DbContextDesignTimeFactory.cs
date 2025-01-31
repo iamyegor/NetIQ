@@ -15,6 +15,6 @@ public class DbContextDesignTimeFactory : IDesignTimeDbContextFactory<Applicatio
 
         IConfigurationRoot config = configBuilder.Build();
 
-        return new ApplicationContext(config.GetConnectionString("Default")!, false);
+        return new ApplicationContext(config.GetConnectionString("Default")!);
     }
 }

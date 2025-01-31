@@ -1,6 +1,8 @@
 using Api.Mappings;
 using Application;
 using Serilog;
+using Serilog.Events;
+using SharedKernel.Utils;
 
 namespace Api;
 
@@ -41,6 +43,29 @@ public static class DependencyInjection
 
     public static void AddSerilog(this ConfigureHostBuilder host)
     {
-        host.UseSerilog((context, config) => config.ReadFrom.Configuration(context.Configuration));
+        LoggerConfiguration loggerConfig = new LoggerConfiguration()
+            .MinimumLevel.Information()
+            .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+            .Enrich.FromLogContext();
+
+        if (AppEnv.IsProduction)
+        {
+            loggerConfig.WriteTo.Async(writeTo =>
+                writeTo.File(
+                    "/logs/log-.txt",
+                    rollingInterval: RollingInterval.Day,
+                    rollOnFileSizeLimit: true
+                )
+            );
+        }
+        else
+        {
+            loggerConfig.WriteTo.Async(writeTo => writeTo.Console());
+        }
+
+        Log.Logger = loggerConfig.CreateLogger();
+
+        // SelfLog.Enable(Console.Out);
+        host.UseSerilog();
     }
 }

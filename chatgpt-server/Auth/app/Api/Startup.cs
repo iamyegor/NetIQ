@@ -16,7 +16,7 @@ public static class Startup
 
         builder
             .Services.AddBaseServices(CorsPolicy)
-            .AddInfrastructureServices(builder.Configuration, builder.Environment.IsDevelopment())
+            .AddInfrastructureServices(builder.Configuration)
             .AddApplicationValidation();
 
         return builder.Build();

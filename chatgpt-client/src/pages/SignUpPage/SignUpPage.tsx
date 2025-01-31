@@ -15,13 +15,13 @@ export default function SignUpPage() {
 
     return (
         <div className="min-h-full bg-neutral-950 flex items-center justify-center py-5 px-2.5 xs:px-5 sm:px-10">
-            <div className="bg-neutral-800 p-8 pt-5 rounded-xl shadow-lg w-full max-w-md space-y-8 border border-neutral-600">
+            <div className="bg-neutral-800 p-8 pt-5 rounded-xl shadow-lg w-full max-w-md border border-neutral-600">
                 <div className="flex flex-col items-center space-y-6">
                     <img src={netIqLogo} alt="Logo" className="h-20 object-cover" />
-                    <h2 className="text-2xl font-bold text-white text-center">{t.signUp}</h2>
+                    <h2 className="text-4xl font-bold text-white text-center">{t.signUp}</h2>
                 </div>
-                <Form method="post" className="space-y-4 text-white">
-                    <div className="space-y-4">
+                <Form method="post" className="text-white">
+                    <div className="mb-6">
                         <Label htmlFor="email" className="text-white">
                             {t.email}
                         </Label>
@@ -29,14 +29,14 @@ export default function SignUpPage() {
                             id="email"
                             name="email"
                             type="email"
-                            className={`w-full rounded-xl !p-6 !pl-4 !border-neutral-500 ${error?.isField("email") ? "border border-red-500" : ""}`}
+                            className={`w-full mt-2 rounded-xl !p-6 !pl-4 !border-neutral-500 ${error?.isField("email") ? "border border-red-500" : ""}`}
                             required
                         />
                         {error?.forField("email") && (
-                            <p className="text-red-500 text-sm mt-1">{error.forField("email")}</p>
+                            <p className="text-red-500 text-sm mt-2 font-medium">{error.forField("email")}</p>
                         )}
                     </div>
-                    <div className="space-y-4">
+                    <div className="mb-6">
                         <Label htmlFor="password" className="text-white">
                             {t.password}
                         </Label>
@@ -44,15 +44,16 @@ export default function SignUpPage() {
                             id="password"
                             name="password"
                             error={error?.isField("password")}
+                            className="mt-2"
                             required
                         />
                         {error?.forField("password") && (
-                            <p className="text-red-500 text-sm mt-1">
+                            <p className="text-red-500 text-sm mt-2 font-medium">
                                 {error.forField("password")}
                             </p>
                         )}
                     </div>
-                    <div className="space-y-4">
+                    <div className="mb-10">
                         <Label htmlFor="confirmPassword" className="text-white">
                             {t.confirmPassword}
                         </Label>
@@ -60,17 +61,18 @@ export default function SignUpPage() {
                             id="confirmPassword"
                             name="confirmPassword"
                             error={error?.isField("confirmPassword")}
+                            className="mt-2"
                             required
                         />
                         {error?.forField("confirmPassword") && (
-                            <p className="text-red-500 text mt-1 !-mb-8">
+                            <p className="text-red-500 text mt-2 text-sm font-medium">
                                 {error.forField("confirmPassword")}
                             </p>
                         )}
                     </div>
                     <Button
                         type="submit"
-                        className="w-full !mt-12 !p-6"
+                        className="w-full !p-6"
                         disabled={state === "submitting"}
                     >
                         {state === "submitting" ? (
@@ -80,7 +82,7 @@ export default function SignUpPage() {
                         )}
                     </Button>
                 </Form>
-                <p className="text-center text-white text-sm">
+                <p className="text-center text-white text-sm mt-5">
                     {t.alreadyRegistered}{" "}
                     <Link to="/sign-in" className="text-blue-400 hover:underline text-nowrap">
                         {t.signIn}
