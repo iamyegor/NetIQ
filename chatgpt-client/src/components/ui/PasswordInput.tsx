@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import ClosedEyeSvg from "@/assets/auth/closed-eye.svg?react";
 import OpenEyeSvg from "@/assets/auth/open-eye.svg?react";
+import { Eye, EyeOff } from "lucide-react";
 
 interface PasswordInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     error?: boolean;
@@ -25,9 +26,9 @@ const PasswordInput: React.FC<PasswordInputProps> = ({ className, error, ...prop
                 onClick={togglePasswordVisibility}
             >
                 {showPassword ? (
-                    <ClosedEyeSvg className="w-6 h-6 text-gray-400" />
+                    <EyeOff  className="w-6 h-6 text-gray-200" />
                 ) : (
-                    <OpenEyeSvg className="w-6 h-6 text-gray-400" />
+                    <Eye  className="w-6 h-6 text-gray-200" />
                 )}
             </button>
         </div>

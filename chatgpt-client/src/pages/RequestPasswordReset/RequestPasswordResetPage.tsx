@@ -13,10 +13,10 @@ export default function RequestPasswordResetPage() {
     const t = useRequestPasswordResetTranslation();
 
     return (
-        <div className="min-h-full flex justify-center items-center bg-neutral-950 py-5 px-2.5 xs:px-5 sm:px-10">
+        <div className="min-h-full flex justify-center items-center bg-neutral-950 py-5 px-5 sm:px-10">
             <Form
                 method="post"
-                className="flex flex-col justify-center bg-neutral-800 p-4 sm:p-8 max-w-[540px] gap-y-8 text-white rounded-xl relative border border-neutral-600"
+                className="flex flex-col justify-center bg-neutral-800 p-4 sm:p-8 py-8 max-w-[540px] gap-y-8 text-white rounded-xl relative border border-neutral-600"
             >
                 <Link
                     to="/sign-in"

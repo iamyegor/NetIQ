@@ -23,13 +23,13 @@ const ErrorPage: React.FC = () => {
             <TriangleAlert className="w-20 h-20 text-white" />
             <h1 className="text-5xl font-bold text-center">{title}</h1>
             <p className="text-xl text-center">{message}</p>
-            <Link
-                to="/"
+            <a
+                href="/"
                 className="bg-white hover:bg-neutral-200 rounded-xl text-black flex items-center p-3 px-7 space-x-3"
             >
                 <ArrowLeft className="h-5 w-5" />
-                <span>Назад</span>
-            </Link>
+                <span>Go back</span>
+            </a>
         </div>
     );
 };

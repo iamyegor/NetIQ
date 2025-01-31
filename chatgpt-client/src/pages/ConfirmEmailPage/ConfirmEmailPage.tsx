@@ -19,10 +19,10 @@ export default function ConfirmEmailPage() {
     const t = useConfirmEmailTranslation();
 
     return (
-        <div className="h-full flex justify-center items-center bg-black py-5 px-2.5 xs:px-5 sm:px-10">
+        <div className="h-full flex justify-center items-center bg-black py-5 px-5 sm:px-10">
             <Form
                 method="post"
-                className="flex flex-col justify-center items-center p-8 w-full max-w-[600px] bg-neutral-800 rounded-2xl space-y-8 border border-neutral-600"
+                className="flex flex-col justify-center items-center p-4 xs:p-8 py-8 w-full max-w-[600px] bg-neutral-800 rounded-2xl space-y-8 border border-neutral-600"
             >
                 <div className="space-y-4 text-center text-white">
                     <h1 className="text-2xl xs:text-3xl sm:text-4xl font-semibold">
