@@ -38,7 +38,8 @@ public static class DependencyInjection
                         .WithOrigins(
                             "http://localhost",
                             "http://localhost:5173",
-                            "https://netiq.ru"
+                            "https://netiq.ru",
+                            "http://192.168.0.11"
                         )
                         .AllowAnyHeader()
                         .AllowAnyMethod()

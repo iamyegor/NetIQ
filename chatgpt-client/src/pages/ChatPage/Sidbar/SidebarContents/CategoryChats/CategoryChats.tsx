@@ -7,16 +7,16 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from "@/components/ui/dialog.tsx";
+} from "@/components/ui/dialog";
 import useEventSourceStore from "@/lib/zustand/evenSource/useEventSourceStore.ts";
 import useMessageStore from "@/lib/zustand/messages/useMessageStore.ts";
 import useUiStore from "@/lib/zustand/ui/useUiStore.ts";
+import useCategoryChatsTranslation from "@/pages/ChatPage/Sidbar/SidebarContents/CategoryChats/hooks/useCategoryChatsTranslation.ts";
 import { useDeleteChat } from "@/pages/ChatPage/Sidbar/SidebarContents/CategoryChats/hooks/useDeleteChat.ts";
 import Chat from "@/types/chat/Chat.ts";
 import React, { useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import useCategoryChatsTranslation from "@/pages/ChatPage/Sidbar/SidebarContents/CategoryChats/hooks/useCategoryChatsTranslation.ts";
 
 interface CategoryChatsProps {
     categoryTitle: string;

@@ -1,6 +1,7 @@
 import useChatUiStore from "@/lib/zustand/chatsUi/useChatsUiStore";
 import useErrorStore from "@/lib/zustand/error/useErrorStore";
 import useMessageStore from "@/lib/zustand/messages/useMessageStore";
+import useUiStore from "@/lib/zustand/ui/useUiStore";
 import useAttachToBottomBasedOnScroll from "@/pages/ChatPage/ChatArea/_hooks/useAttachToBottomBasedOnScroll";
 import useChatAreaTranslation from "@/pages/ChatPage/ChatArea/_hooks/useChatAreaTranslation";
 import useCheckChatCharacteristics from "@/pages/ChatPage/ChatArea/_hooks/useCheckChatCharacteristics.ts";
@@ -32,7 +33,7 @@ export default function ChatArea() {
     const t = useChatAreaTranslation();
     const { messagesLoading } = useLoadMessages();
     const { attachToBottomBasedOnScroll } = useAttachToBottomBasedOnScroll();
-    
+
     useClearMessageHeightsOnChatSwitch({ messageHeights });
     useCheckChatCharacteristics(chatRef);
     useScrollToBottomOnChatLoad();
@@ -49,15 +50,6 @@ export default function ChatArea() {
                 setChatScrollTop(e.currentTarget.scrollTop);
             }}
         >
-            {messages.length > 0 && (
-                <MessageHeightMeasurer
-                    messages={messages}
-                    messageHeights={messageHeights}
-                    prevChatIdRef={prevChatIdRef}
-                    width={chatWidthElementRef.current?.offsetWidth ?? 0}
-                />
-            )}
-
             {messages.length === 0 && !chatId ? (
                 <ChatHero hello={t.hello} />
             ) : (

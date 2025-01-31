@@ -7,7 +7,14 @@ import fixReactVirtualized from "esbuild-plugin-react-virtualized";
 // https://vitejs.dev/config/
 
 export default defineConfig({
-    plugins: [react(), svgr()],
+    plugins: [
+        react({
+            // babel: {
+            //     plugins: [["babel-plugin-react-compiler"]],
+            // },
+        }),
+        svgr(),
+    ],
     server: {
         host: "0.0.0.0",
         port: 80,

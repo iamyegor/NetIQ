@@ -31,7 +31,7 @@ export const routes = [
             {
                 path: "chat",
                 element: <ChatPage />,
-                loader: redirectToSignInOnUnauthenticatedLoader,
+                // loader: redirectToSignInOnUnauthenticatedLoader,
             },
             {
                 path: "chats/:chatId",

@@ -1,5 +1,10 @@
-import { DialogDescription } from "@/components/ui/dialog.tsx";
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
+import {
+    Drawer,
+    DrawerContent,
+    DrawerDescription,
+    DrawerHeader,
+    DrawerTitle,
+} from "@/components/ui/drawer";
 import useUiStore from "@/lib/zustand/ui/useUiStore";
 import SidebarContents from "@/pages/ChatPage/Sidbar/SidebarContents/SidebarContents.tsx";
 
@@ -15,10 +20,10 @@ export default function Sidebar() {
                     direction="left"
                 >
                     <DrawerHeader className="absolute -top-[9999px] -left-[9999px]">
-                        <DrawerTitle>Навигация по чатам</DrawerTitle>
-                        <DialogDescription>Чаты</DialogDescription>
+                        <DrawerTitle>Chats navigation</DrawerTitle>
+                        <DrawerDescription>Chats</DrawerDescription>
                     </DrawerHeader>
-                    <DrawerContent className="h-screen top-0 left-0 right-auto mt-0 w-min rounded-none text-white">
+                    <DrawerContent className="h-[100dvh] top-0 left-0 right-auto mt-0 w-min rounded-none text-white">
                         <SidebarContents />
                     </DrawerContent>
                 </Drawer>

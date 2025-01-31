@@ -53,7 +53,7 @@ export default function PricingPage() {
     });
 
     return (
-        <div className="min-h-full bg-neutral-800 flex items-center justify-center py-16 px-2.5 xs:px-5 sm:px-10">
+        <div className="min-h-full bg-neutral-900 flex items-center justify-center py-16 px-2.5 xs:px-5 sm:px-10">
             <div className="absolute top-5 left-1/2 transform -translate-x-1/2 z-30">
                 <Alert
                     className={`max-w-[600px] min-w-[300px] xs:min-w-[380px] sm:min-w-[450px] text-sm space-x-3 gap-y-3 flex-col relative !bg-red-700 !border-red-500 ${showPaymentError ? "!opacity-100" : "!opacity-0"} transition-opacity`}

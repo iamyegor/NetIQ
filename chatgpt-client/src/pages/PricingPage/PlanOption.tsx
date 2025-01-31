@@ -28,12 +28,12 @@ export default function PlanOption({
     console.log({ currentPriceId });
 
     return (
-        <div className="bg-neutral-700 rounded-xl p-8 text-sm xs:text-base flex flex-col justify-between h-[440px] md:h-[500px]">
+        <div className="bg-neutral-800 rounded-xl p-8 text-sm xs:text-base flex flex-col justify-between h-[440px] md:h-[500px]">
             <div className="space-y-4">
                 <div className="flex justify-between items-center">
                     <div className="flex items-center gap-x-3">
                         {title === t.plus && (
-                            <Sparkles className="w-6 h-6 flex-shrink-0 text-green-600" />
+                            <Sparkles className="w-6 h-6 flex-shrink-0" />
                         )}
                         <h3 className="text-2xl font-bold">{title}</h3>
                     </div>

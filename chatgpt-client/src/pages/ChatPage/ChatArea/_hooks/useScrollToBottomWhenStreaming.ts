@@ -8,16 +8,12 @@ export default function useScrollToBottomWhenStreaming() {
     const { isStreaming, displayedMessages } = useMessageStore();
     const prevIsStreaming = useRef<boolean>(isStreaming);
     const { isAttachedToBottom, promptWasSentLessThan100MsAgo } = useUiStore();
-    const hasChatScrollbar = useHasChatScrollbar();
+    // const hasChatScrollbar = useHasChatScrollbar();
     const { scrollChatToBottom } = useScrollChatToBottom();
 
+    console.log({ isAttachedToBottom, isStreaming, promptWasSentLessThan100MsAgo });
     useEffect(() => {
-        if (
-            isStreaming &&
-            isAttachedToBottom &&
-            !promptWasSentLessThan100MsAgo &&
-            hasChatScrollbar
-        ) {
+        if (isStreaming && isAttachedToBottom && !promptWasSentLessThan100MsAgo) {
             scrollChatToBottom({ isSmooth: false });
         }
     }, [displayedMessages, isStreaming]);
