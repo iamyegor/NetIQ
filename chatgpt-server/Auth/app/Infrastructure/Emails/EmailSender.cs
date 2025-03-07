@@ -1,30 +1,42 @@
-using Flurl.Http;
+using MailKit.Net.Smtp;
+using MailKit.Security;
 using Microsoft.Extensions.Options;
+using MimeKit;
+using MimeKit.Text;
 
-namespace Infrastructure.Emails;
-
-public class EmailSender
+namespace Infrastructure.Emails
 {
-    private readonly EmailSettings _emailSettings;
-    private const string ResendApiUrl = "https://api.resend.com/emails";
-
-    public EmailSender(IOptions<EmailSettings> emailSettings)
+    public class EmailSender
     {
-        _emailSettings = emailSettings.Value;
-    }
+        private readonly EmailSettings _emailSettings;
 
-    public async Task SendAsync(string subject, string html, string recipient)
-    {
-        var request = new
+        public EmailSender(IOptions<EmailSettings> emailSettings)
         {
-            from = $"{_emailSettings.SenderName} <{_emailSettings.SenderEmail}>",
-            to = new[] { recipient },
-            subject,
-            html
-        };
+            _emailSettings = emailSettings.Value;
+        }
 
-        await ResendApiUrl
-            .WithHeader("Authorization", $"Bearer {_emailSettings.ResendApiKey}")
-            .PostJsonAsync(request);
+        public async Task SendAsync(string subject, string html, string recipient)
+        {
+            MimeMessage email = new();
+            email.From.Add(
+                new MailboxAddress(_emailSettings.SenderName, _emailSettings.SenderEmail)
+            );
+            email.To.Add(MailboxAddress.Parse(recipient));
+            email.Subject = subject;
+
+            BodyBuilder bodyBuilder = new BodyBuilder { HtmlBody = html };
+            email.Body = bodyBuilder.ToMessageBody();
+
+            using SmtpClient client = new();
+            await client.ConnectAsync(
+                _emailSettings.MailServer,
+                _emailSettings.MailPort,
+                SecureSocketOptions.StartTls
+            );
+            await client.AuthenticateAsync(_emailSettings.Username, _emailSettings.Password);
+            await client.SendAsync(email);
+
+            await client.DisconnectAsync(true);
+        }
     }
 }

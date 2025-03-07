@@ -25,7 +25,7 @@ export default function VirtualizedMessages({
     // }, [inputContainerHeight]);
 
     return (
-        <div>
+        <div className="md:pb-[70px]">
             {displayedMessages.map((message) => (
                 <ChatMessage key={message.id} message={message} selectVariant={selectMessage} />
             ))}

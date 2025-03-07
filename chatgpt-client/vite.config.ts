@@ -1,3 +1,4 @@
+import MillionLint from "@million/lint";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
@@ -8,10 +9,13 @@ import fixReactVirtualized from "esbuild-plugin-react-virtualized";
 
 export default defineConfig({
     plugins: [
+        MillionLint.vite({
+            enabled: true,
+        }),
         react({
-            // babel: {
-            //     plugins: [["babel-plugin-react-compiler"]],
-            // },
+            babel: {
+                plugins: [["babel-plugin-react-compiler"]],
+            },
         }),
         svgr(),
     ],
