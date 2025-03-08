@@ -1,5 +1,3 @@
-"use client";
-
 import { keyframes } from "@emotion/react";
 import { Reveal, RevealProps } from "react-awesome-reveal";
 
@@ -13,8 +11,8 @@ const customSlideAnimation = (distance: number, direction: SlideDirection) => ke
                 direction === "left"
                     ? `${distance}px`
                     : direction === "right"
-                    ? `-${distance}px`
-                    : "0"
+                      ? `-${distance}px`
+                      : "0"
             },
             ${direction === "up" ? `${distance}px` : direction === "down" ? `-${distance}px` : "0"},
             0
@@ -32,14 +30,14 @@ interface CustomSlideProps extends Omit<RevealProps, "keyframes"> {
     direction?: SlideDirection;
 }
 
-export default function subtleSlide({
+export default function SubtleSlide({
     children,
     distance = 100,
     direction = "down",
     duration = 400,
     triggerOnce = true,
     ...props
-}: CustomSlideProps): JSX.Element {
+}: CustomSlideProps) {
     return (
         <Reveal
             keyframes={customSlideAnimation(distance, direction)}
