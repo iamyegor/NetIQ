@@ -2,7 +2,7 @@ import { RefObject, useEffect } from "react";
 import useChatUiStore from "@/lib/zustand/chatsUi/useChatsUiStore.ts";
 import { useParams } from "react-router-dom";
 
-export default function useCheckChatCharacteristics(chatRef: RefObject<HTMLDivElement>) {
+export default function useCheckChatCharacteristics(chatRef: RefObject<HTMLDivElement | null>) {
     const { chatId } = useParams();
     const { setChatHeight, setChatScrollTop, setChatContainerHeight } = useChatUiStore();
 
@@ -13,17 +13,16 @@ export default function useCheckChatCharacteristics(chatRef: RefObject<HTMLDivEl
     useEffect(() => {
         if (!chatRef.current) return;
 
-        const resizeObserver = new ResizeObserver(checkScrollAndHeight);
+        const resizeObserver = new ResizeObserver(() => checkScrollAndHeight(chatRef.current!));
         if (chatRef.current) {
             resizeObserver.observe(chatRef.current);
         }
 
-        function checkScrollAndHeight() {
-            const chatElement = chatRef.current;
-            if (!chatElement) return;
+        function checkScrollAndHeight(chatEl: HTMLDivElement) {
+            if (chatEl === null) return;
 
-            setChatHeight(chatRef.current.scrollHeight);
-            setChatContainerHeight(chatRef.current.clientHeight);
+            setChatHeight(chatEl.scrollHeight);
+            setChatContainerHeight(chatEl.clientHeight);
         }
     }, []);
 }

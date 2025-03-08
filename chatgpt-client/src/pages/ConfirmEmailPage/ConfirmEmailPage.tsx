@@ -9,6 +9,7 @@ import CountdownDisplay from "@/pages/ConfirmEmailPage/components/VerificationCo
 import useEmailConfirmationMessage from "@/pages/ConfirmEmailPage/hooks/useEmailConfirmationMessage.ts";
 import { Button } from "@/components/ui/button.tsx";
 import useConfirmEmailTranslation from "./hooks/useConfirmEmailTranslation";
+import LoadingSpinner from "@/components/ui/loading-spinner";
 
 export default function ConfirmEmailPage() {
     const [inputs, setInputs] = useState<string[]>(Array(5).fill(""));
@@ -39,7 +40,7 @@ export default function ConfirmEmailPage() {
                     disabled={inputs.some((x) => x === "") || state === "submitting"}
                 >
                     {state === "submitting" ? (
-                        <l-ring-2 color="#424242" size={25} stroke={4} />
+                        <LoadingSpinner />
                     ) : (
                         <span>{t.confirm}</span>
                     )}

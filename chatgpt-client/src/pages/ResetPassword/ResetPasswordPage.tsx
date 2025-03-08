@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button.tsx";
 import PasswordInput from "@/components/ui/PasswordInput.tsx";
 import { Form, useActionData, useNavigation } from "react-router-dom";
 import useResetPasswordTranslation from "./hooks/useResetPasswordTranslation";
+import LoadingSpinner from "@/components/ui/loading-spinner";
 
 export default function ResetPasswordPage() {
     const actionData = useActionData() as { error: string } | null;
@@ -33,11 +34,7 @@ export default function ResetPasswordPage() {
                 />
                 {error && <p className="text-red-500 text-sm !-mt-3">{error}</p>}
                 <Button type="submit" className="w-full !p-6" disabled={state === "submitting"}>
-                    {state === "submitting" ? (
-                        <l-ring-2 color="#424242" size={25} stroke={4} />
-                    ) : (
-                        <span>{t.submitButton}</span>
-                    )}
+                    {state === "submitting" ? <LoadingSpinner /> : <span>{t.submitButton}</span>}
                 </Button>
             </Form>
         </div>

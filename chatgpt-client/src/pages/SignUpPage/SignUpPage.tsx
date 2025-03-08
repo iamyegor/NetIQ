@@ -6,6 +6,7 @@ import FieldError from "@/types/errors/FieldError";
 import netIqLogo from "@/assets/common/netiq.png";
 import PasswordInput from "@/components/ui/PasswordInput.tsx";
 import useSignUpTranslation from "./hooks/useSignUpTranslation";
+import LoadingSpinner from "@/components/ui/loading-spinner";
 
 export default function SignUpPage() {
     const actionData = useActionData() as { error: FieldError } | null;
@@ -33,7 +34,9 @@ export default function SignUpPage() {
                             required
                         />
                         {error?.forField("email") && (
-                            <p className="text-red-500 text-sm mt-2 font-medium -mb-3">{error.forField("email")}</p>
+                            <p className="text-red-500 text-sm mt-2 font-medium -mb-3">
+                                {error.forField("email")}
+                            </p>
                         )}
                     </div>
                     <div className="mb-6">
@@ -70,16 +73,8 @@ export default function SignUpPage() {
                             </p>
                         )}
                     </div>
-                    <Button
-                        type="submit"
-                        className="w-full !p-6"
-                        disabled={state === "submitting"}
-                    >
-                        {state === "submitting" ? (
-                            <l-ring-2 color="#424242" size={25} stroke={4} />
-                        ) : (
-                            <span>{t.register}</span>
-                        )}
+                    <Button type="submit" className="w-full !p-6" disabled={state === "submitting"}>
+                        {state === "submitting" ? <LoadingSpinner /> : <span>{t.register}</span>}
                     </Button>
                 </Form>
                 <p className="text-center text-white text-sm mt-5 leading-[1.6]">

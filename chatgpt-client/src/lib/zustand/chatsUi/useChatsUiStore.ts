@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { RefObject } from "react";
 
 interface ChatsUiState {
-    chatRef: RefObject<HTMLDivElement>;
+    chatRef: RefObject<HTMLDivElement | null>;
     chatScrollTop: number;
     setChatScrollTop: (chatScrollTop: number) => void;
 

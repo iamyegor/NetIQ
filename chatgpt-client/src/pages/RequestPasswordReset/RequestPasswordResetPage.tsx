@@ -6,6 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import { Form, Link, useActionData, useNavigation } from "react-router-dom";
 import FeedbackMessageComponent from "../ConfirmEmailPage/components/VerificationCodeInput/FeedbackMessageComponent";
 import useRequestPasswordResetTranslation from "./hooks/useRequestPasswordResetTranslation";
+import LoadingSpinner from "@/components/ui/loading-spinner";
 
 export default function RequestPasswordResetPage() {
     const feedBack = useActionData() as FeedbackMessage | null;
@@ -41,11 +42,7 @@ export default function RequestPasswordResetPage() {
                     <FeedbackMessageComponent feedback={feedBack} />
                 </div>
                 <Button className="w-full !p-6" disabled={state === "submitting"}>
-                    {state === "submitting" ? (
-                        <l-ring-2 color="#424242" size={25} stroke={4} />
-                    ) : (
-                        <span>{t.submitButton}</span>
-                    )}
+                    {state === "submitting" ? <LoadingSpinner /> : <span>{t.submitButton}</span>}
                 </Button>
             </Form>
         </div>

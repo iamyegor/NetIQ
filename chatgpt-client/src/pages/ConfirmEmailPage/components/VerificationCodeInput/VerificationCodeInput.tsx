@@ -58,7 +58,9 @@ export default function VerificationCodeInput({
             <div className="flex justify-center space-x-2 sm:space-x-3">
                 {inputs.map((value, index) => (
                     <input
-                        ref={(el) => (inputRefs.current[index] = el!)}
+                        ref={(el) => {
+                            inputRefs.current[index] = el!;
+                        }}
                         name={`code-${index}`}
                         key={index}
                         id={`input-${index}`}
@@ -72,7 +74,9 @@ export default function VerificationCodeInput({
                         onKeyDown={(e) => handleKeydown(e, index)}
                         className={classNames(
                             "w-[50px] sm:w-14 h-[50px] sm:h-14 bg-neutral-900 text-white text-center text-xl font-semibold border border-neutral-600 rounded-md outline-none ring-offset-2 ring-offset-neutral-800 focus:ring-1 transition-all",
-                            !message || message.isSuccess ? "ring-neutral-600" : "ring-red-600 ring-1",
+                            !message || message.isSuccess
+                                ? "ring-neutral-600"
+                                : "ring-red-600 ring-1",
                         )}
                         inputMode="numeric"
                     />

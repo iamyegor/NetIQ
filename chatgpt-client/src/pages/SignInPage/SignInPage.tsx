@@ -6,6 +6,7 @@ import PasswordInput from "@/components/ui/PasswordInput";
 import "ldrs/ring2";
 import { Form, Link, useActionData, useNavigation } from "react-router-dom";
 import useSignInTranslation from "./hooks/useSignInTranslation";
+import LoadingSpinner from "@/components/ui/loading-spinner";
 
 export default function SignInPage() {
     const actionData = useActionData() as { error: string } | undefined;
@@ -59,11 +60,7 @@ export default function SignInPage() {
                     </p>
 
                     <Button type="submit" className="w-full !p-6" disabled={state === "submitting"}>
-                        {state === "submitting" ? (
-                            <l-ring-2 color="#424242" size={25} stroke={4} />
-                        ) : (
-                            <span>{t.enter}</span>
-                        )}
+                        {state === "submitting" ? <LoadingSpinner /> : <span>{t.enter}</span>}
                     </Button>
                 </Form>
 

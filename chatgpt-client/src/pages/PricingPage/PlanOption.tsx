@@ -3,6 +3,7 @@ import { Check, Sparkles } from "lucide-react";
 import usePricingTranslation from "./hooks/usePricingTranslation";
 import usePricingStore from "@/pages/PricingPage/hooks/usePricingStore";
 import { cn } from "@/lib/utils";
+import LoadingSpinner from "@/components/ui/loading-spinner";
 
 type PlanOptionProps = {
     title: string;
@@ -32,9 +33,7 @@ export default function PlanOption({
             <div className="space-y-4">
                 <div className="flex justify-between items-center">
                     <div className="flex items-center gap-x-3">
-                        {title === t.plus && (
-                            <Sparkles className="w-6 h-6 flex-shrink-0" />
-                        )}
+                        {title === t.plus && <Sparkles className="w-6 h-6 flex-shrink-0" />}
                         <h3 className="text-2xl font-bold">{title}</h3>
                     </div>
                     <span className="text-neutral-400">
@@ -57,7 +56,7 @@ export default function PlanOption({
                 className="w-full !mt-8 !p-6"
             >
                 {isLoading ? (
-                    <l-ring-2 color="#424242" size={25} stroke={4} />
+                    <LoadingSpinner />
                 ) : currentPriceId === priceId ? (
                     t.currentPlan
                 ) : !priceId ? (

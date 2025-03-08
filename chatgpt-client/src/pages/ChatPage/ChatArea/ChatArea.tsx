@@ -1,3 +1,4 @@
+import LoadingSpinner from "@/components/ui/loading-spinner";
 import useChatUiStore from "@/lib/zustand/chatsUi/useChatsUiStore";
 import useErrorStore from "@/lib/zustand/error/useErrorStore";
 import useMessageStore from "@/lib/zustand/messages/useMessageStore";
@@ -59,7 +60,7 @@ export default function ChatArea() {
                 >
                     {messagesLoading ? (
                         <div className="flex w-full h-full justify-center items-center">
-                            <l-ring-2 color="#e5e5e5" size="55" stroke="6"></l-ring-2>
+                            <LoadingSpinner />
                         </div>
                     ) : (
                         <VirtualizedMessages messageHeights={messageHeights} />

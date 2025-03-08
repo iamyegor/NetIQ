@@ -6,6 +6,7 @@ import classNames from "classnames";
 import { Mail } from "lucide-react";
 import { useEffect, useState } from "react";
 import useResendCodeTranslation from "./hooks/useResendCodeTranslation";
+import LoadingSpinner from "@/components/ui/loading-spinner";
 
 interface ResendCodeButtonProps {
     setSecondsLeft: (seconds: number) => void;
@@ -68,7 +69,7 @@ export default function ResendCodeButton({
             onClick={resendCode}
         >
             {isLoading ? (
-                <l-ring-2 color="#525252" size={30} />
+                <LoadingSpinner />
             ) : (
                 <>
                     <Mail

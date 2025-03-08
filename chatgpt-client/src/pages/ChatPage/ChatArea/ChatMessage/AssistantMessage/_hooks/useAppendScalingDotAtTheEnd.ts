@@ -2,8 +2,8 @@ import { RefObject, useEffect } from "react";
 import Message from "@/types/chat/Message.ts";
 
 export default function useAppendScalingDotAtTheEnd(
-    contentRef: RefObject<HTMLDivElement>,
-    scalingDotRef: RefObject<HTMLDivElement>,
+    contentRef: RefObject<HTMLDivElement | null>,
+    scalingDotRef: RefObject<HTMLDivElement | null>,
     message: Message,
     isStreaming: boolean,
     isLast: boolean,
