@@ -1,6 +1,0 @@
-POST https://localhost:7071/api/chats
-Content-Type: application/json
-
-{
-  "Message": "Your first message to ChatGPT goes here"
-}

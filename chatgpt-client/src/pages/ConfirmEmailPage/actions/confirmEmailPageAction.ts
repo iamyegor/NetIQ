@@ -17,7 +17,8 @@ export default async function confirmEmailPageAction({ request }: any) {
 
     try {
         await authApi.post("email/confirm-email", { code });
-        return redirect("/");
+        window.location.href = "/";
+        return null;
     } catch (error) {
         if (axios.isAxiosError(error)) {
             return FeedbackMessage.createError(extractVerifyEmailError(error));

@@ -2,6 +2,7 @@ using Api.Utils;
 using Application;
 using DotNetEnv;
 using Infrastructure;
+using SharedKernel.Utils;
 
 namespace Api;
 
@@ -11,7 +12,9 @@ public static class Startup
 
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
-        Env.Load(".asp-env");
+        if (AppEnv.IsDevelopment)
+            Env.Load(".env.asp");
+
         builder.Host.AddSerilog();
 
         builder

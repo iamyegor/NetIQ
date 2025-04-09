@@ -28,7 +28,7 @@ export default function SignInPage() {
                     </p>
                 )}
 
-                <Form method="post" className="text-white">
+                <Form method="post" replace={true} className="text-white">
                     <div className="space-y-2 mb-4">
                         <Label htmlFor="email" className="text-white">
                             {t.email}

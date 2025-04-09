@@ -56,24 +56,12 @@ public static class DependencyInjection
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
             .Enrich.FromLogContext();
 
-        if (AppEnv.IsProduction)
-        {
-            loggerConfig.WriteTo.Async(writeTo =>
-                writeTo.File(
-                    "/logs/log-.txt",
-                    rollingInterval: RollingInterval.Day,
-                    rollOnFileSizeLimit: true
-                )
-            );
-        }
-        else
-        {
+        if (AppEnv.IsDevelopment)
             loggerConfig.WriteTo.Async(writeTo => writeTo.Console());
-        }
 
         Log.Logger = loggerConfig.CreateLogger();
 
-        // SelfLog.Enable(Console.Out);
+        SelfLog.Enable(Console.Out);
         host.UseSerilog();
     }
 }

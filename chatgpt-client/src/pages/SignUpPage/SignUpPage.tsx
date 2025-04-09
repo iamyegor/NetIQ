@@ -21,7 +21,7 @@ export default function SignUpPage() {
                     <img src={netIqLogo} alt="Logo" className="h-20 object-cover" />
                     <h2 className="text-4xl font-bold text-white text-center">{t.signUp}</h2>
                 </div>
-                <Form method="post" className="text-white">
+                <Form method="post" replace={true} className="text-white">
                     <div className="mb-6">
                         <Label htmlFor="email" className="text-white">
                             {t.email}

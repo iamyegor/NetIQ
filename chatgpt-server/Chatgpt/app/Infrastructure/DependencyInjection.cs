@@ -7,6 +7,7 @@ using Infrastructure.Stripe;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SharedKernel.Auth;
+using Throw;
 
 namespace Infrastructure;
 
@@ -29,17 +30,20 @@ public static class DependencyInjection
             .AddAuth(config)
             .AddChatgpt(config);
 
-        services.AddOptions<StripeSettings>().Bind(config.GetSection("Stripe"));
+        services.Configure<StripeSettings>(options =>
+        {
+            options.ApiKey = Environment.GetEnvironmentVariable("STRIPE_API_KEY").ThrowIfNull();
+            options.WebhookSecret = Environment
+                .GetEnvironmentVariable("STRIPE_WEBHOOK_SECRET")
+                .ThrowIfNull();
+        });
 
         return services;
     }
 
     private static void AddChatgpt(this IServiceCollection services, IConfiguration config)
     {
-        string apiKey = config.GetValue<string>("ChatGpt:ApiKey")!;
-        // string proxyAddress = Environment.GetEnvironmentVariable("PROXY_ADDRESS")!;
-        // string proxyUsername = Environment.GetEnvironmentVariable("PROXY_USERNAME")!;
-        // string proxyPassword = Environment.GetEnvironmentVariable("PROXY_PASSWORD")!;
+        string apiKey = Environment.GetEnvironmentVariable("CHATGPT_API_KEY").ThrowIfNull();
 
         GptHttpClient gptHttpClient = new(apiKey);
 
