@@ -26,8 +26,6 @@ export default function PlanOption({
 }: PlanOptionProps) {
     const { currentPriceId } = usePricingStore();
 
-    console.log({ currentPriceId });
-
     return (
         <div className="bg-neutral-800 rounded-xl p-8 text-sm xs:text-base flex flex-col justify-between h-[440px] md:h-[500px]">
             <div className="space-y-4">

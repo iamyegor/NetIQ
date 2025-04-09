@@ -2,7 +2,6 @@ using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
-using MimeKit.Text;
 
 namespace Infrastructure.Emails
 {
@@ -24,10 +23,12 @@ namespace Infrastructure.Emails
             email.To.Add(MailboxAddress.Parse(recipient));
             email.Subject = subject;
 
-            BodyBuilder bodyBuilder = new BodyBuilder { HtmlBody = html };
+            BodyBuilder bodyBuilder = new() { HtmlBody = html };
             email.Body = bodyBuilder.ToMessageBody();
 
             using SmtpClient client = new();
+            client.Timeout = 45000;
+
             await client.ConnectAsync(
                 _emailSettings.MailServer,
                 _emailSettings.MailPort,

@@ -51,6 +51,14 @@ public static class DependencyInjection
 
         if (AppEnv.IsDevelopment)
             loggerConfig.WriteTo.Async(writeTo => writeTo.Console());
+        else
+            loggerConfig.WriteTo.Async(writeTo =>
+                writeTo.File(
+                    path: "/logs/log.txt",
+                    rollingInterval: RollingInterval.Day,
+                    retainedFileCountLimit: 30
+                )
+            );
 
         Log.Logger = loggerConfig.CreateLogger();
 

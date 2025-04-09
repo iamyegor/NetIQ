@@ -11,7 +11,6 @@ export default function useScrollToBottomWhenStreaming() {
     // const hasChatScrollbar = useHasChatScrollbar();
     const { scrollChatToBottom } = useScrollChatToBottom();
 
-    console.log({ isAttachedToBottom, isStreaming, promptWasSentLessThan100MsAgo });
     useEffect(() => {
         if (isStreaming && isAttachedToBottom && !promptWasSentLessThan100MsAgo) {
             scrollChatToBottom({ isSmooth: false });
