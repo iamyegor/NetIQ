@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { Check, Sparkles } from "lucide-react";
 import usePricingTranslation from "./hooks/usePricingTranslation";
 import usePricingStore from "@/pages/PricingPage/hooks/usePricingStore";
-import { cn } from "@/lib/utils";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 
 type PlanOptionProps = {
