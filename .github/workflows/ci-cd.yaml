@@ -9,7 +9,6 @@ on:
 env:
   DOCKER_USERNAME: jasonstathamdev
   DOCKER_REPO: netiq
-  SERVER_IP: REDACTED
 
 jobs:
   setup:
@@ -143,5 +142,5 @@ jobs:
           mkdir -p ~/.ssh
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ env.SERVER_IP }} >> ~/.ssh/known_hosts
-          ssh root@${{ env.SERVER_IP }} "helm upgrade netiq netiq-k8s --values netiq-k8s/values.yaml"
+          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+          ssh root@${{ secrets.SERVER_IP }} "helm upgrade netiq netiq-k8s --values netiq-k8s/values.yaml"
