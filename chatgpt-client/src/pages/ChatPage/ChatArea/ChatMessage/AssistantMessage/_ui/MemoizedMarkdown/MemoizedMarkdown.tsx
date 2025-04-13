@@ -14,7 +14,7 @@ const MemoizedMarkdown = memo(function MemoizedMarkdown({
         () => ({
             code: ({ children, ...rest }: HTMLAttributes<HTMLElement>) => (
                 <Code
-                    shouldHighlightCode={shouldHighlightCode}
+                    highlightingEnabled={shouldHighlightCode}
                     rawCode={children?.toString()}
                     className={rest?.className}
                 />

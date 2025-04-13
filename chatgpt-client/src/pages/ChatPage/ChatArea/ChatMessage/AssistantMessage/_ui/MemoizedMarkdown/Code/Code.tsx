@@ -8,10 +8,10 @@ import loadHighlightJs from "../utils/loadHighlightJs";
 interface CodeProps {
     rawCode: string | undefined;
     className: string | undefined;
-    shouldHighlightCode: boolean;
+    highlightingEnabled: boolean;
 }
 
-export default function Code({ rawCode, className, shouldHighlightCode }: CodeProps) {
+export default function Code({ rawCode, className, highlightingEnabled }: CodeProps) {
     const { codeMap } = useMessageStore();
     const [isCopied, setIsCopied] = useState(false);
     const [highlightedCode, setHighlightedCode] = useState<string | null>(null);
@@ -25,7 +25,7 @@ export default function Code({ rawCode, className, shouldHighlightCode }: CodePr
 
         let code = codeMap.get(rawCode);
 
-        if (!code && shouldHighlightCode) {
+        if (!code && highlightingEnabled) {
             loadHighlightJs()
                 .then((hljs) => {
                     if (language && hljs.default.getLanguage(language)) {
@@ -39,10 +39,8 @@ export default function Code({ rawCode, className, shouldHighlightCode }: CodePr
                 .catch(() => {
                     setHighlightedCode(rawCode);
                 });
-        } else {
-            setHighlightedCode(code || rawCode);
         }
-    }, [rawCode, language, shouldHighlightCode, codeMap, className]);
+    }, [rawCode, language, highlightingEnabled, codeMap, className]);
 
     if (!rawCode) return null;
     if (!language) return <code>{rawCode}</code>;
