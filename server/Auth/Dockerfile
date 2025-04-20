@@ -2,6 +2,9 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
+RUN dotnet tool install --global dotnet-ef
+ENV PATH="$PATH:/root/.dotnet/tools"
+
 COPY ["Auth/Api/Api.csproj", "Auth/Api/"]
 COPY ["Auth/Application/Application.csproj", "Auth/Application/"]
 COPY ["Auth/Domain/Domain.csproj", "Auth/Domain/"]
