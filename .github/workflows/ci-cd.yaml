@@ -7,132 +7,54 @@ on:
     branches: [main]
 
 env:
-  DOCKER_USERNAME: jasonstathamdev
+  HELM_COMMAND: helm upgrade netiq netiq-k8s --values netiq-k8s/values.yaml --install --atomic --wait
   DOCKER_REPO: netiq
+  DOCKER_USERNAME: jasonstathamdev
 
 jobs:
-  setup:
+  build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - name: client
+            context: ./client
+            dockerfile: ./client/Dockerfile 
+            tag: client
+          - name: auth-app
+            context: ./server 
+            dockerfile: ./server/Auth/Dockerfile 
+            tag: auth-app
+          - name: netiq-app
+            context: ./server 
+            dockerfile: ./server/Backend/Dockerfile 
+            tag: netiq-app
+
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v3
 
-  build-client:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Login to DockerHub
-        uses: docker/login-action@v1
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
         with:
-          username: ${{ env.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push client
-        uses: docker/build-push-action@v2
+      - name: Build and push ${{ matrix.name }} image to Docker Hub
+        uses: docker/build-push-action@v5
         with:
-          context: ./chatgpt-client
+          context: ${{ matrix.context }}
+          file: ${{ matrix.dockerfile }}
           push: true
-          tags: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKER_REPO }}:client
-
-  build-auth:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Login to DockerHub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ env.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Set up .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: "8.0.x"
-
-      - name: Prepare Auth migrations
-        run: |
-          mkdir -p chatgpt-server/Auth/migrator/Migrator/Migrations
-          cp -r chatgpt-server/Auth/app/Infrastructure/Data/Migrations/* chatgpt-server/Auth/migrator/Migrator/Migrations/
-
-      - name: Run MigrationChanger for Auth
-        run: |
-          dotnet build chatgpt-server/Auth/migrator/MigrationChanger
-          dotnet run --project chatgpt-server/Auth/migrator/MigrationChanger
-
-      - name: Build and push Auth app
-        uses: docker/build-push-action@v2
-        with:
-          context: ./chatgpt-server
-          file: ./chatgpt-server/Auth/app/Dockerfile
-          push: true
-          tags: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKER_REPO }}:auth-app
-
-      - name: Build and push Auth migrator
-        uses: docker/build-push-action@v2
-        with:
-          context: ./chatgpt-server/Auth/migrator
-          push: true
-          tags: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKER_REPO }}:auth-migrator
-
-  build-server:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Login to DockerHub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ env.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Set up .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: "8.0.x"
-
-      - name: Prepare Server migrations
-        run: |
-          mkdir -p chatgpt-server/Chatgpt/migrator/Migrator/Migrations
-          cp -r chatgpt-server/Chatgpt/app/Infrastructure/Data/Migrations/* chatgpt-server/Chatgpt/migrator/Migrator/Migrations/
-
-      - name: Run MigrationChanger for Server
-        run: |
-          dotnet build chatgpt-server/Chatgpt/migrator/MigrationChanger
-          dotnet run --project chatgpt-server/Chatgpt/migrator/MigrationChanger
-
-      - name: Build and push Server app
-        uses: docker/build-push-action@v2
-        with:
-          context: ./chatgpt-server
-          file: ./chatgpt-server/Chatgpt/app/Dockerfile
-          push: true
-          tags: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKER_REPO }}:netiq-app
-
-      - name: Build and push Server migrator
-        uses: docker/build-push-action@v2
-        with:
-          context: ./chatgpt-server/Chatgpt/migrator
-          push: true
-          tags: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKER_REPO }}:netiq-migrator
+          tags: ${{ env.DOCKER_USERNAME }}/${{ env.DOCKER_REPO }}:${{ matrix.tag }}
+          cache-from: type=registry,ref=${{ env.DOCKER_USERNAME }}/${{ env.DOCKER_REPO }}:${{ matrix.tag }}-cache
+          cache-to: type=registry,ref=${{ env.DOCKER_USERNAME }}/${{ env.DOCKER_REPO }}:${{ matrix.tag }}-cache,mode=max
 
   deploy:
-    needs: [build-client, build-auth, build-server]
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to server
@@ -143,4 +65,4 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
-          ssh root@${{ secrets.SERVER_IP }} "helm upgrade netiq netiq-k8s --values netiq-k8s/values.yaml"
+          ssh root@${{ secrets.SERVER_IP }} "${{ env.HELM_COMMAND }}"
