@@ -16,6 +16,8 @@ RUN dotnet restore "Backend/Api/Api.csproj" -v d
 COPY ["Backend/", "Backend/"]
 COPY ["SharedKernel/", "SharedKernel/"]
 
+RUN rm -rf Backend/Infrastructure/Data/CompiledModels
+
 RUN dotnet ef dbcontext optimize \
     -o Backend/Infrastructure/Data/CompiledModels \
     --namespace Infrastructure.Data.CompiledModels \

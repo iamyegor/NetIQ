@@ -16,6 +16,8 @@ RUN dotnet restore "Auth/Api/Api.csproj" -v d
 COPY ["Auth/", "Auth/"]
 COPY ["SharedKernel/", "SharedKernel/"]
 
+RUN rm -rf Backend/Infrastructure/Data/CompiledModels
+
 RUN dotnet ef dbcontext optimize \
     -o Auth/Infrastructure/Data/CompiledModels \
     --namespace Infrastructure.Data.CompiledModels \

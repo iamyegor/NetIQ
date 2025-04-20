@@ -12,7 +12,7 @@ namespace Infrastructure.Data.CompiledModels
     public partial class ApplicationContextModel
     {
         private ApplicationContextModel()
-            : base(skipDetectChanges: false, modelId: new Guid("1781c97c-cd7e-448d-8771-254618d53ade"), entityTypeCount: 5)
+            : base(skipDetectChanges: false, modelId: new Guid("d9e8fa8e-460c-4326-9b23-6d1ac1969007"), entityTypeCount: 5)
         {
         }
 
