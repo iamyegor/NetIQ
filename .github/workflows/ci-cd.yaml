@@ -29,6 +29,10 @@ jobs:
             context: ./server 
             dockerfile: ./server/Backend/Dockerfile 
             tag: netiq-app
+          - name: migrator
+            context: ./server
+            dockerfile: ./server/Dockerfile.ef-tools
+            tag: migrator
 
     steps:
       - uses: actions/checkout@v3
