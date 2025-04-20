@@ -13,6 +13,12 @@ RUN dotnet restore "Auth/Api/Api.csproj" -v d
 COPY ["Auth/", "Auth/"]
 COPY ["SharedKernel/", "SharedKernel/"]
 
+RUN dotnet ef dbcontext optimize \
+    -o Auth/Infrastructure/Data/CompiledModels \
+    --namespace Infrastructure.Data.CompiledModels \
+    -c ApplicationContext \
+    --project Auth/Infrastructure/Infrastructure.csproj
+
 WORKDIR "/src/Auth/Api"
 RUN dotnet publish -c Release -o /app/publish --no-restore
 

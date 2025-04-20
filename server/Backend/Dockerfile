@@ -13,6 +13,12 @@ RUN dotnet restore "Backend/Api/Api.csproj" -v d
 COPY ["Backend/", "Backend/"]
 COPY ["SharedKernel/", "SharedKernel/"]
 
+RUN dotnet ef dbcontext optimize \
+    -o Backend/Infrastructure/Data/CompiledModels \
+    --namespace Infrastructure.Data.CompiledModels \
+    -c ApplicationContext \
+    --project Backend/Infrastructure/Infrastructure.csproj
+
 WORKDIR "/src/Backend/Api"
 RUN dotnet publish -c Release -o /app/publish --no-restore
 

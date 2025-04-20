@@ -1,6 +1,7 @@
 using System.Reflection;
 using Domain.User;
 using Domain.User.Entities;
+using Infrastructure.Data.CompiledModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -23,7 +24,7 @@ public class ApplicationContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql(_connectionString);
+        optionsBuilder.UseNpgsql(_connectionString).UseModel(ApplicationContextModel.Instance);
 
         if (AppEnv.IsDevelopment)
         {
