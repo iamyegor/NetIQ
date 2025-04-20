@@ -10,10 +10,10 @@ COPY ["SharedKernel/SharedKernel.csproj", "SharedKernel/"]
 
 RUN dotnet restore "Backend/Api/Api.csproj" -v d
 
-COPY Backend/ .
-COPY SharedKernel/ SharedKernel/
+COPY ["Backend/", "Backend/"]
+COPY ["SharedKernel/", "SharedKernel/"]
 
-WORKDIR /src/Backend/Api
+WORKDIR "/src/Backend/Api"
 RUN dotnet publish -c Release -o /app/publish --no-restore
 
 # Production image

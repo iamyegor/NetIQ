@@ -10,10 +10,10 @@ COPY ["SharedKernel/SharedKernel.csproj", "SharedKernel/"]
 
 RUN dotnet restore "Auth/Api/Api.csproj" -v d
 
-COPY Auth/ .
-COPY SharedKernel/ SharedKernel/
+COPY ["Auth/", "Auth/"]
+COPY ["SharedKernel/", "SharedKernel/"]
 
-WORKDIR /src/Auth/Api
+WORKDIR "/src/Auth/Api"
 RUN dotnet publish -c Release -o /app/publish --no-restore
 
 # Production image
