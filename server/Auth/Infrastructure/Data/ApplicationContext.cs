@@ -1,11 +1,7 @@
 using System.Reflection;
 using Domain.User;
-using Infrastructure.Data.CompiledModels;
 using Infrastructure.Specifications;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Serilog;
-using SharedKernel.Utils;
 
 namespace Infrastructure.Data;
 
@@ -24,14 +20,7 @@ public class ApplicationContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql(_connectionString).UseModel(ApplicationContextModel.Instance);
-
-        if (AppEnv.IsDevelopment)
-        {
-            optionsBuilder
-                .UseLoggerFactory(LoggerFactory.Create(builder => builder.AddSerilog()))
-                .EnableSensitiveDataLogging();
-        }
+        optionsBuilder.UseNpgsql(_connectionString);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

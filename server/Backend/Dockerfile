@@ -16,25 +16,11 @@ RUN dotnet restore "Backend/Api/Api.csproj" -v d
 COPY ["Backend/", "Backend/"]
 COPY ["SharedKernel/", "SharedKernel/"]
 
-RUN echo "Attempting to remove potentially existing CompiledModels directory..." && \
-    rm -rf Backend/Infrastructure/Data/CompiledModels && \
-    echo "Removal step complete."
-
-# --- Generate EF Core Compiled Model (Add verbosity and error checking) ---
-RUN echo "Generating EF Core Compiled Models..." && \
-    dotnet ef dbcontext optimize \
-        -o Backend/Infrastructure/Data/CompiledModels \
-        --namespace Infrastructure.Data.CompiledModels \
-        -c ApplicationContext \
-        --project Backend/Infrastructure/Infrastructure.csproj \
-        --verbosity detailed && \
-    echo "EF Core Optimize command finished successfully." || \
-    (echo "!!! EF Core Optimize command failed !!!"; exit 1) # Fail build if optimize fails
-
-# --- (Optional Debugging) List generated files ---
-RUN echo "Listing contents of generated directory:" && \
-    ls -lR Backend/Infrastructure/Data/CompiledModels || \
-    echo "Warning: CompiledModels directory not found or empty after generation attempt."
+RUN dotnet ef dbcontext optimize \
+    -o Backend/Infrastructure/Data/CompiledModels \
+    --namespace Infrastructure.Data.CompiledModels \
+    -c ApplicationContext \
+    --project Backend/Infrastructure/Infrastructure.csproj
 
 WORKDIR "/src/Backend/Api"
 RUN dotnet publish -c Release -o /app/publish --no-restore
