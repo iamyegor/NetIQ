@@ -10,7 +10,6 @@ namespace Domain.User;
 public class User : AggregateRoot<Guid>
 {
     public Email Email { get; private set; }
-    public string ArbitraryField { get; private set; }
     public IReadOnlyList<Chat.Chat> Chats => _chats.AsReadOnly();
     private readonly List<Chat.Chat> _chats = [];
     public int SentMessages { get; private set; }

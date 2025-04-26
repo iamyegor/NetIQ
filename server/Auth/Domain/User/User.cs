@@ -25,7 +25,6 @@ public class User : AggregateRoot<UserId>
     }
 
     public Email? Email { get; private set; }
-    public string ArbitraryField { get; private set; }
     public Password? Password { get; private set; }
 
     public EmailVerificationCode? EmailVerificationCode { get; private set; } =
